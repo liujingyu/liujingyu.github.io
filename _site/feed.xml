@@ -7,18 +7,12 @@
 		<atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
-				<title>Hello World!</title>
-				<description>&lt;p&gt;&lt;strong&gt;dbyll&lt;/strong&gt; is minimalist, stylish theme for jekyll. Supports gravatar, account links (github, twitter, e-mail, pinterest, résume file) and a bio.&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;dbyll&lt;/strong&gt; is brought to you by &lt;strong&gt;&lt;a href=&quot;http://ismaildemirbilek.com&quot;&gt;dbtek&lt;/a&gt;&lt;/strong&gt;. Open sourced under &lt;a href=&quot;http://opensource.org/licenses/MIT&quot;&gt;MIT&lt;/a&gt; license.&lt;/p&gt;
-
-&lt;h3 id=&quot;dbyll-is-on-github&quot;&gt;dbyll is on GitHub&lt;/h3&gt;
-
-&lt;p&gt;&lt;a class=&quot;btn btn-default&quot; href=&quot;https://github.com/dbtek/dbyll&quot;&gt;Grab your copy now!&lt;/a&gt;&lt;/p&gt;
+				<title>使用Google检索好问题</title>
+				<description>&lt;p&gt;为了解决百度检索技术问题质量不高，优秀的工程师都会改用Google。我用的是shadowsocks, 为什么选择它，原因有三：一稳定，我是用三年了，每年也就一两周不可以使用; 二、价格不贵入门版每年$19.95; 三、分享推荐还可以赚佣金。使用Google搜索提高了我解决问题的效率，让我远离因效率低下而导致的加班。我的唯一推荐链: &lt;a href=&quot;https://order.shadowsocks.nl/aff.php?aff=9451&quot;&gt;https://order.shadowsocks.nl/aff.php?aff=9451&lt;/a&gt;&lt;/p&gt;
 </description>
-				<pubDate>Fri, 15 Nov 2013 00:00:00 +0800</pubDate>
-				<link>/general/setup/demo/2013/11/15/hello-world.html</link>
-				<guid isPermaLink="true">/general/setup/demo/2013/11/15/hello-world.html</guid>
+				<pubDate>Sat, 04 Jan 2020 00:00:00 +0800</pubDate>
+				<link>/tools/shadowsocks/2020/01/04/use-google-search-good-question.html</link>
+				<guid isPermaLink="true">/tools/shadowsocks/2020/01/04/use-google-search-good-question.html</guid>
 			</item>
 		
 	</channel>
