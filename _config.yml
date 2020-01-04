@@ -35,3 +35,6 @@ BASE_PATH:
 
 plugins:
   - jekyll-paginate
+  - jekyll-feed
+  - jekyll-sitemap
+  - jekyll-seo-tag
