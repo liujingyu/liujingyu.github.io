@@ -41,7 +41,7 @@ tags_path: tags.html
 about_path: about
 
 # set it as url of an image
-sidebar_background_image: assets/media/sky.png
+sidebar_background_image: /assets/media/sky.png
 
 BASE_PATH:
 
