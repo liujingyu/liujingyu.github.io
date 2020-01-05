@@ -7,18 +7,18 @@ highlighter: rouge
 markdown: kramdown
 disqus: dbyll
 google_analytics: dbyll
-title: Dragon
+title: JY
 
 defaults:
   -
     scope:
       path: "" # empty string for all files
     values:
-      title: "Dragon"
+      title: "JY"
 
-description: "Dragon的笔记本"
+description: "JY的笔记本"
 author:
-  name: Dragon
+  name: JY
   email: jingyu525@gmail.com
   github: liujingyu
   bio: 人不了解自己时是最糟糕的!
