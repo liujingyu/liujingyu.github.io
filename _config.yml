@@ -9,6 +9,17 @@ disqus: dbyll
 google_analytics: dbyll
 title: JY
 
+collections: 
+  elasticsearch:
+    output: true
+    permalink: /elasticsearch/:name
+  share:
+    output: true
+    permalink: /share/:name
+  os:
+    output: true
+    permalink: /os/:name
+
 defaults:
   -
     scope:
