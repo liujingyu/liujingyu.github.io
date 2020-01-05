@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>ElasticSearch</title>
+	<title>elasticsearch基本概念</title>
 	
 	<meta name="author" content="JY">
 
@@ -133,14 +133,24 @@
 
 	<div class="col-sm-9 col-sm-offset-3">
 		<div class="page-header">
-  <h1>ElasticSearch </h1>
+  <h1>elasticsearch基本概念 </h1>
 </div>
 
-
-<h2><a href="/elasticsearch/01-concept">elasticsearch基本概念</a></h2>
-
-<p class="post-excerpt"></p>
-
+<p>ES中一些特有的概念:</p>
+<ul>
+  <li>分片(shard)</li>
+  <li>主分片(primary shard)，简称P</li>
+  <li>分片副本(特指数据的一个分片，无论主分片，还是副分片)</li>
+  <li>副分片(replica shard)，简称R</li>
+  <li>分片分配(shard allocation)</li>
+  <li>集群状态(cluster state)</li>
+  <li>分配决策(allocation decision)</li>
+  <li>分配感知(allocation awareness)</li>
+  <li>分配标识(allocation IDs)</li>
+  <li>追踪(tracking)</li>
+  <li>事务日志(translog)</li>
+  <li>同步集合(in-sync set)</li>
+</ul>
 
 
 
