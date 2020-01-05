@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 我使用的vim plugin set
-categories: [工具]
+categories: [tools]
 tags: [vim, tools]
 fullview: true
 markdown: kramdown

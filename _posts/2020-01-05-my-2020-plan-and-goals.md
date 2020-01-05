@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 我的2020规划图
-categories: [规划]
+categories: [plan]
 tags: [plan, goals]
 fullview: true
 markdown: kramdown

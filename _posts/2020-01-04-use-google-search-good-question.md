@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 使用Google检索好问题
-categories: [工具]
+categories: [tools]
 tags: [tools, shadowsocks]
 fullview: true
 markdown: kramdown

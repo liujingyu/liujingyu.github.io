@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>我使用Homebrew记录</title>
+	<title>我使用的vim plugin set</title>
 	
 	<meta name="author" content="JY">
 
@@ -133,7 +133,7 @@
 
 	<div class="col-sm-9 col-sm-offset-3">
 		<div class="page-header">
-  <h1>我使用Homebrew记录 </h1>
+  <h1>我使用的vim plugin set </h1>
 </div>
 	
 <article>
@@ -147,98 +147,11 @@
 	   2020
 	 </span>
 	  <div class="article_body">
-	  <p>homebrew 官方地址：<a href="https://brew.sh/index_zh-cn">https://brew.sh/index_zh-cn</a>.</p>
+	  <p><img src="/assets/media/vim-plugins.png" alt="vim plugins" /></p>
 
-<h3 id="安装homebrew">安装homebrew:</h3>
+<p>这些插件很棒。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/usr/bin/ruby <span class="nt">-e</span> <span class="s2">"</span><span class="si">$(</span>curl <span class="nt">-fsSL</span> https://raw.githubusercontent.com/Homebrew/install/master/install<span class="si">)</span><span class="s2">"</span>
-</code></pre></div></div>
-
-<p>使用 Homebrew 安装 Apple（或您的 Linux 系统）没有预装但 你需要的东西。</p>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew <span class="nb">install </span>wget
-</code></pre></div></div>
-
-<p>Homebrew 会将软件包安装到独立目录，并将其文件软链接至 /usr/local 。</p>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cd</span> /usr/local
-<span class="nv">$ </span>find Cellar
-Cellar/wget/1.16.1
-Cellar/wget/1.16.1/bin/wget
-Cellar/wget/1.16.1/share/man/man1/wget.1
-
-<span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-l</span> bin
-bin/wget -&gt; ../Cellar/wget/1.16.1/bin/wget
-</code></pre></div></div>
-
-<p>完全基于 Git 和 Ruby，所以自由修改的同时你仍可以轻松撤销你的变更或与上游更新合并。</p>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew edit wget <span class="c"># 使用 $EDITOR 编辑!</span>
-
-</code></pre></div></div>
-
-<p>Homebrew 的配方都是简单的 Ruby 脚本：</p>
-
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Wget</span> <span class="o">&lt;</span> <span class="no">Formula</span>
-  <span class="n">homepage</span> <span class="s2">"https://www.gnu.org/software/wget/"</span>
-  <span class="n">url</span> <span class="s2">"https://ftp.gnu.org/gnu/wget/wget-1.15.tar.gz"</span>
-  <span class="n">sha256</span> <span class="s2">"52126be8cf1bddd7536886e74c053ad7d0ed2aa89b4b630f76785bac21695fcd"</span>
-
-  <span class="k">def</span> <span class="nf">install</span>
-    <span class="nb">system</span> <span class="s2">"./configure"</span><span class="p">,</span> <span class="s2">"--prefix=</span><span class="si">#{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">"</span>
-    <span class="nb">system</span> <span class="s2">"make"</span><span class="p">,</span> <span class="s2">"install"</span>
-  <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div></div>
-
-<h3 id="我的安装列表">我的安装列表</h3>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ brew list -1
-ack
-gdbm
-gettext
-git
-icu4c
-libevent
-libidn2
-libunistring
-libyaml
-ncurses
-node
-openssl@1.1
-pcre2
-pkg-config
-python
-readline
-ruby
-sqlite
-thrift@0.9
-tmux
-tmuxinator
-tree
-wget
-xz
-zplug
-
-</code></pre></div></div>
-
-<h3 id="遇到过的问题">遇到过的问题:</h3>
-
-<ul>
-  <li>
-    <p>thrift 安装低版本.</p>
-
-    <p>修改Homebrew的Ruby 脚本。 <code class="highlighter-rouge">git clone https://github.com/Homebrew/homebrew-core</code> 下载到本地，找到thrift 低版本的formula, 然后, <code class="highlighter-rouge">brew install &lt;formula&gt;</code>。</p>
-  </li>
-  <li>
-    <p>磁盘空间不足:</p>
-
-    <p>每天运行一次</p>
-    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c">#!/bin/bash</span>
- brew update <span class="o">&amp;&amp;</span> brew upgrade <span class="o">&amp;&amp;</span> brew cleanup
-</code></pre></div>    </div>
-  </li>
-</ul>
+<p><a href="https://vimawesome.com/">more vimawesome plugins</a></p>
 
 	  </div>
 
@@ -248,8 +161,8 @@ zplug
 		  
 		  
 			 
-				<li><a href="/categories.html#工具-ref">
-					工具 <span>(3)</span>
+				<li><a href="/categories.html#tools-ref">
+					tools <span>(3)</span>
 					
 				</a></li>
 			
@@ -264,22 +177,15 @@ zplug
 		  
 			 
 				<li>
+					<a href="/tags.html#vim-ref">
+					vim <span>(1)</span>
+					,
+					</a>
+				</li>
+			 
+				<li>
 					<a href="/tags.html#tools-ref">
 					tools <span>(3)</span>
-					,
-					</a>
-				</li>
-			 
-				<li>
-					<a href="/tags.html#mac-ref">
-					mac <span>(1)</span>
-					,
-					</a>
-				</li>
-			 
-				<li>
-					<a href="/tags.html#packages-ref">
-					packages <span>(1)</span>
 					
 					</a>
 				</li>
@@ -294,7 +200,7 @@ zplug
 		<div>
       <section class="share col-sm-6">
         <h4 class="section-title">Share Post</h4>
-        <a class="btn btn-default btn-sm twitter" href="http://twitter.com/share?text=我使用Homebrew记录"
+        <a class="btn btn-default btn-sm twitter" href="http://twitter.com/share?text=我使用的vim plugin set"
            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
           <i class="fa fa-twitter fa-lg"></i>
           Twitter
@@ -322,10 +228,10 @@ zplug
 
 		<ul class="pager">
 		  
-		  <li class="previous"><a href="/%E8%AF%BB%E4%B9%A6/2020/01/05/brain-mind-dushu-note.html" title="樊登读书思维导图">&larr; Previous</a></li>
+		  <li class="previous"><a href="/plan/2020/01/05/my-2020-plan-and-goals.html" title="我的2020规划图">&larr; Previous</a></li>
 		  
 		  
-		  <li class="next"><a href="/%E8%A7%84%E5%88%92/2020/01/05/my-2020-plan-and-goals.html" title="我的2020规划图">Next &rarr;</a></li>
+			<li class="next disabled"><a>Next &rarr;</a>
 		  
 		</ul>
 
