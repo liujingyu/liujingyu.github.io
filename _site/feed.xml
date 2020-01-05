@@ -7,6 +7,15 @@
 		<atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>我的2020规划图</title>
+				<description>&lt;p&gt;&lt;img src=&quot;/assets/media/2020.png&quot; alt=&quot;2020-plan-and-goals&quot; /&gt;&lt;/p&gt;
+</description>
+				<pubDate>Sun, 05 Jan 2020 00:00:00 +0800</pubDate>
+				<link>/plan/goals/2020/01/05/my-2020-plan-and-goals.html</link>
+				<guid isPermaLink="true">/plan/goals/2020/01/05/my-2020-plan-and-goals.html</guid>
+			</item>
+		
+			<item>
 				<title>我使用Homebrew记录</title>
 				<description>&lt;p&gt;homebrew 官方地址：&lt;a href=&quot;https://brew.sh/index_zh-cn&quot;&gt;https://brew.sh/index_zh-cn&lt;/a&gt;.&lt;/p&gt;
 
