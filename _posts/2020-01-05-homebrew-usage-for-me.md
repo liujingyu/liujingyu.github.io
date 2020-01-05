@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 我使用Homebrew记录
-categories: [tools, mac, packages]
+categories: [工具]
 tags: [tools, mac, packages]
 fullview: true
 markdown: kramdown

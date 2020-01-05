@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 樊登读书思维导图
-categories: [note]
+categories: [读书]
 tags: [note]
 fullview: true
 markdown: kramdown
