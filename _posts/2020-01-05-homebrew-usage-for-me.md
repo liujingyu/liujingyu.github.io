@@ -104,3 +104,38 @@ zplug
     #!/bin/bash
     brew update && brew upgrade && brew cleanup
     ```
+* brew install php@7.1 安装失败.
+
+  ```sh
+
+  a) git clone https://github.com/Homebrew/homebrew-core
+
+  b) git log --grep=php@7.1
+
+	commit d541efc88be7f81e99deaeb1ad4dba7f718754b4
+	Author: Andreas Braun <git@alcaeus.org>
+	Date:   Thu Nov 28 15:02:50 2019 +0100
+
+		Remove php@7.1
+
+		Closes #47385.
+
+		Signed-off-by: Sean Molenaar <smillerdev@me.com>
+
+	commit 5afd75d0216cdf66bdcadd1b101757260f4a3cef (php@7.1)
+	Author: BrewTestBot <homebrew-test-bot@lists.sfconservancy.org>
+	Date:   Fri Oct 25 10:00:42 2019 +0000
+
+		php@7.1: update 7.1.33 bottle.
+    ....
+
+  c) git checkout -b php@7.1 5afd75d0216cdf66bdcadd1b101757260f4a3cef
+
+  d) brew install Formula/php@7.1.rb
+
+  e) 完毕
+
+
+  ```
+
+

@@ -238,7 +238,42 @@ zplug
  brew update <span class="o">&amp;&amp;</span> brew upgrade <span class="o">&amp;&amp;</span> brew cleanup
 </code></pre></div>    </div>
   </li>
+  <li>
+    <p>brew install php@7.1 安装失败.</p>
+
+    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+a<span class="o">)</span> git clone https://github.com/Homebrew/homebrew-core
+
+b<span class="o">)</span> git log <span class="nt">--grep</span><span class="o">=</span>php@7.1
+
+  commit d541efc88be7f81e99deaeb1ad4dba7f718754b4
+  Author: Andreas Braun &lt;git@alcaeus.org&gt;
+  Date:   Thu Nov 28 15:02:50 2019 +0100
+
+      Remove php@7.1
+
+      Closes <span class="c">#47385.</span>
+
+      Signed-off-by: Sean Molenaar &lt;smillerdev@me.com&gt;
+
+  commit 5afd75d0216cdf66bdcadd1b101757260f4a3cef <span class="o">(</span>php@7.1<span class="o">)</span>
+  Author: BrewTestBot &lt;homebrew-test-bot@lists.sfconservancy.org&gt;
+  Date:   Fri Oct 25 10:00:42 2019 +0000
+
+      php@7.1: update 7.1.33 bottle.
+  ....
+
+c<span class="o">)</span> git checkout <span class="nt">-b</span> php@7.1 5afd75d0216cdf66bdcadd1b101757260f4a3cef
+
+d<span class="o">)</span> brew <span class="nb">install </span>Formula/php@7.1.rb
+
+e<span class="o">)</span> 完毕
+
+
+</code></pre></div>    </div>
+  </li>
 </ul>
+
 
 	  </div>
 

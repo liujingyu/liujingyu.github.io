@@ -121,7 +121,42 @@ zplug
  brew update &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; brew upgrade &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; brew cleanup
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
   &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;brew install php@7.1 安装失败.&lt;/p&gt;
+
+    &lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
+a&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; git clone https://github.com/Homebrew/homebrew-core
+
+b&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; git log &lt;span class=&quot;nt&quot;&gt;--grep&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;php@7.1
+
+  commit d541efc88be7f81e99deaeb1ad4dba7f718754b4
+  Author: Andreas Braun &amp;lt;git@alcaeus.org&amp;gt;
+  Date:   Thu Nov 28 15:02:50 2019 +0100
+
+      Remove php@7.1
+
+      Closes &lt;span class=&quot;c&quot;&gt;#47385.&lt;/span&gt;
+
+      Signed-off-by: Sean Molenaar &amp;lt;smillerdev@me.com&amp;gt;
+
+  commit 5afd75d0216cdf66bdcadd1b101757260f4a3cef &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;php@7.1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  Author: BrewTestBot &amp;lt;homebrew-test-bot@lists.sfconservancy.org&amp;gt;
+  Date:   Fri Oct 25 10:00:42 2019 +0000
+
+      php@7.1: update 7.1.33 bottle.
+  ....
+
+c&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; git checkout &lt;span class=&quot;nt&quot;&gt;-b&lt;/span&gt; php@7.1 5afd75d0216cdf66bdcadd1b101757260f4a3cef
+
+d&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; brew &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;Formula/php@7.1.rb
+
+e&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 完毕
+
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
+  &lt;/li&gt;
 &lt;/ul&gt;
+
 </description>
 				<pubDate>Sun, 05 Jan 2020 00:00:00 +0800</pubDate>
 				<link>/tools/2020/01/05/homebrew-usage-for-me.html</link>
