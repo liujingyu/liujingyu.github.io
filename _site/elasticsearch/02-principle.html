@@ -149,7 +149,7 @@
 </ul>
 
 <p>Figure 4. 拥有三个节点的集群——为了分散负载而对分片进行重新分配
-<a href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_0204.png">elas_0204</a></p>
+<img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_0204.png" alt="elas_0204" /></p>
 
 <p>Node 1 和 Node 2 上各有一个分片被迁移到了新的 Node 3 节点，现在每个节点上都拥有2个分片，而不是之前的3个。 这表示每个节点的硬件资源（CPU, RAM, I/O）将被更少的分片所共享，每个分片的性能将会得到提升。</p>
 
@@ -172,11 +172,12 @@
 
 <p>Figure 5. 将参数 number_of_replicas 调大到 2</p>
 
-<p><a href="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_0205.png">elas_0205</a></p>
+<p><img src="https://www.elastic.co/guide/cn/elasticsearch/guide/current/images/elas_0205.png" alt="elas_0205" /></p>
 
 <p>当然，如果只是在相同节点数目的集群上增加更多的副本分片并不能提高性能，因为每个分片从节点上获得的资源会变少。 你需要增加更多的硬件资源来提升吞吐量。</p>
 
 <p>但是更多的副本分片数提高了数据冗余量：按照上面的节点配置，我们可以在失去2个节点的情况下不丢失任何数据。</p>
+
 
 
 
