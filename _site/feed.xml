@@ -7,6 +7,75 @@
 		<atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>直言三段论</title>
+				<description>&lt;p&gt;标准式直言三段论:
+组成成分、形式、有效性和制约其正确使用的规则。&lt;/p&gt;
+
+&lt;p&gt;三段论大项、小项和中项的定义:&lt;/p&gt;
+
+&lt;p&gt;大项:结论的谓项&lt;/p&gt;
+
+&lt;p&gt;小项:结论的主项&lt;/p&gt;
+
+&lt;p&gt;中项:两个前提中都出现, 但结论中不出现的第三个项&lt;/p&gt;
+
+&lt;p&gt;继而又分别定义了大前提和小前提,包含大项的前提叫做大前提,包含小项的前提叫做小前提。&lt;/p&gt;
+
+&lt;p&gt;如果几个命题出现的次序正好是:大前提在第一位、小前提在第二位、结论在最后,我们就把这样的三段论指定为标准式的。&lt;/p&gt;
+
+&lt;p&gt;三段论的式与格是如何确定的。
+段论的式由识别三个命题类型的字母来确定,即A、E、1、O中的三个。总共有64个不同式。
+段论的格由中项在前提中的不同位置来确定。&lt;/p&gt;
+
+&lt;p&gt;对四个可能的格描述并定义如下:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;第一格&lt;/strong&gt;:中项在大前提中做主项、在小前提中做谓项。 模式为:M-P,S-M,所以S-P。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;第二格&lt;/strong&gt;:中项在两个前提中都儆谓项。 模式为:P-M,S-M,所以S-P&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;第三格&lt;/strong&gt;:中项在两个前提中都做主项。 模式为:M一P,M-S,所以S-P。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;第四格&lt;/strong&gt;:中项在大前提中做谓项、在小前提中做主项。 模式为:P-M,M-S,所以S-P。&lt;/p&gt;
+
+&lt;p&gt;标准式三段论的式与格如何共同地确定其逻辑形式。由于64个式每一个都有四个格,所以共有256个标准式的直言三段论,但其中只有一小部分是有效式。&lt;/p&gt;
+
+&lt;p&gt;标准式三段论的六条基本规则,同时定义了违反各条规则所造成的谬误。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;规则1&lt;/strong&gt;一个有效的标准式直言三段论必须仅仅包含三个项,在整个论证中,每一个项都须在相同的意义上使用。&lt;/p&gt;
+
+&lt;p&gt;违反本规则所犯的错误:四项谬误。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;规则2&lt;/strong&gt;在一个有效的标准式直言三段论中,中项必须至少在一个前提中周延。&lt;/p&gt;
+
+&lt;p&gt;违反本规则所犯的错误:中项不周延谬误。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;规则3&lt;/strong&gt;在一个有效的标准式直言三段论中,在结论中周延的项在前提中也必须周延。&lt;/p&gt;
+
+&lt;p&gt;违反本规则所犯的错误:大项不当周延谬误,或者小项不当周延谬误&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;规则4&lt;/strong&gt;任何有两个否定前提的标准式三段论都不是有效的。&lt;/p&gt;
+
+&lt;p&gt;违反本规则所犯的错误:排斥前提谬误。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;规则5&lt;/strong&gt;如果一个标准式三段论有一个前提是否定的,那么结论必须是否定的。&lt;/p&gt;
+
+&lt;p&gt;违反本规则所犯的错误:从否定推肯定谬误。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;规则6&lt;/strong&gt;一个有效的标准式直言三段论,如果结论为特称命题,那么其前提不能都是全称的。&lt;/p&gt;
+
+&lt;p&gt;违反本规则所犯的错误:存在谬误。&lt;/p&gt;
+
+&lt;p&gt;标准式直言三段论的15个有效形式的说明,识别它们的格与式,并说明了它们传统的拉丁名称:
+AAA-1( Barbara)、EAE-1( parent)、AII1(Dari)、EIO-1(Fe rio)、AEE-2( Camestres)、EAE-2( Cesare)、AOO2( Baroko)、EIO2( Festino)、AII-3( Datisi)、IAI-3( Disamis)、EIO-3( Ferison)、OAO3 ( Bokardo)、AEE-4( amenes)、IAI-4( Dimaris)、EIO-4( Fresison)。&lt;/p&gt;
+
+&lt;p&gt;15个有效形式的演绎推导,通过排除法程序,证明了只有15个形式是完全遵守三段论的六条基本规则的。&lt;/p&gt;
+</description>
+				<pubDate>Fri, 17 Jan 2020 00:00:00 +0800</pubDate>
+				<link>/logical/2020/01/17/syllogism.html</link>
+				<guid isPermaLink="true">/logical/2020/01/17/syllogism.html</guid>
+			</item>
+		
+			<item>
 				<title>谬误</title>
 				<description>&lt;h3 id=&quot;什么是谬误&quot;&gt;什么是谬误&lt;/h3&gt;
 
@@ -205,6 +274,43 @@
 			</item>
 		
 			<item>
+				<title>日常语言中的论证</title>
+				<description>&lt;p&gt;若非标准式三段论论证中的命题不是标准式直言命題,则需要把它们翻译为标准式,以便用文恩图或者三段论规则加以检验。还给出了九种不同类型的非标准式命题及其相应的翻译方法:&lt;/p&gt;
+
+&lt;p&gt;1.单称命题。&lt;/p&gt;
+
+&lt;p&gt;2.谓词为形容词或形容词短语,而非名词或类词项的直言命题。&lt;/p&gt;
+
+&lt;p&gt;3.主要动词不是标准的联项“是”或“不是”的直言命题。&lt;/p&gt;
+
+&lt;p&gt;4.标准形式的各成分都出现,却没有按标准顺序排列的陈述句。&lt;/p&gt;
+
+&lt;p&gt;5.量词不是“所有”、“没有”或“有”这些标准语词的直言命题。&lt;/p&gt;
+
+&lt;p&gt;6.用“只”、“只有”表述的排斥命题。&lt;/p&gt;
+
+&lt;p&gt;7.不含量词的直言命题。&lt;/p&gt;
+
+&lt;p&gt;8.完全不像标准式直言命题但可以有标准式翻版的命题。&lt;/p&gt;
+
+&lt;p&gt;9.用“除了”等表述的除外命题。&lt;/p&gt;
+
+&lt;p&gt;另外的两种三段论:析取三段论和假言三段论,因其中包含选言命题或假言命题而得名。&lt;/p&gt;
+
+&lt;p&gt;本节说明并例示了三种驳斥二难推论的修辞方法:&lt;/p&gt;
+
+&lt;p&gt;“绕过(或避开)死角法”、&lt;/p&gt;
+
+&lt;p&gt;“直击(擒拿)一角法”、&lt;/p&gt;
+
+&lt;p&gt;“构造反二难法”。&lt;/p&gt;
+</description>
+				<pubDate>Fri, 17 Jan 2020 00:00:00 +0800</pubDate>
+				<link>/logical/2020/01/17/argument-in-everyday-language.html</link>
+				<guid isPermaLink="true">/logical/2020/01/17/argument-in-everyday-language.html</guid>
+			</item>
+		
+			<item>
 				<title>我使用的vim plugin set</title>
 				<description>&lt;p&gt;&lt;img src=&quot;/assets/media/vim-plugins.png&quot; alt=&quot;vim plugins&quot; /&gt;&lt;/p&gt;
 
@@ -359,58 +465,6 @@ e&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 完毕
 				<pubDate>Sun, 05 Jan 2020 00:00:00 +0800</pubDate>
 				<link>/tools/2020/01/05/homebrew-usage-for-me.html</link>
 				<guid isPermaLink="true">/tools/2020/01/05/homebrew-usage-for-me.html</guid>
-			</item>
-		
-			<item>
-				<title>樊登读书思维导图</title>
-				<description>&lt;p&gt;&lt;img src=&quot;/assets/media/dushu/WechatIMG128.jpeg&quot; alt=&quot;/assets/media/dushu/WechatIMG128.jpeg&quot; /&gt;
-&lt;img src=&quot;/assets/media/dushu/WechatIMG129.jpeg&quot; alt=&quot;/assets/media/dushu/WechatIMG129.jpeg&quot; /&gt;
-&lt;img src=&quot;/assets/media/dushu/WechatIMG130.jpeg&quot; alt=&quot;/assets/media/dushu/WechatIMG130.jpeg&quot; /&gt;
-&lt;img src=&quot;/assets/media/dushu/WechatIMG131.jpeg&quot; alt=&quot;/assets/media/dushu/WechatIMG131.jpeg&quot; /&gt;
-&lt;img src=&quot;/assets/media/dushu/WechatIMG132.jpeg&quot; alt=&quot;/assets/media/dushu/WechatIMG132.jpeg&quot; /&gt;
-&lt;img src=&quot;/assets/media/dushu/WechatIMG135.jpeg&quot; alt=&quot;/assets/media/dushu/WechatIMG135.jpeg&quot; /&gt;
-&lt;img src=&quot;/assets/media/dushu/WechatIMG136.jpeg&quot; alt=&quot;/assets/media/dushu/WechatIMG136.jpeg&quot; /&gt;
-&lt;img src=&quot;/assets/media/dushu/WechatIMG137.jpeg&quot; alt=&quot;/assets/media/dushu/WechatIMG137.jpeg&quot; /&gt;
-&lt;img src=&quot;/assets/media/dushu/WechatIMG138.jpeg&quot; alt=&quot;/assets/media/dushu/WechatIMG138.jpeg&quot; /&gt;
-&lt;img src=&quot;/assets/media/dushu/WechatIMG142.jpeg&quot; alt=&quot;/assets/media/dushu/WechatIMG142.jpeg&quot; /&gt;
-&lt;img src=&quot;/assets/media/dushu/WechatIMG143.jpeg&quot; alt=&quot;/assets/media/dushu/WechatIMG143.jpeg&quot; /&gt;
-&lt;img src=&quot;/assets/media/dushu/WechatIMG145.jpeg&quot; alt=&quot;/assets/media/dushu/WechatIMG145.jpeg&quot; /&gt;
-&lt;img src=&quot;/assets/media/dushu/WechatIMG146.jpeg&quot; alt=&quot;/assets/media/dushu/WechatIMG146.jpeg&quot; /&gt;
-&lt;img src=&quot;/assets/media/dushu/WechatIMG147.jpeg&quot; alt=&quot;/assets/media/dushu/WechatIMG147.jpeg&quot; /&gt;
-&lt;img src=&quot;/assets/media/dushu/WechatIMG148.jpeg&quot; alt=&quot;/assets/media/dushu/WechatIMG148.jpeg&quot; /&gt;
-&lt;img src=&quot;/assets/media/dushu/WechatIMG149.jpeg&quot; alt=&quot;/assets/media/dushu/WechatIMG149.jpeg&quot; /&gt;
-&lt;img src=&quot;/assets/media/dushu/WechatIMG150.jpeg&quot; alt=&quot;/assets/media/dushu/WechatIMG150.jpeg&quot; /&gt;
-&lt;img src=&quot;/assets/media/dushu/WechatIMG151.jpeg&quot; alt=&quot;/assets/media/dushu/WechatIMG151.jpeg&quot; /&gt;
-&lt;img src=&quot;/assets/media/dushu/WechatIMG152.jpeg&quot; alt=&quot;/assets/media/dushu/WechatIMG152.jpeg&quot; /&gt;
-&lt;img src=&quot;/assets/media/dushu/WechatIMG153.jpeg&quot; alt=&quot;/assets/media/dushu/WechatIMG153.jpeg&quot; /&gt;
-&lt;img src=&quot;/assets/media/dushu/WechatIMG154.jpeg&quot; alt=&quot;/assets/media/dushu/WechatIMG154.jpeg&quot; /&gt;
-&lt;img src=&quot;/assets/media/dushu/WechatIMG155.jpeg&quot; alt=&quot;/assets/media/dushu/WechatIMG155.jpeg&quot; /&gt;
-&lt;img src=&quot;/assets/media/dushu/WechatIMG157.jpeg&quot; alt=&quot;/assets/media/dushu/WechatIMG157.jpeg&quot; /&gt;
-&lt;img src=&quot;/assets/media/dushu/WechatIMG158.jpeg&quot; alt=&quot;/assets/media/dushu/WechatIMG158.jpeg&quot; /&gt;&lt;/p&gt;
-</description>
-				<pubDate>Sun, 05 Jan 2020 00:00:00 +0800</pubDate>
-				<link>/read/2020/01/05/brain-mind-dushu-note.html</link>
-				<guid isPermaLink="true">/read/2020/01/05/brain-mind-dushu-note.html</guid>
-			</item>
-		
-			<item>
-				<title>使用Google检索好问题</title>
-				<description>&lt;p&gt;为了解决百度检索技术问题质量不高，优秀的工程师都会改用Google。&lt;/p&gt;
-
-&lt;p&gt;我用的是shadowsocks, 为什么选择它，原因有三：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;稳定，用了三年，每年也就一两周不可以使用;&lt;/li&gt;
-  &lt;li&gt;价格不贵，入门版每年$19.95;&lt;/li&gt;
-  &lt;li&gt;分享推荐还可以赚佣金。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;使用Google搜索提高了我解决问题的效率，让我远离因效率低下而导致的加班。&lt;/p&gt;
-
-&lt;p&gt;我的唯一推荐链: &lt;a href=&quot;https://order.shadowsocks.nl/aff.php?aff=9451&quot;&gt;https://order.shadowsocks.nl/aff.php?aff=9451&lt;/a&gt;&lt;/p&gt;
-</description>
-				<pubDate>Sat, 04 Jan 2020 00:00:00 +0800</pubDate>
-				<link>/tools/2020/01/04/use-google-search-good-question.html</link>
-				<guid isPermaLink="true">/tools/2020/01/04/use-google-search-good-question.html</guid>
 			</item>
 		
 	</channel>
