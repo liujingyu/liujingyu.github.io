@@ -65,6 +65,30 @@
 			</item>
 		
 			<item>
+				<title>逻辑学基本概念</title>
+				<description>&lt;p&gt;&lt;strong&gt;逻辑学&lt;/strong&gt;定义为研究用于区分正确推理与不正确推理的方法和原理的学问。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;命题&lt;/strong&gt;是可以被肯定或否定,并且或真或假的东西。&lt;/p&gt;
+
+&lt;p&gt;论证概念, 一串命题,其中之一是结论,另一个(或一些)是用以支持结论的前提。&lt;/p&gt;
+
+&lt;p&gt;说明并且例示分析论证的方法种是&lt;strong&gt;解析法&lt;/strong&gt;,按照逻辑的顺序完整地列出论证中所有的命题;另一种是&lt;strong&gt;图示法&lt;/strong&gt;,所有命题都用数字标示,这些数字以一定的方式相互连接以展现命题之间的逻辑关系。&lt;/p&gt;
+
+&lt;p&gt;讨论辨识论证的几个方面的问题,包括&lt;strong&gt;结论指示词&lt;/strong&gt;和&lt;strong&gt;前提指示词&lt;/strong&gt;、&lt;strong&gt;语境&lt;/strong&gt;在辨识前提和结论中的作用、有可能充当前提的非陈述形式以及包含未明确陈述出来的命题的论证等。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;论证&lt;/strong&gt;和&lt;strong&gt;说明&lt;/strong&gt;之间的区别,解释为什么做出这种区分常常是困难的,这种区分依赖于语段的语境和作者的表达意图。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;演绎和有效性&lt;/strong&gt;,将演绎论证定义为断言其结论从前提必然9地得出的论证,一个有效的演绎论证就是一个假如其前提为真则结论必然为真的论证。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;归纳和或然性&lt;/strong&gt;,将归纳论证定义为其结论具有某种或然性程度,但并非(从前提)必然地得出的论证,说明归纳论证可以被判定好与坏,但不能刻画为有效与无效。&lt;/p&gt;
+
+</description>
+				<pubDate>Fri, 17 Jan 2020 00:00:00 +0800</pubDate>
+				<link>/logical/2020/01/17/basic-concepts-of-logic.html</link>
+				<guid isPermaLink="true">/logical/2020/01/17/basic-concepts-of-logic.html</guid>
+			</item>
+		
+			<item>
 				<title>我使用的vim plugin set</title>
 				<description>&lt;p&gt;&lt;img src=&quot;/assets/media/vim-plugins.png&quot; alt=&quot;vim plugins&quot; /&gt;&lt;/p&gt;
 
