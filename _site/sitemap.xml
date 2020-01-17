@@ -2,15 +2,15 @@
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
 <loc>/elasticsearch/01-concept</loc>
-<lastmod>2020-01-09T13:56:55+08:00</lastmod>
+<lastmod>2020-01-17T12:02:35+08:00</lastmod>
 </url>
 <url>
 <loc>/elasticsearch/02-principle</loc>
-<lastmod>2020-01-09T13:56:55+08:00</lastmod>
+<lastmod>2020-01-17T12:02:35+08:00</lastmod>
 </url>
 <url>
 <loc>/elasticsearch/03-module</loc>
-<lastmod>2020-01-09T13:56:55+08:00</lastmod>
+<lastmod>2020-01-17T12:02:35+08:00</lastmod>
 </url>
 <url>
 <loc>/tools/2020/01/04/use-google-search-good-question.html</loc>
@@ -33,8 +33,12 @@
 <lastmod>2020-01-05T00:00:00+08:00</lastmod>
 </url>
 <url>
+<loc>/logical/2020/01/17/logical-fallacy.html</loc>
+<lastmod>2020-01-17T00:00:00+08:00</lastmod>
+</url>
+<url>
 <loc>/share/week-1</loc>
-<lastmod>2020-01-09T13:56:55+08:00</lastmod>
+<lastmod>2020-01-17T12:02:35+08:00</lastmod>
 </url>
 <url>
 <loc>/about/</loc>
