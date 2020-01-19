@@ -7,6 +7,27 @@
 		<atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>量化理论</title>
+				<description>&lt;p&gt;演绎论证,它们的分支命题不是复合命题, 并且其有效性或无效性取决于这些非复合命题的内在逻辑结构。&lt;/p&gt;
+
+&lt;p&gt;单称命题,介绍了个体变元符号x,个体常项符号(小写字母从a到u)以及表示属性的符号(大写字母)。介绍了命题函项概念: 个含有一个个体变元的表达式,当以一个个体常元代入个体変元时,它就変成一个陈述。因此,通过列举程序,可以从一个命题函项得到一个命题。&lt;/p&gt;
+
+&lt;p&gt;如何用概括的方法,也就是通过使用“每个”、“没有”有些”等量词,从命题函项得到命题。介绍了全称量词(x),其含义是给定任何一个x”,以及存在量词(ヨx),其含义是“至少存在一个如此这般的x”。还用对当方阵表明了全称量化和存在量化之间的关系。&lt;/p&gt;
+
+&lt;p&gt;怎样用命题函项和量词正确地符号化以下四种主要命题: A:全称肯定命题E:全称否定命题I:特称肯定命题O:特称否定命题还对A、E、I、O四种命题之间关系的现代解释进行了说明。&lt;/p&gt;
+
+&lt;p&gt;通过增加以下四个附加规则,扩展了推论规则表: 全称列举,UI 全称概括,UG 存在列举,E 存在概括,EG并且说明了怎样用这四个和前面已提出的19条推论规则,构造演绎论证有效性的形式证明,这种证明涉及非复合命题的内部结构。&lt;/p&gt;
+
+&lt;p&gt;如何设计含有一个、两个或三个个体的模型或可能域以及在该可能域中改写论证的各分支命题,由此用逻辑类推的反驳方法来证明一个涉及量词的论证的无效性。如果我们能展示这样一个可能域,即它至少含有一个使该论证的所有前提在域中为真而结论在其中为假的个体,那么,我们就证明了这个涉及量词的论证无效&lt;/p&gt;
+
+&lt;p&gt;怎样对非三段论论证进行符号化和评价。这些论证含有些不能划归为A、E、I、O命题或单称命题的命题。鉴于除外命题和其他一些命题的复杂性,必须先理解它们的逻辑含义,然后才能用命题函项和量词进行准确的翻译。&lt;/p&gt;
+</description>
+				<pubDate>Sun, 19 Jan 2020 00:00:00 +0800</pubDate>
+				<link>/logical/2020/01/19/quantitative-theory.html</link>
+				<guid isPermaLink="true">/logical/2020/01/19/quantitative-theory.html</guid>
+			</item>
+		
+			<item>
 				<title>直言三段论</title>
 				<description>&lt;p&gt;标准式直言三段论:
 组成成分、形式、有效性和制约其正确使用的规则。&lt;/p&gt;
@@ -330,141 +351,6 @@ AAA-1( Barbara)、EAE-1( parent)、AII1(Dari)、EIO-1(Fe rio)、AEE-2( Camestres
 				<pubDate>Sun, 05 Jan 2020 00:00:00 +0800</pubDate>
 				<link>/plan/2020/01/05/my-2020-plan-and-goals.html</link>
 				<guid isPermaLink="true">/plan/2020/01/05/my-2020-plan-and-goals.html</guid>
-			</item>
-		
-			<item>
-				<title>我使用Homebrew记录</title>
-				<description>&lt;p&gt;homebrew 官方地址：&lt;a href=&quot;https://brew.sh/index_zh-cn&quot;&gt;https://brew.sh/index_zh-cn&lt;/a&gt;.&lt;/p&gt;
-
-&lt;h3 id=&quot;安装homebrew&quot;&gt;安装homebrew:&lt;/h3&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/usr/bin/ruby &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;curl &lt;span class=&quot;nt&quot;&gt;-fsSL&lt;/span&gt; https://raw.githubusercontent.com/Homebrew/install/master/install&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;使用 Homebrew 安装 Apple（或您的 Linux 系统）没有预装但 你需要的东西。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;wget
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Homebrew 会将软件包安装到独立目录，并将其文件软链接至 /usr/local 。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /usr/local
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;find Cellar
-Cellar/wget/1.16.1
-Cellar/wget/1.16.1/bin/wget
-Cellar/wget/1.16.1/share/man/man1/wget.1
-
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; bin
-bin/wget -&amp;gt; ../Cellar/wget/1.16.1/bin/wget
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;完全基于 Git 和 Ruby，所以自由修改的同时你仍可以轻松撤销你的变更或与上游更新合并。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew edit wget &lt;span class=&quot;c&quot;&gt;# 使用 $EDITOR 编辑!&lt;/span&gt;
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Homebrew 的配方都是简单的 Ruby 脚本：&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Wget&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Formula&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;homepage&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;https://www.gnu.org/software/wget/&quot;&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;https://ftp.gnu.org/gnu/wget/wget-1.15.tar.gz&quot;&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;sha256&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;52126be8cf1bddd7536886e74c053ad7d0ed2aa89b4b630f76785bac21695fcd&quot;&lt;/span&gt;
-
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;install&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;system&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;./configure&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;--prefix=&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;prefix&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;system&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;make&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;install&quot;&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;我的安装列表&quot;&gt;我的安装列表&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ brew list -1
-ack
-gdbm
-gettext
-git
-icu4c
-libevent
-libidn2
-libunistring
-libyaml
-ncurses
-node
-openssl@1.1
-pcre2
-pkg-config
-python
-readline
-ruby
-sqlite
-thrift@0.9
-tmux
-tmuxinator
-tree
-wget
-xz
-zplug
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;遇到过的问题&quot;&gt;遇到过的问题:&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;thrift 安装低版本.&lt;/p&gt;
-
-    &lt;p&gt;修改Homebrew的Ruby 脚本。 &lt;code class=&quot;highlighter-rouge&quot;&gt;git clone https://github.com/Homebrew/homebrew-core&lt;/code&gt; 下载到本地，找到thrift 低版本的formula, 然后, &lt;code class=&quot;highlighter-rouge&quot;&gt;brew install &amp;lt;formula&amp;gt;&lt;/code&gt;。&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;磁盘空间不足:&lt;/p&gt;
-
-    &lt;p&gt;每天运行一次&lt;/p&gt;
-    &lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt; &lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
- brew update &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; brew upgrade &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; brew cleanup
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;brew install php@7.1 安装失败.&lt;/p&gt;
-
-    &lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-a&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; git clone https://github.com/Homebrew/homebrew-core
-
-b&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; git log &lt;span class=&quot;nt&quot;&gt;--grep&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;php@7.1
-
-  commit d541efc88be7f81e99deaeb1ad4dba7f718754b4
-  Author: Andreas Braun &amp;lt;git@alcaeus.org&amp;gt;
-  Date:   Thu Nov 28 15:02:50 2019 +0100
-
-      Remove php@7.1
-
-      Closes &lt;span class=&quot;c&quot;&gt;#47385.&lt;/span&gt;
-
-      Signed-off-by: Sean Molenaar &amp;lt;smillerdev@me.com&amp;gt;
-
-  commit 5afd75d0216cdf66bdcadd1b101757260f4a3cef &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;php@7.1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-  Author: BrewTestBot &amp;lt;homebrew-test-bot@lists.sfconservancy.org&amp;gt;
-  Date:   Fri Oct 25 10:00:42 2019 +0000
-
-      php@7.1: update 7.1.33 bottle.
-  ....
-
-c&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; git checkout &lt;span class=&quot;nt&quot;&gt;-b&lt;/span&gt; php@7.1 5afd75d0216cdf66bdcadd1b101757260f4a3cef
-
-d&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; brew &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;Formula/php@7.1.rb
-
-e&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 完毕
-
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-</description>
-				<pubDate>Sun, 05 Jan 2020 00:00:00 +0800</pubDate>
-				<link>/tools/2020/01/05/homebrew-usage-for-me.html</link>
-				<guid isPermaLink="true">/tools/2020/01/05/homebrew-usage-for-me.html</guid>
 			</item>
 		
 	</channel>
