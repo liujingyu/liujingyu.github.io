@@ -7,6 +7,17 @@
 		<atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>职业规划</title>
+				<description>&lt;p&gt;前几天，听PM圈子的老师分享关于项目经理的职业规划，顺便分享了职业规划的大致框架。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/media/职业生涯规划.png&quot; alt=&quot;职业规划&quot; /&gt;&lt;/p&gt;
+</description>
+				<pubDate>Sat, 08 Feb 2020 00:00:00 +0800</pubDate>
+				<link>/plan/2020/02/08/work-plan.html</link>
+				<guid isPermaLink="true">/plan/2020/02/08/work-plan.html</guid>
+			</item>
+		
+			<item>
 				<title>量化理论</title>
 				<description>&lt;p&gt;演绎论证,它们的分支命题不是复合命题, 并且其有效性或无效性取决于这些非复合命题的内在逻辑结构。&lt;/p&gt;
 
@@ -342,15 +353,6 @@ AAA-1( Barbara)、EAE-1( parent)、AII1(Dari)、EIO-1(Fe rio)、AEE-2( Camestres
 				<pubDate>Sun, 05 Jan 2020 00:00:00 +0800</pubDate>
 				<link>/tools/2020/01/05/use-vim-plugins.html</link>
 				<guid isPermaLink="true">/tools/2020/01/05/use-vim-plugins.html</guid>
-			</item>
-		
-			<item>
-				<title>我的2020规划图</title>
-				<description>&lt;p&gt;&lt;img src=&quot;/assets/media/2020.png&quot; alt=&quot;2020-plan-and-goals&quot; /&gt;&lt;/p&gt;
-</description>
-				<pubDate>Sun, 05 Jan 2020 00:00:00 +0800</pubDate>
-				<link>/plan/2020/01/05/my-2020-plan-and-goals.html</link>
-				<guid isPermaLink="true">/plan/2020/01/05/my-2020-plan-and-goals.html</guid>
 			</item>
 		
 	</channel>
