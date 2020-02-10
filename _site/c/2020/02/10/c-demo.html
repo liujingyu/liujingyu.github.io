@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>C 语言 Demo示例学习</title>
+	
+	<meta name="author" content="JY">
+
+	<!-- Enable responsive viewport -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	<!-- Le styles -->
+	<link href="/assets/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/assets/resources/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	<link href="/assets/resources/syntax/syntax.css" rel="stylesheet">
+	<link href="/assets/css/style.css" rel="stylesheet">
+
+	<!-- Le fav and touch icons -->
+	<!-- Update these with your own images
+	<link rel="shortcut icon" href="images/favicon.ico">
+	<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+	-->
+
+	<link rel="alternate" type="application/rss+xml" title="" href="/feed.xml">
+</head>
+
+<body>
+	<nav class="navbar navbar-default visible-xs" role="navigation">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			
+			<a type="button" class="navbar-toggle nav-link" href="http://github.com/liujingyu">
+				<i class="fa fa-github"></i>
+			</a>
+			
+			
+			
+			<a type="button" class="navbar-toggle nav-link" href="mailto:jingyu525@gmail.com">
+				<i class="fa fa-envelope"></i>
+			</a>
+			
+			<a class="navbar-brand" href="/">
+                <img src="/assets/media/dragon.jpeg" class="img-circle" />
+				JY
+			</a>
+		</div>
+
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="/">Home</a></li>
+				<li><a href="/categories.html">Categories</a></li>
+				<li><a href="/tags.html">Tags</a></li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</nav>
+
+	<!-- nav-menu-dropdown -->
+	<div class="btn-group hidden-xs" id="nav-menu">
+		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+			<i class="fa fa-bars"></i>
+		</button>
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="/"><i class="fa fa-home"></i>Home</a></li>
+			<li><a href="/categories.html"><i class="fa fa-folder"></i>Categories</a></li>
+			<li><a href="/tags.html"><i class="fa fa-tags"></i>Tags</a></li>
+			<li class="divider"></li>
+			<li><a href="#"><i class="fa fa-arrow-up"></i>Top of Page</a></li>
+		</ul>
+	</div>
+
+	<div class="col-sm-3 sidebar hidden-xs" style="background: url(/assets/media/sky.png) no-repeat !important;">
+		<!-- sidebar.html -->
+<header class="sidebar-header" role="banner">
+	<a href="/">
+        <img src="/assets/media/dragon.jpeg" class="img-circle"  height="150" width="150" />
+	</a>
+	<h3 class="title">
+        <a href="/">JY</a>
+    </h3>
+</header>
+
+
+<div id="bio" class="text-center">
+	目前就职于小猪短租
+</div>
+
+
+<div id="contact-list" class="text-center">
+	<ul class="list-unstyled list-inline">
+		
+		<li>
+			<a class="btn btn-default btn-sm" href="https://github.com/liujingyu">
+				<i class="fa fa-github-alt fa-lg"></i>
+			</a>
+		</li>
+		
+		
+		<li>
+			<a class="btn btn-default btn-sm" href="mailto:jingyu525@gmail.com">
+				<i class="fa fa-envelope fa-lg"></i>
+			</a>
+		</li>
+		
+		<li>
+			<a class="btn btn-default btn-sm" href="/feed.xml">
+				<i class="fa fa-rss fa-lg"></i>
+			</a>
+		</li>
+	</ul>
+	<ul class="list-unstyled list-inline">
+		<li>
+            <a class="btn btn-default btn-sm" href="/about">
+                关于
+			</a>
+		</li>
+		<li>
+            <a class="btn btn-default btn-sm" href="/elasticsearch">
+                elasticsearch
+			</a>
+		</li>
+		<li>
+            <a class="btn btn-default btn-sm" href="/open-source">
+                开源项目
+			</a>
+		</li>
+	</ul>
+</div>
+<!-- sidebar.html end -->
+
+	</div>
+
+	<div class="col-sm-9 col-sm-offset-3">
+		<div class="page-header">
+  <h1>C 语言 Demo示例学习 </h1>
+</div>
+	
+<article>
+
+	<div class="col-sm-10">
+	 <span class="post-date">
+	   
+	   February 
+	   10th,
+	   
+	   2020
+	 </span>
+	  <div class="article_body">
+	  <h3 id="函数指针">函数指针</h3>
+
+<p>函数指针是指向函数的指针变量。</p>
+
+<p>通常我们说的指针变量是指向一个整型、字符型或数组等变量，而函数指针是指向函数。</p>
+
+<p>函数指针可以像一般函数一样，用于调用函数、传递参数。</p>
+
+<p>函数指针变量的声明：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typedef int (*fun_ptr)(int,int); // 声明一个指向同样参数、返回值的函数指针类型
+</code></pre></div></div>
+
+<p>实例</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;stdio.h&gt;
+
+int max(int x, int y)
+{
+    return x &gt; y ? x : y;
+}
+
+int main(void)
+{
+    /* p 是函数指针 */
+    int (* p)(int, int) = &amp; max; // &amp;可以省略
+    int a, b, c, d;
+
+    printf("请输入三个数字:");
+    scanf("%d %d %d", &amp; a, &amp; b, &amp; c);
+
+    /* 与直接调用函数等价，d = max(max(a, b), c) */
+    d = p(p(a, b), c);
+
+    printf("最大的数字是: %d\n", d);
+
+    return 0;
+}
+</code></pre></div></div>
+
+<p>编译执行，输出结果如下：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>请输入三个数字:1 2 3
+最大的数字是: 3
+</code></pre></div></div>
+
+<h3 id="回调函数">回调函数</h3>
+
+<p>函数指针作为某个函数的参数</p>
+
+<p>函数指针变量可以作为某个函数的参数来使用的，回调函数就是一个通过函数指针调用的函数。</p>
+
+<p>简单讲：回调函数是由别人的函数执行时调用你实现的函数。</p>
+
+<h3 id="c-typedef">C typedef</h3>
+
+<p>C 语言提供了 typedef 关键字，您可以使用它来为类型取一个新的名字。下面的实例为单字节数字定义了一个术语 BYTE：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typedef unsigned char BYTE;
+</code></pre></div></div>
+<p>在这个类型定义之后，标识符 BYTE 可作为类型 unsigned char 的缩写，例如：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BYTE  b1, b2;
+</code></pre></div></div>
+<p>按照惯例，定义时会大写字母，以便提醒用户类型名称是一个象征性的缩写，但您也可以使用小写字母，如下：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typedef unsigned char byte;
+</code></pre></div></div>
+
+<p>示例</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;stdio.h&gt;
+#include &lt;string.h&gt;
+
+typedef struct Books
+{
+   char  title[50];
+   char  author[50];
+   char  subject[100];
+   int   book_id;
+} Book;
+
+int main( )
+{
+   Book book;
+
+   strcpy( book.title, "C 教程");
+   strcpy( book.author, "Runoob");
+   strcpy( book.subject, "编程语言");
+   book.book_id = 12345;
+
+   printf( "书标题 : %s\n", book.title);
+   printf( "书作者 : %s\n", book.author);
+   printf( "书类目 : %s\n", book.subject);
+   printf( "书 ID : %d\n", book.book_id);
+
+   return 0;
+}
+</code></pre></div></div>
+
+<h3 id="typedef-vs-define">typedef vs #define</h3>
+
+<p>#define 是 C 指令，用于为各种数据类型定义别名，与 typedef 类似，但是它们有以下几点不同：</p>
+<ul>
+  <li>typedef 仅限于为类型定义符号名称，#define 不仅可以为类型定义别名，也能为数值定义别名，比如您可以定义 1 为 ONE。</li>
+  <li>typedef 是由编译器执行解释的，#define 语句是由预编译器进行处理的。</li>
+</ul>
+
+<p>下面是 #define 的最简单的用法：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;stdio.h&gt;
+
+#define TRUE  1
+#define FALSE 0
+
+int main( )
+{
+   printf( "TRUE 的值: %d\n", TRUE);
+   printf( "FALSE 的值: %d\n", FALSE);
+
+   return 0;
+}
+</code></pre></div></div>
+
+<h3 id="枚举类型vs常量">枚举类型vs常量</h3>
+
+<p>枚举常量是另外一种类型的常量。枚举是一个常量整型值的列表。</p>
+
+<h3 id="c-enum枚举">C enum(枚举)</h3>
+
+<p>枚举是 C 语言中的一种基本数据类型，它可以让数据更简洁，更易读。</p>
+
+<p>枚举语法定义格式为：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>enum　枚举名　{枚举元素1,枚举元素2,……};
+</code></pre></div></div>
+
+<p>接下来我们举个例子，比如：一星期有 7 天，如果不用枚举，我们需要使用 #define 来为每个整数定义一个别名：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#define MON  1
+#define TUE  2
+#define WED  3
+#define THU  4
+#define FRI  5
+#define SAT  6
+#define SUN  7
+</code></pre></div></div>
+
+<p>这个看起来代码量就比较多，接下来我们看看使用枚举的方式：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>enum DAY
+{
+      MON=1, TUE, WED, THU, FRI, SAT, SUN
+};
+</code></pre></div></div>
+
+<h3 id="c-命令行参数">C 命令行参数</h3>
+
+<p>执行程序时，可以从命令行传值给 C 程序。这些值被称为命令行参数，它们对程序很重要，特别是当您想从外部控制程序，而不是在代码内对这些值进行硬编码时，就显得尤为重要了。</p>
+
+<p>命令行参数是使用 main() 函数参数来处理的，其中，argc 是指传入参数的个数，argv[] 是一个指针数组，指向传递给程序的每个参数。下面是一个简单的实例，检查命令行是否有提供参数，并根据参数执行相应的动作：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;stdio.h&gt;
+
+int main( int argc, char *argv[] )
+{
+   if( argc == 2 )
+   {
+      printf("The argument supplied is %s\n", argv[1]);
+   }
+   else if( argc &gt; 2 )
+   {
+      printf("Too many arguments supplied.\n");
+   }
+   else
+   {
+      printf("One argument expected.\n");
+   }
+}
+</code></pre></div></div>
+<p>使用一个参数，编译并执行上面的代码，它会产生下列结果：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$./a.out testing
+The argument supplied is testing
+</code></pre></div></div>
+
+<h3 id="c-内存管理">C 内存管理</h3>
+
+<p><code class="highlighter-rouge">void *calloc(int num, int size);</code>
+在内存中动态地分配 num 个长度为 size 的连续空间，并将每一个字节都初始化为 0。所以它的结果是分配了 <code class="highlighter-rouge">num*size</code> 个字节长度的内存空间，并且每个字节的值都是0。</p>
+
+<p><code class="highlighter-rouge">void free(void *address);</code>
+该函数释放 address 所指向的内存块,释放的是动态分配的内存空间。</p>
+
+<p><code class="highlighter-rouge">void *malloc(int num);</code>
+在堆区分配一块指定大小的内存空间，用来存放数据。这块内存空间在函数执行完成后不会被初始化，它们的值是未知的。</p>
+
+<p><code class="highlighter-rouge">void *realloc(void *address, int newsize);</code>
+该函数重新分配内存，把内存扩展到 newsize。</p>
+
+<p>注意：void * 类型表示未确定类型的指针。C、C++ 规定 void * 类型可以通过类型转换强制转换为任何其它类型的指针。</p>
+
+<h4 id="动态分配内存">动态分配内存</h4>
+
+<p>编程时，如果您预先知道数组的大小，那么定义数组时就比较容易。例如，一个存储人名的数组，它最多容纳 100 个字符，所以您可以定义数组，如下所示：</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>char name[100];
+</code></pre></div></div>
+
+<p>但是，如果您预先不知道需要存储的文本长度，例如您向存储有关一个主题的详细描述。在这里，我们需要定义一个指针，该指针指向未定义所需内存大小的字符，后续再根据需求来分配内存，如下所示：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+int main()
+{
+   char name[100];
+   char *description;
+
+   strcpy(name, "Zara Ali");
+
+   /* 动态分配内存 */
+   description = (char *)malloc( 200 * sizeof(char) );
+   if( description == NULL )
+   {
+      fprintf(stderr, "Error - unable to allocate required memory\n");
+   }
+   else
+   {
+      strcpy( description, "Zara ali a DPS student in class 10th");
+   }
+   printf("Name = %s\n", name );
+   printf("Description: %s\n", description );
+}
+</code></pre></div></div>
+
+<p>上面的程序也可以使用 calloc() 来编写，只需要把 malloc 替换为 calloc 即可，如下所示：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>calloc(200, sizeof(char));
+</code></pre></div></div>
+
+<p>当动态分配内存时，您有完全控制权，可以传递任何大小的值。而那些预先定义了大小的数组，一旦定义则无法改变大小。</p>
+
+<h4 id="重新调整内存的大小和释放内存">重新调整内存的大小和释放内存</h4>
+
+<p>当程序退出时，操作系统会自动释放所有分配给程序的内存，但是，建议您在不需要内存时，都应该调用函数 free() 来释放内存。</p>
+
+<p>或者，您可以通过调用函数 realloc() 来增加或减少已分配的内存块的大小。让我们使用 realloc() 和 free() 函数，再次查看上面的实例：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+int main()
+{
+   char name[100];
+   char *description;
+
+   strcpy(name, "Zara Ali");
+
+   /* 动态分配内存 */
+   description = (char *)malloc( 30 * sizeof(char) );
+   if( description == NULL )
+   {
+      fprintf(stderr, "Error - unable to allocate required memory\n");
+   }
+   else
+   {
+      strcpy( description, "Zara ali a DPS student.");
+   }
+   /* 假设您想要存储更大的描述信息 */
+   description = (char *) realloc( description, 100 * sizeof(char) );
+   if( description == NULL )
+   {
+      fprintf(stderr, "Error - unable to allocate required memory\n");
+   }
+   else
+   {
+      strcat( description, "She is in class 10th");
+   }
+
+   printf("Name = %s\n", name );
+   printf("Description: %s\n", description );
+
+   /* 使用 free() 函数释放内存 */
+   free(description);
+}
+</code></pre></div></div>
+
+<h3 id="c-预处理器">C 预处理器</h3>
+
+<p>C 预处理器不是编译器的组成部分，但是它是编译过程中一个单独的步骤。简言之，C 预处理器只不过是一个文本替换工具而已，它们会指示编译器在实际编译之前完成所需的预处理。我们将把 C 预处理器（C Preprocessor）简写为 CPP。</p>
+
+<p>所有的预处理器命令都是以井号（#）开头。它必须是第一个非空字符，为了增强可读性，预处理器指令应从第一列开始。下面列出了所有重要的预处理器指令：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>指令	描述
+#define	定义宏
+#include	包含一个源代码文件
+#undef	取消已定义的宏
+#ifdef	如果宏已经定义，则返回真
+#ifndef	如果宏没有定义，则返回真
+#if	如果给定条件为真，则编译下面代码
+#else	#if 的替代方案
+#elif	如果前面的 #if 给定条件不为真，当前条件为真，则编译下面代码
+#endif	结束一个 #if……#else 条件编译块
+#error	当遇到标准错误时，输出错误消息
+#pragma	使用标准化方法，向编译器发布特殊的命令到编译器中
+</code></pre></div></div>
+
+	  </div>
+
+		
+		<ul class="tag_box list-unstyled list-inline">
+		  <li><i class="fa fa-folder-open"></i></li>
+		  
+		  
+			 
+				<li><a href="/categories.html#C-ref">
+					C <span>(1)</span>
+					
+				</a></li>
+			
+		  
+		</ul>
+		  
+
+		
+		<ul class="list-inline">
+		  <li><i class="fa fa-tags"></i></li>
+		  
+		  
+			 
+				<li>
+					<a href="/tags.html#C-ref">
+					C <span>(1)</span>
+					
+					</a>
+				</li>
+			
+		  
+		  
+		</ul>
+		  
+
+		<hr>
+
+		<div>
+      <section class="share col-sm-6">
+        <h4 class="section-title">Share Post</h4>
+        <a class="btn btn-default btn-sm twitter" href="http://twitter.com/share?text=C 语言 Demo示例学习"
+           onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+          <i class="fa fa-twitter fa-lg"></i>
+          Twitter
+        </a>
+        <a class="btn btn-default btn-sm facebook" href="https://www.facebook.com/sharer/sharer.php"
+           onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+          <i class="fa fa-facebook fa-lg"></i>
+          Facebook
+        </a>
+        <a class="btn btn-default btn-sm gplus"
+           onclick="window.open('https://plus.google.com/share?url='+window.location.href, 'google-plus-share', 'width=490,height=530');return false;">
+          <i class="fa fa-google-plus fa-lg"></i>
+          Google+
+        </a>
+      </section>
+
+      <section class="col-sm-6 author">
+        <img src="/assets/media/dragon.jpeg" class="img-rounded author-image" width="100" height="100" />
+        <h4 class="section-title author-name">JY</h4>
+        <p class="author-bio">目前就职于小猪短租</p>
+      </section>
+    </div>
+
+    <div class="clearfix"></div>
+
+		<ul class="pager">
+		  
+		  <li class="previous"><a href="/plan/2020/02/08/work-plan.html" title="职业规划">&larr; Previous</a></li>
+		  
+		  
+			<li class="next disabled"><a>Next &rarr;</a>
+		  
+		</ul>
+
+		<hr>
+	</div>
+	
+	<div class="col-sm-2 sidebar-2">
+	
+	</div>
+</article>
+<div class="clearfix"></div>
+
+
+
+
+
+		<footer>
+			<hr/>
+			<p>
+				&copy; 2020 JY with <a href="http://jekyllrb.com/">Jekyll</a>. Theme: <a href="https://github.com/dbtek/dbyll">dbyll</a> by dbtek.
+			</p>
+		</footer>
+	</div>
+
+	<script type="text/javascript" src="/assets/resources/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="/assets/resources/bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/assets/js/app.js"></script>
+</body>
+</html>
+
+
+
