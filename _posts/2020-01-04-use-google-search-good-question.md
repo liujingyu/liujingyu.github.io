@@ -17,4 +17,4 @@ markdown: kramdown
 
 使用Google搜索提高了我解决问题的效率，让我远离因效率低下而导致的加班。
 
-我的唯一推荐链: [https://order.shadowsocks.nl/aff.php?aff=9451](https://order.shadowsocks.nl/aff.php?aff=9451)
+我的唯一推荐链: [https://portal.shadowsocks.nl/aff.php?aff=9451](https://order.shadowsocks.nl/aff.php?aff=9451)
