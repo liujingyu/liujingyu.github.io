@@ -25,7 +25,7 @@
     &lt;p&gt;&lt;a href=&quot;https://github.com/EZLippi/Tinyhttpd&quot;&gt;源码Tinyhttpd&lt;/a&gt;&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;&lt;img src=&quot;https://img-blog.csdn.net/20160413230616951&quot; alt=&quot;流程图&quot; /&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;img src=&quot;/assets/media/img-blog.csdn.net/20160413230616951.png&quot; alt=&quot;流程图&quot; /&gt;&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
     &lt;p&gt;阅读代码顺序 &lt;code class=&quot;highlighter-rouge&quot;&gt;main -&amp;gt; startup -&amp;gt; accept_request -&amp;gt; execute_cgi&lt;/code&gt;&lt;/p&gt;

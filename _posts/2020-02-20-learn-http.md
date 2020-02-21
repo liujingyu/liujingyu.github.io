@@ -22,7 +22,7 @@ HTTP是Hypertext Transfer Protocol 的缩写，超文本传输协议
 
 - [源码Tinyhttpd](https://github.com/EZLippi/Tinyhttpd)
 
-- ![流程图](https://img-blog.csdn.net/20160413230616951)
+- ![流程图](/assets/media/img-blog.csdn.net/20160413230616951.png)
 
 - 阅读代码顺序 `main -> startup -> accept_request -> execute_cgi`
 
