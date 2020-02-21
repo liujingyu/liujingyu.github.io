@@ -24,7 +24,7 @@ HTTP是Hypertext Transfer Protocol 的缩写，超文本传输协议
 
 ### HTTP 报文结构
 
-![http message structure](/assets/media/20180826161800456.png)
+![http message structure](/assets/media/20180826205639881.png)
 
 ![request example](/assets/media/20180826154938556.png)
 
@@ -34,7 +34,7 @@ HTTP是Hypertext Transfer Protocol 的缩写，超文本传输协议
 
 - [源码Tinyhttpd](https://github.com/EZLippi/Tinyhttpd)
 
-- ![流程图](/assets/media/img-blog.csdn.net/20160413230616951.png)
+- ![流程图](/assets/media/20160413230616951.png)
 
 - 阅读代码顺序 `main -> startup -> accept_request -> execute_cgi`
 

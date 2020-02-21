@@ -24,7 +24,7 @@
 
 &lt;h3 id=&quot;http-报文结构&quot;&gt;HTTP 报文结构&lt;/h3&gt;
 
-&lt;p&gt;&lt;img src=&quot;/assets/media/20180826161800456.png&quot; alt=&quot;http message structure&quot; /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/media/20180826205639881.png&quot; alt=&quot;http message structure&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;&lt;img src=&quot;/assets/media/20180826154938556.png&quot; alt=&quot;request example&quot; /&gt;&lt;/p&gt;
 
@@ -37,7 +37,7 @@
     &lt;p&gt;&lt;a href=&quot;https://github.com/EZLippi/Tinyhttpd&quot;&gt;源码Tinyhttpd&lt;/a&gt;&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
-    &lt;p&gt;&lt;img src=&quot;/assets/media/img-blog.csdn.net/20160413230616951.png&quot; alt=&quot;流程图&quot; /&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;img src=&quot;/assets/media/20160413230616951.png&quot; alt=&quot;流程图&quot; /&gt;&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
     &lt;p&gt;阅读代码顺序 &lt;code class=&quot;highlighter-rouge&quot;&gt;main -&amp;gt; startup -&amp;gt; accept_request -&amp;gt; execute_cgi&lt;/code&gt;&lt;/p&gt;
