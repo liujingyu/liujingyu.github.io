@@ -18,6 +18,18 @@
 
 &lt;h2 id=&quot;如何学习http&quot;&gt;如何学习HTTP&lt;/h2&gt;
 
+&lt;h3 id=&quot;client--server-交互场景&quot;&gt;client &amp;amp; server 交互场景&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/media/20180826161800456.png&quot; alt=&quot;client&amp;amp;server&quot; /&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;http-报文结构&quot;&gt;HTTP 报文结构&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/media/20180826161800456.png&quot; alt=&quot;http message structure&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/media/20180826154938556.png&quot; alt=&quot;request example&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/media/20180826155011558.png&quot; alt=&quot;response example&quot; /&gt;&lt;/p&gt;
+
 &lt;h3 id=&quot;经典开源的http-server项目&quot;&gt;经典开源的HTTP Server项目&lt;/h3&gt;
 
 &lt;ul&gt;
@@ -63,32 +75,28 @@ unimplemented: 返回给浏览器表明收到的 HTTP 请求所用的 method 不
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;参考链接&quot;&gt;参考链接&lt;/h2&gt;
-
 &lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.ruanyifeng.com/blog/2014/05/restful_api.html&quot;&gt;RESTful API 设计指南&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;http://www.ruanyifeng.com/blog/2011/09/restful.html&quot;&gt;理解RESTful架构&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://blog.csdn.net/u013644957/article/details/51147723&quot;&gt;Tinyhttpd for Ubuntu 14.04 中文详细注释版&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://blog.csdn.net/thisinnocence/article/details/82081887&quot;&gt;HTTP1.1 基础: 请求和响应的消息交互细节&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://datatracker.ietf.org/doc/rfc2616/&quot;&gt;RFC文档&lt;/a&gt;
     &lt;ul&gt;
       &lt;li&gt;摘要&lt;/li&gt;
       &lt;li&gt;The Hypertext Transfer Protocol (HTTP) is an application-level
-  protocol for distributed, collaborative, hypermedia information
-  systems. It is a generic, stateless, protocol which can be used for
-  many tasks beyond its use for hypertext, such as name servers and
-  distributed object management systems, through extension of its
-  request methods, error codes and headers [47]. A feature of HTTP is
-  the typing and negotiation of data representation, allowing systems
-  to be built independently of the data being transferred.&lt;/li&gt;
+ protocol for distributed, collaborative, hypermedia information
+ systems. It is a generic, stateless, protocol which can be used for
+ many tasks beyond its use for hypertext, such as name servers and
+ distributed object management systems, through extension of its
+ request methods, error codes and headers [47]. A feature of HTTP is
+ the typing and negotiation of data representation, allowing systems
+ to be built independently of the data being transferred.&lt;/li&gt;
     &lt;/ul&gt;
 
     &lt;p&gt;HTTP has been in use by the World-Wide Web global information
-  initiative since 1990. This specification defines the protocol
-  referred to as “HTTP/1.1”, and is an update to RFC 2068 [33].&lt;/p&gt;
+ initiative since 1990. This specification defines the protocol
+ referred to as “HTTP/1.1”, and is an update to RFC 2068 [33].&lt;/p&gt;
   &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;a href=&quot;http://www.ruanyifeng.com/blog/2014/05/restful_api.html&quot;&gt;RESTful API 设计指南&lt;/a&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;a href=&quot;http://www.ruanyifeng.com/blog/2011/09/restful.html&quot;&gt;理解RESTful架构&lt;/a&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://blog.csdn.net/u013644957/article/details/51147723&quot;&gt;Tinyhttpd for Ubuntu 14.04 中文详细注释版&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 
 </description>

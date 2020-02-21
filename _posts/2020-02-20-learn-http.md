@@ -18,6 +18,18 @@ HTTP是Hypertext Transfer Protocol 的缩写，超文本传输协议
 
 ## 如何学习HTTP
 
+### client & server 交互场景
+
+![client&server](/assets/media/20180826161800456.png)
+
+### HTTP 报文结构
+
+![http message structure](/assets/media/20180826161800456.png)
+
+![request example](/assets/media/20180826154938556.png)
+
+![response example](/assets/media/20180826155011558.png)
+
 ### 经典开源的HTTP Server项目
 
 - [源码Tinyhttpd](https://github.com/EZLippi/Tinyhttpd)
@@ -53,8 +65,11 @@ unimplemented: 返回给浏览器表明收到的 HTTP 请求所用的 method 不
 - [Make 命令教程](http://www.ruanyifeng.com/blog/2015/02/make.html)
 
 ## 参考链接
-
-* [RFC文档](https://datatracker.ietf.org/doc/rfc2616/)
+ * [RESTful API 设计指南](http://www.ruanyifeng.com/blog/2014/05/restful_api.html)
+ * [理解RESTful架构](http://www.ruanyifeng.com/blog/2011/09/restful.html)
+ * [Tinyhttpd for Ubuntu 14.04 中文详细注释版](https://blog.csdn.net/u013644957/article/details/51147723)
+ * [HTTP1.1 基础: 请求和响应的消息交互细节](https://blog.csdn.net/thisinnocence/article/details/82081887)
+ * [RFC文档](https://datatracker.ietf.org/doc/rfc2616/)
     - 摘要
 	-    The Hypertext Transfer Protocol (HTTP) is an application-level
     protocol for distributed, collaborative, hypermedia information
@@ -69,9 +84,4 @@ unimplemented: 返回给浏览器表明收到的 HTTP 请求所用的 method 不
     initiative since 1990. This specification defines the protocol
     referred to as "HTTP/1.1", and is an update to RFC 2068 [33].
 
- * [RESTful API 设计指南](http://www.ruanyifeng.com/blog/2014/05/restful_api.html)
-
- * [理解RESTful架构](http://www.ruanyifeng.com/blog/2011/09/restful.html)
-
- * [Tinyhttpd for Ubuntu 14.04 中文详细注释版](https://blog.csdn.net/u013644957/article/details/51147723)
 
