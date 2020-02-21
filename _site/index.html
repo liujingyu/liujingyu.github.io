@@ -155,6 +155,104 @@
   <span class="post-date">
     
     February
+    20th,
+    
+    2020
+  </span>
+
+  <h2>
+    <a href="/c%20protocol/2020/02/20/learn-http.html">HTTP</a>
+  </h2>
+
+  <div>
+    
+    <h2 id="http是什么">HTTP是什么</h2>
+
+<p>HTTP是Hypertext Transfer Protocol 的缩写，超文本传输协议</p>
+
+<h2 id="为什么学习http">为什么学习HTTP</h2>
+
+<p>网络应用程序，分为前端和后端两个部分。当前的发展趋势，就是前端设备层出不穷（手机、平板、桌面电脑、其他专用设备……）。RESTful API是目前比较成熟的一套互联网应用程序的API设计理论, 底层协议正是使用的Http协议。做为后端开发的同学，有必要了解底层的HTTP协议内容及实现逻辑，有利于我们清楚整个具体过程到底发生了什么。</p>
+
+<h2 id="如何学习http">如何学习HTTP</h2>
+
+<h3 id="经典开源的http-server项目">经典开源的HTTP Server项目</h3>
+
+<ul>
+  <li>
+    <p><a href="https://github.com/EZLippi/Tinyhttpd">源码Tinyhttpd</a></p>
+  </li>
+  <li>
+    <p><img src="https://img-blog.csdn.net/20160413230616951" alt="流程图" /></p>
+  </li>
+  <li>
+    <p>阅读代码顺序 <code class="highlighter-rouge">main -&gt; startup -&gt; accept_request -&gt; execute_cgi</code></p>
+  </li>
+  <li>每个函数作用
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>accept_request:  处理从套接字上监听到的一个 HTTP 请求，在这里可以很大一部分地体现服务器处理请求流程。
+bad_request: 返回给客户端这是个错误请求，HTTP 状态吗 400 BAD REQUEST.
+cat: 读取服务器上某个文件写到 socket 套接字。
+cannot_execute: 主要处理发生在执行 cgi 程序时出现的错误。
+error_die: 把错误信息写到 perror 并退出。
+execute_cgi: 运行 cgi 程序的处理，也是个主要函数。
+get_line: 读取套接字的一行，把回车换行等情况都统一为换行符结束。
+headers: 把 HTTP 响应的头部写到套接字。
+not_found: 主要处理找不到请求的文件时的情况。
+sever_file: 调用 cat 把服务器文件返回给浏览器。
+startup: 初始化 httpd 服务，包括建立套接字，绑定端口，进行监听等。
+unimplemented: 返回给浏览器表明收到的 HTTP 请求所用的 method 不被支持。
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>Docker C 环境, 调试PHP源码用的Docker环境, 大家可以试试 <a href="https://github.com/liujingyu/docker-debug-php-src">docker-debug-php-src</a></p>
+  </li>
+  <li>
+    <p><a href="https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/gdb.html">GDB 工具参考</a></p>
+  </li>
+  <li><a href="http://www.ruanyifeng.com/blog/2015/02/make.html">Make 命令教程</a></li>
+</ul>
+
+<h2 id="参考链接">参考链接</h2>
+
+<ul>
+  <li><a href="https://datatracker.ietf.org/doc/rfc2616/">RFC文档</a>
+    <ul>
+      <li>摘要</li>
+      <li>The Hypertext Transfer Protocol (HTTP) is an application-level
+  protocol for distributed, collaborative, hypermedia information
+  systems. It is a generic, stateless, protocol which can be used for
+  many tasks beyond its use for hypertext, such as name servers and
+  distributed object management systems, through extension of its
+  request methods, error codes and headers [47]. A feature of HTTP is
+  the typing and negotiation of data representation, allowing systems
+  to be built independently of the data being transferred.</li>
+    </ul>
+
+    <p>HTTP has been in use by the World-Wide Web global information
+  initiative since 1990. This specification defines the protocol
+  referred to as “HTTP/1.1”, and is an update to RFC 2068 [33].</p>
+  </li>
+  <li>
+    <p><a href="http://www.ruanyifeng.com/blog/2014/05/restful_api.html">RESTful API 设计指南</a></p>
+  </li>
+  <li>
+    <p><a href="http://www.ruanyifeng.com/blog/2011/09/restful.html">理解RESTful架构</a></p>
+  </li>
+  <li><a href="https://blog.csdn.net/u013644957/article/details/51147723">Tinyhttpd for Ubuntu 14.04 中文详细注释版</a></li>
+</ul>
+
+
+    
+  </div>
+
+</article>
+
+
+<article class="home">
+
+  <span class="post-date">
+    
+    February
     10th,
     
     2020
@@ -892,58 +990,6 @@ AAA-1( Barbara)、EAE-1( parent)、AII1(Dari)、EIO-1(Fe rio)、AEE-2( Camestres
 
 <p><strong>归纳和或然性</strong>,将归纳论证定义为其结论具有某种或然性程度,但并非(从前提)必然地得出的论证,说明归纳论证可以被判定好与坏,但不能刻画为有效与无效。</p>
 
-
-    
-  </div>
-
-</article>
-
-
-<article class="home">
-
-  <span class="post-date">
-    
-    January
-    17th,
-    
-    2020
-  </span>
-
-  <h2>
-    <a href="/logical/2020/01/17/argument-in-everyday-language.html">日常语言中的论证</a>
-  </h2>
-
-  <div>
-    
-    <p>若非标准式三段论论证中的命题不是标准式直言命題,则需要把它们翻译为标准式,以便用文恩图或者三段论规则加以检验。还给出了九种不同类型的非标准式命题及其相应的翻译方法:</p>
-
-<p>1.单称命题。</p>
-
-<p>2.谓词为形容词或形容词短语,而非名词或类词项的直言命题。</p>
-
-<p>3.主要动词不是标准的联项“是”或“不是”的直言命题。</p>
-
-<p>4.标准形式的各成分都出现,却没有按标准顺序排列的陈述句。</p>
-
-<p>5.量词不是“所有”、“没有”或“有”这些标准语词的直言命题。</p>
-
-<p>6.用“只”、“只有”表述的排斥命题。</p>
-
-<p>7.不含量词的直言命题。</p>
-
-<p>8.完全不像标准式直言命题但可以有标准式翻版的命题。</p>
-
-<p>9.用“除了”等表述的除外命题。</p>
-
-<p>另外的两种三段论:析取三段论和假言三段论,因其中包含选言命题或假言命题而得名。</p>
-
-<p>本节说明并例示了三种驳斥二难推论的修辞方法:</p>
-
-<p>“绕过(或避开)死角法”、</p>
-
-<p>“直击(擒拿)一角法”、</p>
-
-<p>“构造反二难法”。</p>
 
     
   </div>
