@@ -42,6 +42,10 @@ startup: 初始化 httpd 服务，包括建立套接字，绑定端口，进行�
 unimplemented: 返回给浏览器表明收到的 HTTP 请求所用的 method 不被支持。
 ```
 
+- cgi页面请求响应处理的核心函数—— `execute_cgi()`
+
+![Pipe state](/assets/media/2018050721251980.png)
+
 - Docker C 环境, 调试PHP源码用的Docker环境, 大家可以试试 [docker-debug-php-src](https://github.com/liujingyu/docker-debug-php-src)
 
 - [GDB 工具参考](https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/gdb.html)

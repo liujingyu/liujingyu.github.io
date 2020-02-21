@@ -45,13 +45,21 @@ startup: 初始化 httpd 服务，包括建立套接字，绑定端口，进行�
 unimplemented: 返回给浏览器表明收到的 HTTP 请求所用的 method 不被支持。
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
   &lt;/li&gt;
+  &lt;li&gt;cgi页面请求响应处理的核心函数—— &lt;code class=&quot;highlighter-rouge&quot;&gt;execute_cgi()&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/media/2018050721251980.png&quot; alt=&quot;Pipe state&quot; /&gt;&lt;/p&gt;
+
+&lt;ul&gt;
   &lt;li&gt;
     &lt;p&gt;Docker C 环境, 调试PHP源码用的Docker环境, 大家可以试试 &lt;a href=&quot;https://github.com/liujingyu/docker-debug-php-src&quot;&gt;docker-debug-php-src&lt;/a&gt;&lt;/p&gt;
   &lt;/li&gt;
   &lt;li&gt;
     &lt;p&gt;&lt;a href=&quot;https://linuxtools-rst.readthedocs.io/zh_CN/latest/tool/gdb.html&quot;&gt;GDB 工具参考&lt;/a&gt;&lt;/p&gt;
   &lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;http://www.ruanyifeng.com/blog/2015/02/make.html&quot;&gt;Make 命令教程&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;a href=&quot;http://www.ruanyifeng.com/blog/2015/02/make.html&quot;&gt;Make 命令教程&lt;/a&gt;&lt;/p&gt;
+  &lt;/li&gt;
 &lt;/ul&gt;
 
 &lt;h2 id=&quot;参考链接&quot;&gt;参考链接&lt;/h2&gt;
