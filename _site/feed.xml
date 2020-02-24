@@ -123,8 +123,8 @@ curl_setopt($curl, CURLOPT_TIMEOUT, 120);
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 </description>
 				<pubDate>Mon, 24 Feb 2020 00:00:00 +0800</pubDate>
-				<link>/supervisor%20php%20gdb/2020/02/24/supervisor-script-suspended-animation.html</link>
-				<guid isPermaLink="true">/supervisor%20php%20gdb/2020/02/24/supervisor-script-suspended-animation.html</guid>
+				<link>/php/2020/02/24/supervisor-script-suspended-animation.html</link>
+				<guid isPermaLink="true">/php/2020/02/24/supervisor-script-suspended-animation.html</guid>
 			</item>
 		
 			<item>
@@ -373,8 +373,8 @@ Average:         0.13      0.57
 
 </description>
 				<pubDate>Mon, 24 Feb 2020 00:00:00 +0800</pubDate>
-				<link>/linux%20load/2020/02/24/high-machine-load.html</link>
-				<guid isPermaLink="true">/linux%20load/2020/02/24/high-machine-load.html</guid>
+				<link>/linux/load/2020/02/24/high-machine-load.html</link>
+				<guid isPermaLink="true">/linux/load/2020/02/24/high-machine-load.html</guid>
 			</item>
 		
 			<item>
@@ -472,8 +472,8 @@ unimplemented: 返回给浏览器表明收到的 HTTP 请求所用的 method 不
 
 </description>
 				<pubDate>Thu, 20 Feb 2020 00:00:00 +0800</pubDate>
-				<link>/c%20protocol/2020/02/20/learn-http.html</link>
-				<guid isPermaLink="true">/c%20protocol/2020/02/20/learn-http.html</guid>
+				<link>/c/protocol/2020/02/20/learn-http.html</link>
+				<guid isPermaLink="true">/c/protocol/2020/02/20/learn-http.html</guid>
 			</item>
 		
 			<item>

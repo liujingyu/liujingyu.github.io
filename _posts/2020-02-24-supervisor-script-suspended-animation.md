@@ -1,8 +1,8 @@
 ---
 layout: post
 title: supervisor 运行的PHP脚本假死排查
-categories: [supervisor php gdb]
-tags: [supervisor php gdb]
+categories: [php]
+tags: [supervisor, php, gdb]
 fullview: true
 markdown: kramdown
 
