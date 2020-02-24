@@ -1,7 +1,7 @@
 ---
 layout: post
 title: HTTP
-categories: [C, Protocol]
+categories: [c, protocol]
 tags: [c,protocol]
 fullview: true
 markdown: kramdown

@@ -1,8 +1,8 @@
 ---
 layout: post
 title: 机器高负载排查
-categories: [Linux, load]
-tags: [Linux]
+categories: [linux, load]
+tags: [linux]
 fullview: true
 markdown: kramdown
 

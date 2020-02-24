@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 语言的用法
-categories: [Logical]
+categories: [logical]
 tags: [language]
 fullview: true
 markdown: kramdown

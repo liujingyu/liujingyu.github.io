@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 谬误
-categories: [Logical]
+categories: [logical]
 tags: [error]
 fullview: true
 markdown: kramdown

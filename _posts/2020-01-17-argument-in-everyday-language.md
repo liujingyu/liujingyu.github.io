@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 日常语言中的论证
-categories: [Logical]
+categories: [logical]
 tags: [argument]
 fullview: true
 markdown: kramdown

@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 定义
-categories: [Logical]
+categories: [logical]
 tags: [definition]
 fullview: true
 markdown: kramdown

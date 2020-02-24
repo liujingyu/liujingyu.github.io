@@ -1,8 +1,8 @@
 ---
 layout: post
 title: 量化理论
-categories: [Logical]
-tags: [Quantitative theory]
+categories: [logical]
+tags: [quantitative, theory]
 fullview: true
 markdown: kramdown
 

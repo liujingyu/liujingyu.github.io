@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 直言三段论
-categories: [Logical]
+categories: [logical]
 tags: [syllogism]
 fullview: true
 markdown: kramdown

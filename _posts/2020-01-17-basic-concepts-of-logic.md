@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 逻辑学基本概念
-categories: [Logical]
+categories: [logical]
 tags: [concepts]
 fullview: true
 markdown: kramdown
