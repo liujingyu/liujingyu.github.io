@@ -55,14 +55,18 @@
 
 &lt;p&gt;&lt;img src=&quot;/assets/media/tcpip.tcpformat.png&quot; alt=&quot;tcpformat&quot; /&gt;&lt;/p&gt;
 
+&lt;h5 id=&quot;tcp-可选项&quot;&gt;TCP 可选项&lt;/h5&gt;
 &lt;p&gt;&lt;img src=&quot;/assets/media/3611655386-5b097d85e838f_articlex.jpeg&quot; alt=&quot;other choose item&quot; /&gt;&lt;/p&gt;
+
+&lt;h5 id=&quot;tcp状态流转图&quot;&gt;TCP状态流转图&lt;/h5&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/media/79702-b5828684905e8dc1.webp&quot; alt=&quot;TCP&quot; /&gt;&lt;/p&gt;
+
+&lt;h5 id=&quot;tcp时序图&quot;&gt;TCP时序图&lt;/h5&gt;
+&lt;p&gt;&lt;img src=&quot;/assets/media/tcpip.tcpconnection.png&quot; alt=&quot;tcpip.tcpconnection.png&quot; /&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;udp-格式&quot;&gt;UDP 格式&lt;/h3&gt;
 
 &lt;p&gt;&lt;img src=&quot;/assets/media/tcpip.udpformat.png&quot; alt=&quot;udpformat&quot; /&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;tcp状态流转图&quot;&gt;TCP状态流转图&lt;/h3&gt;
-&lt;p&gt;&lt;img src=&quot;/assets/media/79702-b5828684905e8dc1.webp&quot; alt=&quot;TCP&quot; /&gt;&lt;/p&gt;
 
 &lt;p&gt;各种状态表示的意思&lt;/p&gt;
 

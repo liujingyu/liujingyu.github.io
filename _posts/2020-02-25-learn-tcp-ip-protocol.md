@@ -54,14 +54,19 @@ OSI 七层模型目前只是一个模型，目前实际网络应用的是TCP/IP 
 
 ![tcpformat](/assets/media/tcpip.tcpformat.png)
 
+##### TCP 可选项
 ![other choose item](/assets/media/3611655386-5b097d85e838f_articlex.jpeg)
+
+##### TCP状态流转图
+![TCP](/assets/media/79702-b5828684905e8dc1.webp)
+
+##### TCP时序图
+![tcpip.tcpconnection.png](/assets/media/tcpip.tcpconnection.png)
 
 ### UDP 格式
 
 ![udpformat](/assets/media/tcpip.udpformat.png)
 
-### TCP状态流转图
-![TCP](/assets/media/79702-b5828684905e8dc1.webp)
 
 各种状态表示的意思
 
