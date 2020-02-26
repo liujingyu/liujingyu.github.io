@@ -471,12 +471,15 @@ tcp6       0      0 :::8000                 :::*                    LISTEN      
 
 <p><img src="/assets/media/WX20200226-133908.png" alt="tcpdump package" /></p>
 
-<p>数据解读
-[S] (SYN)
-[S.] (SYN ACK)
-[F] (FIN)
-[F.] (FIN ACK)
-[P.] (PUSH ACK)</p>
+<p>数据解读</p>
+
+<ul>
+  <li>[S] (SYN)</li>
+  <li>[S.] (SYN ACK)</li>
+  <li>[F] (FIN)</li>
+  <li>[F.] (FIN ACK)</li>
+  <li>[P.] (PUSH ACK)</li>
+</ul>
 
 <p>第一列 用于标识行</p>
 
@@ -501,16 +504,21 @@ localhost.irdmi(定为服务端)</p>
 
 <h4 id="三次握手">三次握手</h4>
 
-<p>Line 1 客户端发起连接请求 Flags[S] seq 3125423480 win 43690
-Line 2 服务端发起连接请求，并应答客户端连接请求  Flags[S.] seq 4241729365 ack 3125423481 (Line 1 seq + 1 = ack) win 43690
-Line 3 客户端应答服务端连接请求 Flags[.] ack 1 win 342</p>
+<p>Line 1 客户端发起连接请求 Flags[S] seq 3125423480 win 43690</p>
+
+<p>Line 2 服务端发起连接请求，并应答客户端连接请求  Flags[S.] seq 4241729365 ack 3125423481 (Line 1 seq + 1 = ack) win 43690</p>
+
+<p>Line 3 客户端应答服务端连接请求 Flags[.] ack 1 win 342</p>
 
 <h4 id="四次挥手">四次挥手</h4>
 
-<p>Line 5 服务端主动关闭连接 Flags[F.]
-Line 6-8 传输数据 服务端不在主动发数据，等待客户端ack确认
-Line 9 客户端关闭连接 Flags[F.] 确认服务端ACK
-Line 10 服务端给客户但发送 ACK</p>
+<p>Line 5 服务端主动关闭连接 Flags[F.]</p>
+
+<p>Line 6-8 传输数据 服务端不在主动发数据，等待客户端ack确认</p>
+
+<p>Line 9 客户端关闭连接 Flags[F.] 确认服务端ACK</p>
+
+<p>Line 10 服务端给客户但发送 ACK</p>
 
 <h2 id="实际应用场景">实际应用场景</h2>
 

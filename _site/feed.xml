@@ -313,12 +313,15 @@ tcp6       0      0 :::8000                 :::*                    LISTEN      
 
 &lt;p&gt;&lt;img src=&quot;/assets/media/WX20200226-133908.png&quot; alt=&quot;tcpdump package&quot; /&gt;&lt;/p&gt;
 
-&lt;p&gt;数据解读
-[S] (SYN)
-[S.] (SYN ACK)
-[F] (FIN)
-[F.] (FIN ACK)
-[P.] (PUSH ACK)&lt;/p&gt;
+&lt;p&gt;数据解读&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;[S] (SYN)&lt;/li&gt;
+  &lt;li&gt;[S.] (SYN ACK)&lt;/li&gt;
+  &lt;li&gt;[F] (FIN)&lt;/li&gt;
+  &lt;li&gt;[F.] (FIN ACK)&lt;/li&gt;
+  &lt;li&gt;[P.] (PUSH ACK)&lt;/li&gt;
+&lt;/ul&gt;
 
 &lt;p&gt;第一列 用于标识行&lt;/p&gt;
 
@@ -343,16 +346,21 @@ localhost.irdmi(定为服务端)&lt;/p&gt;
 
 &lt;h4 id=&quot;三次握手&quot;&gt;三次握手&lt;/h4&gt;
 
-&lt;p&gt;Line 1 客户端发起连接请求 Flags[S] seq 3125423480 win 43690
-Line 2 服务端发起连接请求，并应答客户端连接请求  Flags[S.] seq 4241729365 ack 3125423481 (Line 1 seq + 1 = ack) win 43690
-Line 3 客户端应答服务端连接请求 Flags[.] ack 1 win 342&lt;/p&gt;
+&lt;p&gt;Line 1 客户端发起连接请求 Flags[S] seq 3125423480 win 43690&lt;/p&gt;
+
+&lt;p&gt;Line 2 服务端发起连接请求，并应答客户端连接请求  Flags[S.] seq 4241729365 ack 3125423481 (Line 1 seq + 1 = ack) win 43690&lt;/p&gt;
+
+&lt;p&gt;Line 3 客户端应答服务端连接请求 Flags[.] ack 1 win 342&lt;/p&gt;
 
 &lt;h4 id=&quot;四次挥手&quot;&gt;四次挥手&lt;/h4&gt;
 
-&lt;p&gt;Line 5 服务端主动关闭连接 Flags[F.]
-Line 6-8 传输数据 服务端不在主动发数据，等待客户端ack确认
-Line 9 客户端关闭连接 Flags[F.] 确认服务端ACK
-Line 10 服务端给客户但发送 ACK&lt;/p&gt;
+&lt;p&gt;Line 5 服务端主动关闭连接 Flags[F.]&lt;/p&gt;
+
+&lt;p&gt;Line 6-8 传输数据 服务端不在主动发数据，等待客户端ack确认&lt;/p&gt;
+
+&lt;p&gt;Line 9 客户端关闭连接 Flags[F.] 确认服务端ACK&lt;/p&gt;
+
+&lt;p&gt;Line 10 服务端给客户但发送 ACK&lt;/p&gt;
 
 &lt;h2 id=&quot;实际应用场景&quot;&gt;实际应用场景&lt;/h2&gt;
 

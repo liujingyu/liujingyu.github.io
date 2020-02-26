@@ -327,11 +327,12 @@ tcp6       0      0 :::8000                 :::*                    LISTEN      
 
 
 数据解读
-[S] (SYN)
-[S.] (SYN ACK)
-[F] (FIN)
-[F.] (FIN ACK)
-[P.] (PUSH ACK)
+
+* [S] (SYN)
+* [S.] (SYN ACK)
+* [F] (FIN)
+* [F.] (FIN ACK)
+* [P.] (PUSH ACK)
 
 第一列 用于标识行
 
@@ -358,14 +359,19 @@ localhost.irdmi(定为服务端)
 #### 三次握手
 
 Line 1 客户端发起连接请求 Flags[S] seq 3125423480 win 43690
+
 Line 2 服务端发起连接请求，并应答客户端连接请求  Flags[S.] seq 4241729365 ack 3125423481 (Line 1 seq + 1 = ack) win 43690
+
 Line 3 客户端应答服务端连接请求 Flags[.] ack 1 win 342
 
 #### 四次挥手
 
 Line 5 服务端主动关闭连接 Flags[F.]
+
 Line 6-8 传输数据 服务端不在主动发数据，等待客户端ack确认
+
 Line 9 客户端关闭连接 Flags[F.] 确认服务端ACK
+
 Line 10 服务端给客户但发送 ACK
 
 
