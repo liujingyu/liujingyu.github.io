@@ -116,6 +116,7 @@ OSI 七层模型目前只是一个模型，目前实际网络应用的是TCP/IP 
 
 ## 如何学习 `TCP/IP`
 
+### Redis
 我们利用`tcpdump`工具抓包来分析实际网络请求数据。
 
 本地安装`Redis`
@@ -280,6 +281,92 @@ tcpdump 'tcp[13] & 16!=0'
 tcpdump 'tcp[tcpflags] == tcp-ack'
 ```
 
+
+### HTTP Server （三次握手，四次挥手）
+
+简单的搭建一个`http server`
+```
+[root@0384b25d7893 ~]# cat nchttp.sh
+PORT=$1
+while true; do ( echo "HTTP/1.0 200 Ok"; echo; echo "TEST TASK" ) | nc -l $PORT; done
+```
+
+启动脚本
+```
+[root@0384b25d7893 ~]# sh nchttp.sh 8000
+
+```
+
+检查端口8000  一个IPV4, 一个IPV6 监听文件描述符
+
+```
+[root@0384b25d7893 myphp]# netstat -nalp |grep 8000
+tcp        0      0 0.0.0.0:8000            0.0.0.0:*               LISTEN      8832/nc
+tcp6       0      0 :::8000                 :::*                    LISTEN      8832/nc
+[root@0384b25d7893 myphp]#
+```
+
+运行curl 请求
+
+```
+[root@0384b25d7893 myphp]# curl http://localhost:8000/?a=b
+```
+
+服务端连接断开(过2MSL 周期自动断开)
+
+```
+[root@0384b25d7893 myphp]# netstat -nalp |grep 8000
+tcp        0      0 0.0.0.0:8000            0.0.0.0:*               LISTEN      8844/nc
+tcp        0      0 127.0.0.1:8000          127.0.0.1:36512         TIME_WAIT   -
+tcp6       0      0 :::8000                 :::*                    LISTEN      8844/nc
+```
+
+`tcpdump` 抓到的数据包
+
+![tcpdump package](/assets/media/WX20200226-133908.png)
+
+
+数据解读
+[S] (SYN)
+[S.] (SYN ACK)
+[F] (FIN)
+[F.] (FIN ACK)
+[P.] (PUSH ACK)
+
+第一列 用于标识行
+
+```
+1 06:38:46.052767 IP localhost.36258 > localhost.irdmi: Flags [S], seq 3125423480, win 43690, options [mss 65495,sackOK,TS val 3395569 ecr 0,nop,wscale 7], length 0
+2 05:38:46.052809 IP localhost.irdmi > localhost.36258: Flags [S.], seq 4241729365, ack 3125423481, win 43690, options [mss 65495,sackOK,TS val 3395569 ecr 3395569,nop,wscale 7], length 0
+3 05:38:46.052847 IP localhost.36258 > localhost.irdmi: Flags [.], ack 1, win 342, options [nop,nop,TS val 3395569 ecr 3395569], length 0
+
+4 05:38:46.053017 IP localhost.irdmi > localhost.36258: Flags [P.], seq 1:28, ack 1, win 342, options [nop,nop,TS val 3395570 ecr 3395569], length 27
+
+5 05:38:46.053056 IP localhost.irdmi > localhost.36258: Flags [F.], seq 28, ack 1, win 342, options [nop,nop,TS val 3395570 ecr 3395569], length 0
+
+6 05:38:46.054869 IP localhost.36258 > localhost.irdmi: Flags [.], ack 28, win 342, options [nop,nop,TS val 3395570 ecr 3395570], length 0
+7 05:38:46.055778 IP localhost.36258 > localhost.irdmi: Flags [P.], seq 1:83, ack 29, win 342, options [nop,nop,TS val 3395570 ecr 3395570], length 82
+
+8 05:38:46.055870 IP localhost.irdmi > localhost.36258: Flags [.], ack 83, win 342, options [nop,nop,TS val 3395570 ecr 3395570], length 0
+9 05:38:46.058091 IP localhost.36258 > localhost.irdmi: Flags [F.], seq 83, ack 29, win 342, options [nop,nop,TS val 3395570 ecr 3395570], length 0
+10 05:38:46.058153 IP localhost.irdmi > localhost.36258: Flags [.], ack 84, win 342, options [nop,nop,TS val 3395570 ecr 3395570], length 0
+```
+
+localhost.36258(定为客户端)
+localhost.irdmi(定为服务端)
+
+#### 三次握手
+
+Line 1 客户端发起连接请求 Flags[S] seq 3125423480 win 43690
+Line 2 服务端发起连接请求，并应答客户端连接请求  Flags[S.] seq 4241729365 ack 3125423481 (Line 1 seq + 1 = ack) win 43690
+Line 3 客户端应答服务端连接请求 Flags[.] ack 1 win 342
+
+#### 四次挥手
+
+Line 5 服务端主动关闭连接 Flags[F.]
+Line 6-8 传输数据 服务端不在主动发数据，等待客户端ack确认
+Line 9 客户端关闭连接 Flags[F.] 确认服务端ACK
+Line 10 服务端给客户但发送 ACK
 
 
 ## 实际应用场景

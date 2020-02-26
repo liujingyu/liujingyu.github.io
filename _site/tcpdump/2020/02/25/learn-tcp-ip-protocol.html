@@ -267,6 +267,7 @@
 
 <h2 id="如何学习-tcpip">如何学习 <code class="highlighter-rouge">TCP/IP</code></h2>
 
+<h3 id="redis">Redis</h3>
 <p>我们利用<code class="highlighter-rouge">tcpdump</code>工具抓包来分析实际网络请求数据。</p>
 
 <p>本地安装<code class="highlighter-rouge">Redis</code></p>
@@ -424,6 +425,85 @@ tcpdump 'tcp[13] &amp; 16!=0'
 # 等价于
 tcpdump 'tcp[tcpflags] == tcp-ack'
 </code></pre></div></div>
+
+<h3 id="http-server-三次握手四次挥手">HTTP Server （三次握手，四次挥手）</h3>
+
+<p>简单的搭建一个<code class="highlighter-rouge">http server</code></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@0384b25d7893 ~]# cat nchttp.sh
+PORT=$1
+while true; do ( echo "HTTP/1.0 200 Ok"; echo; echo "TEST TASK" ) | nc -l $PORT; done
+</code></pre></div></div>
+
+<p>启动脚本</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@0384b25d7893 ~]# sh nchttp.sh 8000
+
+</code></pre></div></div>
+
+<p>检查端口8000  一个IPV4, 一个IPV6 监听文件描述符</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@0384b25d7893 myphp]# netstat -nalp |grep 8000
+tcp        0      0 0.0.0.0:8000            0.0.0.0:*               LISTEN      8832/nc
+tcp6       0      0 :::8000                 :::*                    LISTEN      8832/nc
+[root@0384b25d7893 myphp]#
+</code></pre></div></div>
+
+<p>运行curl 请求</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@0384b25d7893 myphp]# curl http://localhost:8000/?a=b
+</code></pre></div></div>
+
+<p>服务端连接断开(过2MSL 周期自动断开)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[root@0384b25d7893 myphp]# netstat -nalp |grep 8000
+tcp        0      0 0.0.0.0:8000            0.0.0.0:*               LISTEN      8844/nc
+tcp        0      0 127.0.0.1:8000          127.0.0.1:36512         TIME_WAIT   -
+tcp6       0      0 :::8000                 :::*                    LISTEN      8844/nc
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">tcpdump</code> 抓到的数据包</p>
+
+<p><img src="/assets/media/WX20200226-133908.png" alt="tcpdump package" /></p>
+
+<p>数据解读
+[S] (SYN)
+[S.] (SYN ACK)
+[F] (FIN)
+[F.] (FIN ACK)
+[P.] (PUSH ACK)</p>
+
+<p>第一列 用于标识行</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1 06:38:46.052767 IP localhost.36258 &gt; localhost.irdmi: Flags [S], seq 3125423480, win 43690, options [mss 65495,sackOK,TS val 3395569 ecr 0,nop,wscale 7], length 0
+2 05:38:46.052809 IP localhost.irdmi &gt; localhost.36258: Flags [S.], seq 4241729365, ack 3125423481, win 43690, options [mss 65495,sackOK,TS val 3395569 ecr 3395569,nop,wscale 7], length 0
+3 05:38:46.052847 IP localhost.36258 &gt; localhost.irdmi: Flags [.], ack 1, win 342, options [nop,nop,TS val 3395569 ecr 3395569], length 0
+
+4 05:38:46.053017 IP localhost.irdmi &gt; localhost.36258: Flags [P.], seq 1:28, ack 1, win 342, options [nop,nop,TS val 3395570 ecr 3395569], length 27
+
+5 05:38:46.053056 IP localhost.irdmi &gt; localhost.36258: Flags [F.], seq 28, ack 1, win 342, options [nop,nop,TS val 3395570 ecr 3395569], length 0
+
+6 05:38:46.054869 IP localhost.36258 &gt; localhost.irdmi: Flags [.], ack 28, win 342, options [nop,nop,TS val 3395570 ecr 3395570], length 0
+7 05:38:46.055778 IP localhost.36258 &gt; localhost.irdmi: Flags [P.], seq 1:83, ack 29, win 342, options [nop,nop,TS val 3395570 ecr 3395570], length 82
+
+8 05:38:46.055870 IP localhost.irdmi &gt; localhost.36258: Flags [.], ack 83, win 342, options [nop,nop,TS val 3395570 ecr 3395570], length 0
+9 05:38:46.058091 IP localhost.36258 &gt; localhost.irdmi: Flags [F.], seq 83, ack 29, win 342, options [nop,nop,TS val 3395570 ecr 3395570], length 0
+10 05:38:46.058153 IP localhost.irdmi &gt; localhost.36258: Flags [.], ack 84, win 342, options [nop,nop,TS val 3395570 ecr 3395570], length 0
+</code></pre></div></div>
+
+<p>localhost.36258(定为客户端)
+localhost.irdmi(定为服务端)</p>
+
+<h4 id="三次握手">三次握手</h4>
+
+<p>Line 1 客户端发起连接请求 Flags[S] seq 3125423480 win 43690
+Line 2 服务端发起连接请求，并应答客户端连接请求  Flags[S.] seq 4241729365 ack 3125423481 (Line 1 seq + 1 = ack) win 43690
+Line 3 客户端应答服务端连接请求 Flags[.] ack 1 win 342</p>
+
+<h4 id="四次挥手">四次挥手</h4>
+
+<p>Line 5 服务端主动关闭连接 Flags[F.]
+Line 6-8 传输数据 服务端不在主动发数据，等待客户端ack确认
+Line 9 客户端关闭连接 Flags[F.] 确认服务端ACK
+Line 10 服务端给客户但发送 ACK</p>
 
 <h2 id="实际应用场景">实际应用场景</h2>
 
