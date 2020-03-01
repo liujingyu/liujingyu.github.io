@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>学习Swoole</title>
+	
+	<meta name="author" content="JY">
+
+	<!-- Enable responsive viewport -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	<!-- Le styles -->
+	<link href="/assets/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/assets/resources/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	<link href="/assets/resources/syntax/syntax.css" rel="stylesheet">
+	<link href="/assets/css/style.css" rel="stylesheet">
+
+	<!-- Le fav and touch icons -->
+	<!-- Update these with your own images
+	<link rel="shortcut icon" href="images/favicon.ico">
+	<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+	-->
+
+	<link rel="alternate" type="application/rss+xml" title="" href="/feed.xml">
+</head>
+
+<body>
+	<nav class="navbar navbar-default visible-xs" role="navigation">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			
+			<a type="button" class="navbar-toggle nav-link" href="http://github.com/liujingyu">
+				<i class="fa fa-github"></i>
+			</a>
+			
+			
+			
+			<a type="button" class="navbar-toggle nav-link" href="mailto:jingyu525@gmail.com">
+				<i class="fa fa-envelope"></i>
+			</a>
+			
+			<a class="navbar-brand" href="/">
+                <img src="/assets/media/dragon.jpeg" class="img-circle" />
+				JY
+			</a>
+		</div>
+
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="/">Home</a></li>
+				<li><a href="/categories.html">Categories</a></li>
+				<li><a href="/tags.html">Tags</a></li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</nav>
+
+	<!-- nav-menu-dropdown -->
+	<div class="btn-group hidden-xs" id="nav-menu">
+		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+			<i class="fa fa-bars"></i>
+		</button>
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="/"><i class="fa fa-home"></i>Home</a></li>
+			<li><a href="/categories.html"><i class="fa fa-folder"></i>Categories</a></li>
+			<li><a href="/tags.html"><i class="fa fa-tags"></i>Tags</a></li>
+			<li class="divider"></li>
+			<li><a href="#"><i class="fa fa-arrow-up"></i>Top of Page</a></li>
+		</ul>
+	</div>
+
+	<div class="col-sm-3 sidebar hidden-xs" style="background: url(/assets/media/sky.png) no-repeat !important;">
+		<!-- sidebar.html -->
+<header class="sidebar-header" role="banner">
+	<a href="/">
+        <img src="/assets/media/dragon.jpeg" class="img-circle"  height="150" width="150" />
+	</a>
+	<h3 class="title">
+        <a href="/">JY</a>
+    </h3>
+</header>
+
+
+<div id="bio" class="text-center">
+	目前就职于小猪短租
+</div>
+
+
+<div id="contact-list" class="text-center">
+	<ul class="list-unstyled list-inline">
+		
+		<li>
+			<a class="btn btn-default btn-sm" href="https://github.com/liujingyu">
+				<i class="fa fa-github-alt fa-lg"></i>
+			</a>
+		</li>
+		
+		
+		<li>
+			<a class="btn btn-default btn-sm" href="mailto:jingyu525@gmail.com">
+				<i class="fa fa-envelope fa-lg"></i>
+			</a>
+		</li>
+		
+		<li>
+			<a class="btn btn-default btn-sm" href="/feed.xml">
+				<i class="fa fa-rss fa-lg"></i>
+			</a>
+		</li>
+	</ul>
+	<ul class="list-unstyled list-inline">
+		<li>
+            <a class="btn btn-default btn-sm" href="/about">
+                关于
+			</a>
+		</li>
+		<li>
+            <a class="btn btn-default btn-sm" href="/elasticsearch">
+                elasticsearch
+			</a>
+		</li>
+		<li>
+            <a class="btn btn-default btn-sm" href="/open-source">
+                开源项目
+			</a>
+		</li>
+	</ul>
+</div>
+<!-- sidebar.html end -->
+
+	</div>
+
+	<div class="col-sm-9 col-sm-offset-3">
+		<div class="page-header">
+  <h1>学习Swoole </h1>
+</div>
+	
+<article>
+
+	<div class="col-sm-10">
+	 <span class="post-date">
+	   
+	   March 
+	   1st,
+	     
+	   2020
+	 </span>
+	  <div class="article_body">
+	  <h3 id="学习swoole需要掌握哪些基础知识">学习Swoole需要掌握哪些基础知识</h3>
+
+<h4 id="多进程多线程">多进程/多线程</h4>
+
+<ul>
+  <li>了解Linux操作系统进程和线程的概念</li>
+  <li>了解Linux进程/线程切换调度的基本知识</li>
+  <li>了解进程间通信的基本知识，如管道、UnixSocket、消息队列、共享内存</li>
+</ul>
+
+<h4 id="socket">SOCKET</h4>
+
+<ul>
+  <li>了解SOCKET的基本操作如accept/connect、send/recv、close、listen、bind</li>
+  <li>了解SOCKET的接收缓存区、发送缓存区、阻塞/非阻塞、超时等概念</li>
+</ul>
+
+<h4 id="io复用">IO复用</h4>
+
+<ul>
+  <li>了解select/poll/epoll</li>
+  <li>了解基于select/epoll实现的事件循环，Reactor模型</li>
+  <li>了解可读事件、可写事件</li>
+</ul>
+
+<h4 id="tcpip网络协议">TCP/IP网络协议</h4>
+
+<ul>
+  <li>了解TCP/IP协议</li>
+  <li>了解TCP、UDP传输协议</li>
+</ul>
+
+<h4 id="调试工具">调试工具</h4>
+
+<ul>
+  <li>使用 gdb 调试Linux程序</li>
+  <li>使用 strace 跟踪进程的系统调用</li>
+  <li>使用 tcpdump 跟踪网络通信过程</li>
+  <li>其他Linux系统工具，如ps、lsof、top、vmstat、netstat、sar、ss等</li>
+</ul>
+
+<p>概括一句话读《linux高性能服务器编程》</p>
+
+<h3 id="swoole-图">Swoole 图</h3>
+
+<h4 id="类图">类图</h4>
+
+<p><img src="/assets/media/WX20200301-072210@2x.png" alt="swoole class" /></p>
+
+<h4 id="运行流程图">运行流程图</h4>
+
+<p><img src="https://wiki.swoole.com/_images/server/running_process.jpg" alt="运行流程图" /></p>
+
+<h4 id="进程--线程结构图">进程 / 线程结构图</h4>
+
+<p><img src="https://wiki.swoole.com/_images/server/process_structure.jpg" alt="进程 / 线程结构图" /></p>
+
+<p><img src="https://wiki.swoole.com/_images/server/process_structure_2.png" alt="结构图2" /></p>
+
+<h3 id="实践代码">实践代码</h3>
+
+<p>可以用代码中作”基酒” -&gt; <a href="https://github.com/superman2014/sf-swoole-console">sf-swoole-console</a></p>
+
+<p>Docker运行环境：<a href="https://hub.docker.com/r/phpswoole/swoole">https://hub.docker.com/r/phpswoole/swoole</a></p>
+
+<p>简单写了一个mapreduce 的add 加法:<a href="https://github.com/superman2014/sf-swoole-console/tree/feature-op-add">feature-op-add</a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>docker run -p 9501:9501 -it -v $(pwd):/var/html phpswoole/swoole  /bin/bash
+cd /var/html
+php console task:server start
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ telnet 127.0.0.1 9501
+Trying 127.0.0.1...
+Connected to localhost.
+Escape character is '^]'.
+{"op":"add", "data":[1,2]}
+3
+</code></pre></div></div>
+
+<h2 id="参考">参考</h2>
+
+<ul>
+  <li><a href="https://toxmc.github.io/swoole-cs.github.io/">Swoole 4.x LTS 速查表</a></li>
+  <li><a href="https://wiki.swoole.com/#/server/init">服务端异步风格</a></li>
+</ul>
+
+	  </div>
+
+		
+		<ul class="tag_box list-unstyled list-inline">
+		  <li><i class="fa fa-folder-open"></i></li>
+		  
+		  
+			 
+				<li><a href="/categories.html#swoole-ref">
+					swoole <span>(1)</span>
+					
+				</a></li>
+			
+		  
+		</ul>
+		  
+
+		
+		<ul class="list-inline">
+		  <li><i class="fa fa-tags"></i></li>
+		  
+		  
+			 
+				<li>
+					<a href="/tags.html#swoole-ref">
+					swoole <span>(1)</span>
+					
+					</a>
+				</li>
+			
+		  
+		  
+		</ul>
+		  
+
+		<hr>
+
+		<div>
+      <section class="share col-sm-6">
+        <h4 class="section-title">Share Post</h4>
+        <a class="btn btn-default btn-sm twitter" href="http://twitter.com/share?text=学习Swoole"
+           onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+          <i class="fa fa-twitter fa-lg"></i>
+          Twitter
+        </a>
+        <a class="btn btn-default btn-sm facebook" href="https://www.facebook.com/sharer/sharer.php"
+           onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+          <i class="fa fa-facebook fa-lg"></i>
+          Facebook
+        </a>
+        <a class="btn btn-default btn-sm gplus"
+           onclick="window.open('https://plus.google.com/share?url='+window.location.href, 'google-plus-share', 'width=490,height=530');return false;">
+          <i class="fa fa-google-plus fa-lg"></i>
+          Google+
+        </a>
+      </section>
+
+      <section class="col-sm-6 author">
+        <img src="/assets/media/dragon.jpeg" class="img-rounded author-image" width="100" height="100" />
+        <h4 class="section-title author-name">JY</h4>
+        <p class="author-bio">目前就职于小猪短租</p>
+      </section>
+    </div>
+
+    <div class="clearfix"></div>
+
+		<ul class="pager">
+		  
+		  <li class="previous"><a href="/tcpdump/2020/02/25/learn-tcp-ip-protocol.html" title="学习TCP/IP 协议">&larr; Previous</a></li>
+		  
+		  
+			<li class="next disabled"><a>Next &rarr;</a>
+		  
+		</ul>
+
+		<hr>
+	</div>
+	
+	<div class="col-sm-2 sidebar-2">
+	
+	</div>
+</article>
+<div class="clearfix"></div>
+
+
+
+
+
+		<footer>
+			<hr/>
+			<p>
+				&copy; 2020 JY with <a href="http://jekyllrb.com/">Jekyll</a>. Theme: <a href="https://github.com/dbtek/dbyll">dbyll</a> by dbtek.
+			</p>
+		</footer>
+	</div>
+
+	<script type="text/javascript" src="/assets/resources/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="/assets/resources/bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/assets/js/app.js"></script>
+</body>
+</html>
+
+
+
