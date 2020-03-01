@@ -239,11 +239,113 @@ Escape character is '^]'.
 3
 </code></pre></div></div>
 
+<h3 id="自定义协议">自定义协议</h3>
+
+<h4 id="eof结束符">EOF结束符</h4>
+
+<p>发送者和接收者约定数据包已一个特殊的结束符(EOF)做结尾。适合协议相对简单的需求，常见的比如 redis、memcache、ftp、stmp等都是用\r\n换行符作为结束符。</p>
+
+<h3 id="固定包头包体协议">固定包头+包体协议</h3>
+
+<p><img src="https://opso.coding.me/images/swoole_pack.png" alt="固定包头+包体协议" /></p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+<span class="c1">// server.php</span>
+<span class="nv">$serv</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Swoole\Server</span><span class="p">(</span><span class="s2">"127.0.0.1"</span><span class="p">,</span> <span class="mi">9501</span><span class="p">);</span>
+<span class="nv">$serv</span><span class="o">-&gt;</span><span class="na">set</span><span class="p">(</span><span class="k">array</span><span class="p">(</span>
+    <span class="s1">'open_length_check'</span> <span class="o">=&gt;</span> <span class="kc">true</span><span class="p">,</span>
+    <span class="s1">'package_length_type'</span> <span class="o">=&gt;</span> <span class="s1">'n'</span><span class="p">,</span>
+    <span class="s1">'package_length_offset'</span> <span class="o">=&gt;</span> <span class="mi">6</span><span class="p">,</span>
+    <span class="s1">'package_body_offset'</span> <span class="o">=&gt;</span> <span class="mi">8</span><span class="p">,</span>
+    <span class="s1">'package_max_length'</span> <span class="o">=&gt;</span> <span class="mi">2000</span><span class="p">,</span>
+<span class="p">));</span>
+<span class="nv">$serv</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">'Connect'</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$serv</span><span class="p">,</span> <span class="nv">$fd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">echo</span> <span class="s2">"Client: Connect.</span><span class="se">\n</span><span class="s2">"</span><span class="p">;</span>
+<span class="p">});</span>
+<span class="nv">$serv</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">'Receive'</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$serv</span><span class="p">,</span> <span class="nv">$fd</span><span class="p">,</span> <span class="nv">$from_id</span><span class="p">,</span> <span class="nv">$data</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nv">$header</span> <span class="o">=</span> <span class="nb">substr</span><span class="p">(</span><span class="nv">$data</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">);</span>
+	<span class="nv">$p</span> <span class="o">=</span> <span class="nb">unpack</span><span class="p">(</span><span class="s1">'a6begin/nbodyLen'</span><span class="p">,</span> <span class="nv">$header</span><span class="p">);</span>
+	<span class="k">if</span> <span class="p">(</span><span class="nv">$p</span><span class="p">[</span><span class="s1">'begin'</span><span class="p">]</span> <span class="o">!=</span> <span class="s1">'SWOOLE'</span><span class="p">){</span>
+		<span class="k">return</span><span class="p">;</span>
+	<span class="p">}</span>
+	<span class="nv">$len</span> <span class="o">=</span> <span class="nv">$p</span><span class="p">[</span><span class="s1">'bodyLen'</span><span class="p">];</span>
+	<span class="nv">$bodyPack</span> <span class="o">=</span> <span class="nb">unpack</span><span class="p">(</span><span class="s2">"a</span><span class="si">{</span><span class="nv">$len</span><span class="si">}</span><span class="s2">body"</span><span class="p">,</span> <span class="nb">substr</span><span class="p">(</span><span class="nv">$data</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="nv">$len</span><span class="p">));</span>
+    <span class="nv">$serv</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="s2">"Server: "</span><span class="o">.</span><span class="nv">$bodyPack</span><span class="p">[</span><span class="s1">'body'</span><span class="p">]</span><span class="o">.</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">);</span>
+<span class="p">});</span>
+<span class="nv">$serv</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">'Close'</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$serv</span><span class="p">,</span> <span class="nv">$fd</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">echo</span> <span class="s2">"Client: Close.</span><span class="se">\n</span><span class="s2">"</span><span class="p">;</span>
+<span class="p">});</span>
+<span class="nv">$serv</span><span class="o">-&gt;</span><span class="na">start</span><span class="p">();</span>
+</code></pre></div></div>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+<span class="c1">//client.php</span>
+<span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">swoole_client</span><span class="p">(</span><span class="nx">SWOOLE_SOCK_TCP</span><span class="p">);</span>
+<span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$client</span><span class="o">-&gt;</span><span class="na">connect</span><span class="p">(</span><span class="s1">'127.0.0.1'</span><span class="p">,</span> <span class="mi">9501</span><span class="p">))</span> <span class="p">{</span>
+	<span class="k">exit</span><span class="p">(</span><span class="s2">"connect failed. Error: </span><span class="si">{</span><span class="nv">$client</span><span class="o">-&gt;</span><span class="na">errCode</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="nv">$msg</span> <span class="o">=</span> <span class="s1">'Hello World!'</span><span class="p">;</span>
+<span class="nv">$client</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="nx">sendMsg</span><span class="p">(</span><span class="nv">$msg</span><span class="p">));</span> <span class="c1">// 正常发包</span>
+<span class="nv">$client</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="nx">sendMsg</span><span class="p">(</span><span class="nv">$msg</span><span class="o">.</span><span class="s1">'0'</span><span class="p">)</span><span class="o">.</span><span class="nx">sendMsg</span><span class="p">(</span><span class="nv">$msg</span><span class="o">.</span><span class="s1">'1'</span><span class="p">)</span><span class="o">.</span><span class="nx">sendMsg</span><span class="p">(</span><span class="nv">$msg</span><span class="o">.</span><span class="s1">'2'</span><span class="p">));</span><span class="c1">// 模拟粘包</span>
+<span class="k">echo</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">recv</span><span class="p">();</span>
+<span class="nv">$client</span><span class="o">-&gt;</span><span class="na">close</span><span class="p">();</span>
+<span class="k">function</span> <span class="nf">sendMsg</span><span class="p">(</span><span class="nv">$msg</span><span class="p">)</span> <span class="p">{</span>
+	<span class="nv">$p</span> <span class="o">=</span> <span class="s1">'SWOOLE'</span><span class="p">;</span>
+	<span class="nv">$p</span> <span class="o">.=</span> <span class="nb">pack</span><span class="p">(</span><span class="s1">'n'</span><span class="p">,</span> <span class="nb">strlen</span><span class="p">(</span><span class="nv">$msg</span><span class="p">));</span>
+	<span class="nv">$p</span> <span class="o">.=</span> <span class="nb">pack</span><span class="p">(</span><span class="s1">'a'</span> <span class="o">.</span> <span class="nb">strlen</span><span class="p">(</span><span class="nv">$msg</span><span class="p">),</span> <span class="nv">$msg</span><span class="p">);</span>
+	<span class="k">return</span> <span class="nv">$p</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>抓包数据分析</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>13:36:39.050774 IP 127.0.0.1.33844 &gt; 127.0.0.1.9501: Flags [P.], seq 1:21, ack 1, win 342, options [nop,nop,TS val 4907685 ecr 4907685], length 20
+        0x0000:  0000 0000 0000 0000 0000 0000 0800 4500  ..............E.
+        0x0010:  0048 a56a 4000 4006 9743 7f00 0001 7f00  .H.j@.@..C......
+        0x0020:  0001 8434 251d 496d 47ce 8446 849b 8018  ...4%.ImG..F....
+        0x0030:  0156 fe3c 0000 0101 080a 004a e2a5 004a  .V.&lt;.......J...J
+        0x0040:  e2a5 5357 4f4f 4c45 000c 4865 6c6c 6f20  ..SWOOLE..Hello.
+        0x0050:  576f 726c 6421                           World!
+13:36:39.050820 IP 127.0.0.1.9501 &gt; 127.0.0.1.33844: Flags [.], ack 21, win 342, options [nop,nop,TS val 4907685 ecr 4907685], length 0
+        0x0000:  0000 0000 0000 0000 0000 0000 0800 4500  ..............E.
+        0x0010:  0034 663e 4000 4006 d683 7f00 0001 7f00  .4f&gt;@.@.........
+        0x0020:  0001 251d 8434 8446 849b 496d 47e2 8010  ..%..4.F..ImG...
+        0x0030:  0156 fe28 0000 0101 080a 004a e2a5 004a  .V.(.......J...J
+        0x0040:  e2a5                                     ..
+13:36:39.050862 IP 127.0.0.1.33844 &gt; 127.0.0.1.9501: Flags [P.], seq 21:84, ack 1, win 342, options [nop,nop,TS val 4907685 ecr 4907685], length 63
+        0x0000:  0000 0000 0000 0000 0000 0000 0800 4500  ..............E.
+        0x0010:  0073 a56b 4000 4006 9717 7f00 0001 7f00  .s.k@.@.........
+        0x0020:  0001 8434 251d 496d 47e2 8446 849b 8018  ...4%.ImG..F....
+        0x0030:  0156 fe67 0000 0101 080a 004a e2a5 004a  .V.g.......J...J
+        0x0040:  e2a5 5357 4f4f 4c45 000d 4865 6c6c 6f20  ..SWOOLE..Hello.   //这里
+        0x0050:  576f 726c 6421 3053 574f 4f4c 4500 0d48  World!0SWOOLE..H
+        0x0060:  656c 6c6f 2057 6f72 6c64 2131 5357 4f4f  ello.World!1SWOO
+        0x0070:  4c45 000d 4865 6c6c 6f20 576f 726c 6421  LE..Hello.World!
+        0x0080:  32                                       2
+13:36:39.050885 IP 127.0.0.1.9501 &gt; 127.0.0.1.33844: Flags [.], ack 84, win 342, options [nop,nop,TS val 4907685 ecr 4907685], length 0
+        0x0000:  0000 0000 0000 0000 0000 0000 0800 4500  ..............E.
+        0x0010:  0034 663f 4000 4006 d682 7f00 0001 7f00  .4f?@.@.........
+        0x0020:  0001 251d 8434 8446 849b 496d 4821 8010  ..%..4.F..ImH!..
+        0x0030:  0156 fe28 0000 0101 080a 004a e2a5 004a  .V.(.......J...J
+        0x0040:  e2a5                                     ..
+13:36:39.051626 IP 127.0.0.1.9501 &gt; 127.0.0.1.33844: Flags [P.], seq 1:22, ack 84, win 342, options [nop,nop,TS val 4907685 ecr 4907685], length 21
+        0x0000:  0000 0000 0000 0000 0000 0000 0800 4500  ..............E.
+        0x0010:  0049 6640 4000 4006 d66c 7f00 0001 7f00  .If@@.@..l......
+        0x0020:  0001 251d 8434 8446 849b 496d 4821 8018  ..%..4.F..ImH!..
+        0x0030:  0156 fe3d 0000 0101 080a 004a e2a5 004a  .V.=.......J...J
+        0x0040:  e2a5 5365 7276 6572 3a20 4865 6c6c 6f20  ..Server:.Hello. // 这里
+        0x0050:  576f 726c 6421 0a                        World!.
+
+
+</code></pre></div></div>
+
 <h2 id="参考">参考</h2>
 
 <ul>
   <li><a href="https://toxmc.github.io/swoole-cs.github.io/">Swoole 4.x LTS 速查表</a></li>
   <li><a href="https://wiki.swoole.com/#/server/init">服务端异步风格</a></li>
+  <li><a href="https://opso.coding.me/post/swoole-tcp-pack/">通过swoole理解TCP粘包</a></li>
+  <li><a href="https://www.ruanyifeng.com/blog/2016/11/byte-order.html">理解字节序</a></li>
 </ul>
 
 	  </div>
