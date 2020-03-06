@@ -339,6 +339,316 @@ Escape character is '^]'.
 
 </code></pre></div></div>
 
+<p>再来一个漂亮版本的代码</p>
+
+<p>RPC 编码协议类</p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="cp">&lt;?php</span>
+
+<span class="kn">namespace</span> <span class="nn">Superman2014\SfSwooleConsole</span><span class="p">;</span>
+
+<span class="cd">/**
+ * Class Protocol
+ * @package Superman2014\SfSwooleConsole
+ *
+ *
+ * 包结构
+ *
+ * 字段	字节数	说明
+ * 包头	定长	每一个通信消息必须包含的内容
+ * 包体	不定长	根据每个通信消息的不同产生变化
+ *
+ * 其中包头详细内容如下：
+ *
+ * 字段        字节数 类型  说明
+ * pkg_len	    2   ushort	整个包的长度，不超过4K
+ * version	    1 	uchar	通讯协议版本号
+ * command_id	2 	ushort	消息命令ID
+ * result	    2 	short	请求时不起作用；请求返回时使用
+ *
+ */</span>
+<span class="kd">class</span> <span class="nc">Protocol</span>
+<span class="p">{</span>
+
+    <span class="k">const</span> <span class="no">VERSION</span> <span class="o">=</span> <span class="s1">'1'</span><span class="p">;</span>
+
+    <span class="k">const</span> <span class="no">HEADER</span> <span class="o">=</span> <span class="mi">7</span><span class="p">;</span>
+
+    <span class="k">const</span> <span class="no">PACKAGE_LENGTH</span> <span class="o">=</span> <span class="mi">4096</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">partHeader</span><span class="p">(</span><span class="nv">$bodyLen</span><span class="p">,</span> <span class="nv">$version</span><span class="p">,</span> <span class="nv">$commandId</span><span class="p">,</span> <span class="nv">$result</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nb">pack</span><span class="p">(</span><span class="s2">"nCns"</span><span class="p">,</span> <span class="nv">$bodyLen</span><span class="p">,</span> <span class="nv">$version</span><span class="p">,</span> <span class="nv">$commandId</span><span class="p">,</span> <span class="nv">$result</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">partBody</span><span class="p">(</span><span class="nv">$msg</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nb">pack</span><span class="p">(</span><span class="s2">"a"</span><span class="o">.</span> <span class="nb">strlen</span><span class="p">(</span><span class="nv">$msg</span><span class="p">),</span> <span class="nv">$msg</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">encode</span><span class="p">(</span><span class="nv">$msg</span><span class="p">,</span> <span class="nv">$commandId</span><span class="p">,</span> <span class="nv">$result</span> <span class="o">=</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="p">{</span>
+
+        <span class="k">return</span> <span class="nx">self</span><span class="o">::</span><span class="na">partHeader</span><span class="p">(</span><span class="nb">strlen</span><span class="p">(</span><span class="nv">$msg</span><span class="p">),</span> <span class="nx">self</span><span class="o">::</span><span class="na">VERSION</span><span class="p">,</span> <span class="nv">$commandId</span><span class="p">,</span> <span class="nv">$result</span><span class="p">)</span>
+            <span class="o">.</span> <span class="nx">self</span><span class="o">::</span><span class="na">partBody</span><span class="p">(</span><span class="nv">$msg</span><span class="p">);</span>
+
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">decode</span><span class="p">(</span><span class="nv">$msg</span><span class="p">)</span>
+    <span class="p">{</span>
+
+        <span class="nv">$header</span> <span class="o">=</span> <span class="nb">substr</span><span class="p">(</span><span class="nv">$msg</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">self</span><span class="o">::</span><span class="na">HEADER</span><span class="p">);</span>
+        <span class="nv">$p</span> <span class="o">=</span> <span class="nb">unpack</span><span class="p">(</span><span class="s1">'nbodyLen/Cversion/ncommandId/sresult'</span><span class="p">,</span> <span class="nv">$header</span><span class="p">);</span>
+        <span class="nv">$len</span> <span class="o">=</span> <span class="nv">$p</span><span class="p">[</span><span class="s1">'bodyLen'</span><span class="p">];</span>
+        <span class="nv">$bodyPack</span> <span class="o">=</span> <span class="nb">unpack</span><span class="p">(</span><span class="s2">"a</span><span class="si">{</span><span class="nv">$len</span><span class="si">}</span><span class="s2">body"</span><span class="p">,</span> <span class="nb">substr</span><span class="p">(</span><span class="nv">$msg</span><span class="p">,</span> <span class="nx">self</span><span class="o">::</span><span class="na">HEADER</span><span class="p">,</span> <span class="nv">$len</span><span class="p">));</span>
+        <span class="k">return</span> <span class="nb">array_merge</span><span class="p">(</span><span class="nv">$bodyPack</span><span class="p">,</span> <span class="nv">$p</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">main</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$msg</span> <span class="o">=</span> <span class="nx">self</span><span class="o">::</span><span class="na">encode</span><span class="p">(</span><span class="s2">"hello"</span><span class="p">,</span> <span class="s2">"1001"</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+
+        <span class="nb">var_dump</span><span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="na">decode</span><span class="p">(</span><span class="nv">$msg</span><span class="p">));</span>
+
+        <span class="c1">//</span>
+<span class="c1">//        array(5) {</span>
+<span class="c1">//        ["body"]=&gt;</span>
+<span class="c1">//  string(5) "hello"</span>
+<span class="c1">//        ["bodyLen"]=&gt;</span>
+<span class="c1">//  int(5)</span>
+<span class="c1">//  ["version"]=&gt;</span>
+<span class="c1">//  int(1)</span>
+<span class="c1">//  ["commandId"]=&gt;</span>
+<span class="c1">//  int(1001)</span>
+<span class="c1">//  ["result"]=&gt;</span>
+<span class="c1">//  int(0)</span>
+<span class="c1">//    }</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">//Protocol::main();</span>
+</code></pre></div></div>
+
+<p>常量类</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+
+<span class="kn">namespace</span> <span class="nn">Superman2014\SfSwooleConsole</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nc">TaskConstant</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="no">COMMAND_SET</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="nx">self</span><span class="o">::</span><span class="na">START</span><span class="p">,</span>
+        <span class="nx">self</span><span class="o">::</span><span class="na">STOP</span><span class="p">,</span>
+        <span class="nx">self</span><span class="o">::</span><span class="na">RESTART</span><span class="p">,</span>
+        <span class="nx">self</span><span class="o">::</span><span class="na">RELOAD</span><span class="p">,</span>
+        <span class="nx">self</span><span class="o">::</span><span class="na">PING</span><span class="p">,</span>
+        <span class="nx">self</span><span class="o">::</span><span class="na">STATUS</span><span class="p">,</span>
+        <span class="nx">self</span><span class="o">::</span><span class="na">USAGE</span><span class="p">,</span>
+    <span class="p">];</span>
+
+    <span class="k">const</span> <span class="no">USER_COMMAND</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="nx">self</span><span class="o">::</span><span class="na">STATUS</span><span class="p">,</span>
+        <span class="nx">self</span><span class="o">::</span><span class="na">RELOAD</span><span class="p">,</span>
+        <span class="nx">self</span><span class="o">::</span><span class="na">RESTART</span><span class="p">,</span>
+        <span class="nx">self</span><span class="o">::</span><span class="na">STOP</span><span class="p">,</span>
+    <span class="p">];</span>
+
+    <span class="k">const</span> <span class="no">START</span> <span class="o">=</span> <span class="s1">'start'</span><span class="p">;</span>
+
+    <span class="k">const</span> <span class="no">STOP</span> <span class="o">=</span> <span class="s1">'stop'</span><span class="p">;</span>
+
+    <span class="k">const</span> <span class="no">STATUS</span> <span class="o">=</span> <span class="s1">'status'</span><span class="p">;</span>
+
+    <span class="k">const</span> <span class="no">RELOAD</span> <span class="o">=</span> <span class="s1">'reload'</span><span class="p">;</span>
+
+    <span class="k">const</span> <span class="no">RESTART</span> <span class="o">=</span> <span class="s1">'restart'</span><span class="p">;</span>
+
+    <span class="k">const</span> <span class="no">PING</span> <span class="o">=</span> <span class="s1">'ping'</span><span class="p">;</span>
+
+    <span class="k">const</span> <span class="no">USAGE</span> <span class="o">=</span> <span class="s1">'usage'</span><span class="p">;</span>
+
+    <span class="k">const</span> <span class="no">DATA</span> <span class="o">=</span> <span class="s1">'data'</span><span class="p">;</span>
+
+    <span class="k">const</span> <span class="no">COMMAND_ID_LIST</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="mi">1001</span> <span class="o">=&gt;</span> <span class="nx">self</span><span class="o">::</span><span class="na">START</span><span class="p">,</span>
+        <span class="mi">1002</span> <span class="o">=&gt;</span> <span class="nx">self</span><span class="o">::</span><span class="na">STOP</span><span class="p">,</span>
+        <span class="mi">1003</span> <span class="o">=&gt;</span> <span class="nx">self</span><span class="o">::</span><span class="na">RESTART</span><span class="p">,</span>
+        <span class="mi">1004</span> <span class="o">=&gt;</span> <span class="nx">self</span><span class="o">::</span><span class="na">RELOAD</span><span class="p">,</span>
+        <span class="mi">1005</span> <span class="o">=&gt;</span> <span class="nx">self</span><span class="o">::</span><span class="na">PING</span><span class="p">,</span>
+        <span class="mi">1006</span> <span class="o">=&gt;</span> <span class="nx">self</span><span class="o">::</span><span class="na">STATUS</span><span class="p">,</span>
+        <span class="mi">1007</span> <span class="o">=&gt;</span> <span class="nx">self</span><span class="o">::</span><span class="na">DATA</span><span class="p">,</span>
+    <span class="p">];</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">commandIdByName</span><span class="p">(</span><span class="nv">$name</span><span class="p">)</span>
+    <span class="p">{</span>
+       <span class="k">return</span> <span class="nb">array_flip</span><span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="na">COMMAND_ID_LIST</span><span class="p">)[</span><span class="nv">$name</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+</code></pre></div></div>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+
+<span class="kn">namespace</span> <span class="nn">Superman2014\SfSwooleConsole</span><span class="p">;</span>
+
+<span class="kn">use</span> <span class="nn">Swoole\Server</span><span class="p">;</span>
+<span class="kn">use</span> <span class="nn">Swoole\Process</span><span class="p">;</span>
+<span class="kn">use</span> <span class="nn">Swoole\Client</span><span class="p">;</span>
+<span class="kn">use</span> <span class="nn">Swoole\Timer</span><span class="p">;</span>
+
+<span class="kd">class</span> <span class="nc">TaskServer</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="no">NAME</span> <span class="o">=</span> <span class="s1">'sf-swoole-console'</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="nv">$config</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s1">'worker_num'</span> <span class="o">=&gt;</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s1">'task_worker_num'</span> <span class="o">=&gt;</span> <span class="mi">4</span><span class="p">,</span>
+        <span class="s1">'daemonize'</span> <span class="o">=&gt;</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="s1">'backlog'</span> <span class="o">=&gt;</span> <span class="mi">128</span><span class="p">,</span>
+        <span class="s1">'log_file'</span> <span class="o">=&gt;</span> <span class="s1">'/tmp/swoole.log'</span><span class="p">,</span>
+        <span class="s1">'log_level'</span> <span class="o">=&gt;</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s1">'task_ipc_mode'</span> <span class="o">=&gt;</span> <span class="mi">3</span><span class="p">,</span>
+        <span class="s1">'heartbeat_check_interval'</span> <span class="o">=&gt;</span> <span class="mi">5</span><span class="p">,</span>
+        <span class="s1">'heartbeat_idle_time'</span> <span class="o">=&gt;</span> <span class="mi">10</span><span class="p">,</span>
+        <span class="s1">'pid_file'</span> <span class="o">=&gt;</span> <span class="s1">'/tmp/sf-swoole-console.pid'</span><span class="p">,</span>
+
+        <span class="s1">'open_length_check'</span> <span class="o">=&gt;</span> <span class="kc">true</span><span class="p">,</span>
+        <span class="s1">'package_length_type'</span> <span class="o">=&gt;</span> <span class="s1">'n'</span><span class="p">,</span>
+        <span class="s1">'package_length_offset'</span> <span class="o">=&gt;</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="s1">'package_body_offset'</span> <span class="o">=&gt;</span> <span class="nx">Protocol</span><span class="o">::</span><span class="na">HEADER</span><span class="p">,</span>
+        <span class="s1">'package_max_length'</span> <span class="o">=&gt;</span> <span class="nx">Protocol</span><span class="o">::</span><span class="na">PACKAGE_LENGTH</span><span class="p">,</span>
+    <span class="p">];</span>
+
+    <span class="k">const</span> <span class="no">LISTEN_HOST</span> <span class="o">=</span> <span class="s1">'0.0.0.0'</span><span class="p">;</span>
+
+    <span class="k">const</span> <span class="no">MANAGE_HOST</span> <span class="o">=</span> <span class="s1">'127.0.0.1'</span><span class="p">;</span>
+
+    <span class="k">const</span> <span class="no">PORT</span> <span class="o">=</span> <span class="mi">9501</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="nv">$command</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">switch</span> <span class="p">(</span><span class="nv">$command</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">case</span> <span class="nx">TaskConstant</span><span class="o">::</span><span class="na">START</span><span class="o">:</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">start</span><span class="p">();</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">TaskConstant</span><span class="o">::</span><span class="na">STOP</span><span class="o">:</span>
+                 <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">clientSendCommand</span><span class="p">()(</span><span class="nx">TaskConstant</span><span class="o">::</span><span class="na">STOP</span><span class="p">);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">TaskConstant</span><span class="o">::</span><span class="na">STATUS</span><span class="o">:</span>
+                <span class="nv">$recv</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">clientSendCommand</span><span class="p">()(</span><span class="nx">TaskConstant</span><span class="o">::</span><span class="na">STATUS</span><span class="p">);</span>
+                <span class="nb">var_dump</span><span class="p">(</span><span class="nv">$recv</span><span class="p">[</span><span class="s1">'body'</span><span class="p">]);</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">TaskConstant</span><span class="o">::</span><span class="na">PING</span><span class="o">:</span>
+                <span class="nb">var_dump</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">clientSendCommand</span><span class="p">()(</span><span class="nx">TaskConstant</span><span class="o">::</span><span class="na">PING</span><span class="p">));</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">TaskConstant</span><span class="o">::</span><span class="na">RELOAD</span><span class="o">:</span>
+                <span class="nv">$recv</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">clientSendCommand</span><span class="p">()(</span> <span class="nx">TaskConstant</span><span class="o">::</span><span class="na">RELOAD</span><span class="p">);</span>
+                <span class="k">echo</span> <span class="nv">$recv</span><span class="p">[</span><span class="s1">'body'</span><span class="p">],</span><span class="nx">PHP_EOL</span><span class="p">;</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="k">case</span> <span class="nx">TaskConstant</span><span class="o">::</span><span class="na">RESTART</span><span class="o">:</span>
+                <span class="nv">$recv</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">clientSendCommand</span><span class="p">()(</span> <span class="nx">TaskConstant</span><span class="o">::</span><span class="na">RESTART</span><span class="p">);</span>
+                <span class="k">echo</span> <span class="nv">$recv</span><span class="p">[</span><span class="s1">'body'</span><span class="p">],</span><span class="nx">PHP_EOL</span><span class="p">;</span>
+                <span class="k">break</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">clientSendCommand</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$command</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$client</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Client</span><span class="p">(</span><span class="nx">SWOOLE_SOCK_TCP</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$client</span><span class="o">-&gt;</span><span class="na">connect</span><span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="na">MANAGE_HOST</span><span class="p">,</span> <span class="nx">self</span><span class="o">::</span><span class="na">PORT</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">exit</span><span class="p">(</span><span class="s2">"connect failed. Error: </span><span class="si">{</span><span class="nv">$client</span><span class="o">-&gt;</span><span class="na">errCode</span><span class="si">}</span><span class="se">\n</span><span class="s2">"</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="nb">in_array</span><span class="p">(</span><span class="nv">$command</span><span class="p">,</span> <span class="nx">TaskConstant</span><span class="o">::</span><span class="na">COMMAND_SET</span><span class="p">))</span> <span class="p">{</span>
+                <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="nx">Protocol</span><span class="o">::</span><span class="na">encode</span><span class="p">(</span><span class="nv">$command</span><span class="p">,</span> <span class="nx">TaskConstant</span><span class="o">::</span><span class="na">commandIdByName</span><span class="p">(</span><span class="nv">$command</span><span class="p">)));</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="nx">Protocol</span><span class="o">::</span><span class="na">encode</span><span class="p">(</span><span class="nv">$command</span><span class="p">,</span> <span class="nx">TaskConstant</span><span class="o">::</span><span class="na">commandIdByName</span><span class="p">(</span><span class="nx">TaskConstant</span><span class="o">::</span><span class="na">DATA</span><span class="p">)));</span>
+            <span class="p">}</span>
+
+            <span class="nv">$recv</span> <span class="o">=</span> <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">recv</span><span class="p">();</span>
+            <span class="nv">$client</span><span class="o">-&gt;</span><span class="na">close</span><span class="p">();</span>
+            <span class="k">return</span> <span class="nx">Protocol</span><span class="o">::</span><span class="na">decode</span><span class="p">(</span><span class="nv">$recv</span><span class="p">);</span>
+        <span class="p">};</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">start</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$server</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Server</span><span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="na">LISTEN_HOST</span><span class="p">,</span> <span class="nx">self</span><span class="o">::</span><span class="na">PORT</span><span class="p">,</span> <span class="nx">SWOOLE_BASE</span><span class="p">,</span> <span class="nx">SWOOLE_SOCK_TCP</span><span class="p">);</span>
+
+        <span class="nv">$server</span><span class="o">-&gt;</span><span class="na">set</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">config</span><span class="p">);</span>
+
+        <span class="nv">$server</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">'Connect'</span><span class="p">,</span> <span class="p">[</span><span class="nv">$this</span><span class="p">,</span> <span class="s1">'onConnect'</span><span class="p">]);</span>
+        <span class="nv">$server</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">'Close'</span><span class="p">,</span> <span class="p">[</span><span class="nv">$this</span><span class="p">,</span> <span class="s1">'onClose'</span><span class="p">]);</span>
+        <span class="nv">$server</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">'Task'</span><span class="p">,</span> <span class="p">[</span><span class="nv">$this</span><span class="p">,</span> <span class="s1">'onTask'</span><span class="p">]);</span>
+        <span class="nv">$server</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">'Finish'</span><span class="p">,</span> <span class="p">[</span><span class="nv">$this</span><span class="p">,</span> <span class="s1">'onFinish'</span><span class="p">]);</span>
+<span class="c1">//        $server-&gt;on('Start', [$this, 'onStart']); // SWOOLE_BASE 不存在</span>
+        <span class="nv">$server</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">'WorkerStart'</span><span class="p">,</span> <span class="p">[</span><span class="nv">$this</span><span class="p">,</span> <span class="s1">'onWorkerStart'</span><span class="p">]);</span>
+        <span class="nv">$server</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">'WorkerStop'</span><span class="p">,</span> <span class="p">[</span><span class="nv">$this</span><span class="p">,</span> <span class="s1">'onWorkerStop'</span><span class="p">]);</span>
+        <span class="nv">$server</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">'ManagerStart'</span><span class="p">,</span> <span class="p">[</span><span class="nv">$this</span><span class="p">,</span> <span class="s1">'onManagerStart'</span><span class="p">]);</span>
+        <span class="nv">$server</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">'Shutdown'</span><span class="p">,</span> <span class="p">[</span><span class="nv">$this</span><span class="p">,</span> <span class="s1">'onShutdown'</span><span class="p">]);</span>
+        <span class="nv">$server</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">'WorkerExit'</span><span class="p">,</span> <span class="p">[</span><span class="nv">$this</span><span class="p">,</span> <span class="s1">'onWorkerExit'</span><span class="p">]);</span>
+
+        <span class="cd">/**
+         * 用户进程实现了广播功能，循环接收unixSocket的消息，并发给服务器的所有连接
+         */</span>
+        <span class="nv">$process</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Process</span><span class="p">(</span>
+            <span class="k">function</span> <span class="p">(</span><span class="nv">$process</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$server</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$socket</span> <span class="o">=</span> <span class="nv">$process</span><span class="o">-&gt;</span><span class="na">exportSocket</span><span class="p">();</span>
+                <span class="k">while</span> <span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="nv">$msg</span> <span class="o">=</span> <span class="nv">$socket</span><span class="o">-&gt;</span><span class="na">recv</span><span class="p">();</span>
+
+                    <span class="nv">$command</span> <span class="o">=</span> <span class="nx">TaskConstant</span><span class="o">::</span><span class="na">COMMAND_ID_LIST</span><span class="p">[</span><span class="nv">$msg</span><span class="p">];</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="nv">$command</span> <span class="o">==</span> <span class="nx">TaskConstant</span><span class="o">::</span><span class="na">STATUS</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="nv">$socket</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="nb">json_encode</span><span class="p">(</span><span class="nv">$server</span><span class="o">-&gt;</span><span class="na">stats</span><span class="p">()));</span>
+                    <span class="p">}</span> <span class="k">elseif</span> <span class="p">(</span><span class="nv">$command</span> <span class="o">==</span> <span class="nx">TaskConstant</span><span class="o">::</span><span class="na">RELOAD</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="nv">$server</span><span class="o">-&gt;</span><span class="na">reload</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+                        <span class="nv">$socket</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="s1">'reload ok'</span><span class="p">);</span>
+                    <span class="p">}</span> <span class="k">elseif</span> <span class="p">(</span><span class="nv">$command</span> <span class="o">==</span> <span class="nx">TaskConstant</span><span class="o">::</span><span class="na">RESTART</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="nx">Process</span><span class="o">::</span><span class="na">kill</span><span class="p">(</span><span class="nv">$server</span><span class="o">-&gt;</span><span class="na">manager_pid</span><span class="p">,</span> <span class="nx">SIGUSR1</span><span class="p">);</span>
+                        <span class="nx">Process</span><span class="o">::</span><span class="na">kill</span><span class="p">(</span><span class="nv">$server</span><span class="o">-&gt;</span><span class="na">manager_pid</span><span class="p">,</span> <span class="nx">SIGUSR2</span><span class="p">);</span>
+                        <span class="nv">$socket</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="s1">'restart ok'</span><span class="p">);</span>
+                    <span class="p">}</span> <span class="k">elseif</span> <span class="p">(</span><span class="nv">$command</span> <span class="o">==</span> <span class="nx">TaskConstant</span><span class="o">::</span><span class="na">STOP</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="nv">$server</span><span class="o">-&gt;</span><span class="na">shutdown</span><span class="p">();</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">},</span>
+            <span class="kc">false</span><span class="p">,</span>
+            <span class="mi">2</span><span class="p">,</span>
+            <span class="mi">1</span>
+        <span class="p">);</span>
+
+        <span class="nv">$server</span><span class="o">-&gt;</span><span class="na">addProcess</span><span class="p">(</span><span class="nv">$process</span><span class="p">);</span>
+
+        <span class="nv">$server</span><span class="o">-&gt;</span><span class="na">on</span><span class="p">(</span><span class="s1">'Receive'</span><span class="p">,</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$server</span><span class="p">,</span> <span class="nv">$fd</span><span class="p">,</span> <span class="nv">$reactorId</span><span class="p">,</span> <span class="nv">$data</span><span class="p">)</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$process</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$msg</span> <span class="o">=</span> <span class="nx">Protocol</span><span class="o">::</span><span class="na">decode</span><span class="p">(</span><span class="nv">$data</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">in_array</span><span class="p">(</span><span class="nv">$c</span> <span class="o">=</span> <span class="nx">TaskConstant</span><span class="o">::</span><span class="na">COMMAND_ID_LIST</span><span class="p">[</span><span class="nv">$msg</span><span class="p">[</span><span class="s1">'commandId'</span><span class="p">]],</span> <span class="nx">TaskConstant</span><span class="o">::</span><span class="na">USER_COMMAND</span><span class="p">))</span> <span class="p">{</span>
+                <span class="nv">$socket</span> <span class="o">=</span> <span class="nv">$process</span><span class="o">-&gt;</span><span class="na">exportSocket</span><span class="p">();</span>
+                <span class="nv">$socket</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="nv">$msg</span><span class="p">[</span><span class="s1">'commandId'</span><span class="p">]);</span>
+                <span class="nv">$server</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="nx">Protocol</span><span class="o">::</span><span class="na">encode</span><span class="p">(</span><span class="nv">$socket</span><span class="o">-&gt;</span><span class="na">recv</span><span class="p">(),</span> <span class="nx">TaskConstant</span><span class="o">::</span><span class="na">commandIdByName</span><span class="p">(</span><span class="nx">TaskConstant</span><span class="o">::</span><span class="na">DATA</span><span class="p">)));</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">onReceive</span><span class="p">(</span><span class="nv">$server</span><span class="p">,</span> <span class="nv">$fd</span><span class="p">,</span> <span class="nv">$reactorId</span><span class="p">,</span> <span class="nv">$msg</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">});</span>
+
+        <span class="nv">$server</span><span class="o">-&gt;</span><span class="na">start</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="c1">//此回调函数在worker进程中执行</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">onReceive</span><span class="p">(</span><span class="nx">Server</span> <span class="nv">$server</span><span class="p">,</span> <span class="nx">int</span> <span class="nv">$fd</span><span class="p">,</span> <span class="nx">int</span> <span class="nv">$reactorId</span><span class="p">,</span> <span class="nv">$data</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$server</span><span class="o">-&gt;</span><span class="na">send</span><span class="p">(</span><span class="nv">$fd</span><span class="p">,</span> <span class="nx">Protocol</span><span class="o">::</span><span class="na">encode</span><span class="p">(</span><span class="nv">$data</span><span class="p">[</span><span class="s1">'body'</span><span class="p">],</span> <span class="nv">$data</span><span class="p">[</span><span class="s1">'commandId'</span><span class="p">]));</span>
+    <span class="p">}</span>
+
+	<span class="c1">// ....</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">Server</code> 的基本基本命令<code class="highlighter-rouge">stop</code> <code class="highlighter-rouge">restart</code> <code class="highlighter-rouge">ping</code> <code class="highlighter-rouge">stop</code> 就是使用协议里面定义的commandId。 后续还会这里进行深入研究。</p>
+
+<p>跟编解码类似的如编程中序列化，反序列化. 可以看看这边文档 <a href="https://www.infoq.cn/article/serialization-and-deserialization">序列化和反序列化</a>。</p>
+
 <h2 id="参考">参考</h2>
 
 <ul>
@@ -346,6 +656,9 @@ Escape character is '^]'.
   <li><a href="https://wiki.swoole.com/#/server/init">服务端异步风格</a></li>
   <li><a href="https://opso.coding.me/post/swoole-tcp-pack/">通过swoole理解TCP粘包</a></li>
   <li><a href="https://www.ruanyifeng.com/blog/2016/11/byte-order.html">理解字节序</a></li>
+  <li><a href="https://my.oschina.net/goal/blog/195749">PHP: 深入pack/unpack</a></li>
+  <li><a href="https://www.infoq.cn/article/serialization-and-deserialization">序列化和反序列化</a></li>
+  <li><a href="https://github.com/superman2014/sf-swoole-console/tree/feature-self-protocol">自定义swoole协议demo</a></li>
 </ul>
 
 	  </div>

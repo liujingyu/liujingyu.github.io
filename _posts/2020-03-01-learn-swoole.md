@@ -188,6 +188,321 @@ function sendMsg($msg) {
 ```
 
 
+再来一个漂亮版本的代码
+
+RPC 编码协议类
+```php
+
+<?php
+
+namespace Superman2014\SfSwooleConsole;
+
+/**
+ * Class Protocol
+ * @package Superman2014\SfSwooleConsole
+ *
+ *
+ * 包结构
+ *
+ * 字段	字节数	说明
+ * 包头	定长	每一个通信消息必须包含的内容
+ * 包体	不定长	根据每个通信消息的不同产生变化
+ *
+ * 其中包头详细内容如下：
+ *
+ * 字段        字节数 类型  说明
+ * pkg_len	    2   ushort	整个包的长度，不超过4K
+ * version	    1 	uchar	通讯协议版本号
+ * command_id	2 	ushort	消息命令ID
+ * result	    2 	short	请求时不起作用；请求返回时使用
+ *
+ */
+class Protocol
+{
+
+    const VERSION = '1';
+
+    const HEADER = 7;
+
+    const PACKAGE_LENGTH = 4096;
+
+    public static function partHeader($bodyLen, $version, $commandId, $result)
+    {
+        return pack("nCns", $bodyLen, $version, $commandId, $result);
+    }
+
+    public static function partBody($msg)
+    {
+        return pack("a". strlen($msg), $msg);
+    }
+
+    public static function encode($msg, $commandId, $result = 0)
+    {
+
+        return self::partHeader(strlen($msg), self::VERSION, $commandId, $result)
+            . self::partBody($msg);
+
+    }
+
+    public static function decode($msg)
+    {
+
+        $header = substr($msg, 0, self::HEADER);
+        $p = unpack('nbodyLen/Cversion/ncommandId/sresult', $header);
+        $len = $p['bodyLen'];
+        $bodyPack = unpack("a{$len}body", substr($msg, self::HEADER, $len));
+        return array_merge($bodyPack, $p);
+    }
+
+    public static function main()
+    {
+        $msg = self::encode("hello", "1001", 0);
+
+        var_dump(self::decode($msg));
+
+        //
+//        array(5) {
+//        ["body"]=>
+//  string(5) "hello"
+//        ["bodyLen"]=>
+//  int(5)
+//  ["version"]=>
+//  int(1)
+//  ["commandId"]=>
+//  int(1001)
+//  ["result"]=>
+//  int(0)
+//    }
+    }
+}
+
+//Protocol::main();
+```
+
+常量类
+
+```
+<?php
+
+namespace Superman2014\SfSwooleConsole;
+
+class TaskConstant
+{
+    const COMMAND_SET = [
+        self::START,
+        self::STOP,
+        self::RESTART,
+        self::RELOAD,
+        self::PING,
+        self::STATUS,
+        self::USAGE,
+    ];
+
+    const USER_COMMAND = [
+        self::STATUS,
+        self::RELOAD,
+        self::RESTART,
+        self::STOP,
+    ];
+
+    const START = 'start';
+
+    const STOP = 'stop';
+
+    const STATUS = 'status';
+
+    const RELOAD = 'reload';
+
+    const RESTART = 'restart';
+
+    const PING = 'ping';
+
+    const USAGE = 'usage';
+
+    const DATA = 'data';
+
+    const COMMAND_ID_LIST = [
+        1001 => self::START,
+        1002 => self::STOP,
+        1003 => self::RESTART,
+        1004 => self::RELOAD,
+        1005 => self::PING,
+        1006 => self::STATUS,
+        1007 => self::DATA,
+    ];
+
+    public static function commandIdByName($name)
+    {
+       return array_flip(self::COMMAND_ID_LIST)[$name];
+    }
+}
+
+```
+
+```
+<?php
+
+namespace Superman2014\SfSwooleConsole;
+
+use Swoole\Server;
+use Swoole\Process;
+use Swoole\Client;
+use Swoole\Timer;
+
+class TaskServer
+{
+    const NAME = 'sf-swoole-console';
+
+    public $config = [
+        'worker_num' => 4,
+        'task_worker_num' => 4,
+        'daemonize' => true,
+        'backlog' => 128,
+        'log_file' => '/tmp/swoole.log',
+        'log_level' => 0,
+        'task_ipc_mode' => 3,
+        'heartbeat_check_interval' => 5,
+        'heartbeat_idle_time' => 10,
+        'pid_file' => '/tmp/sf-swoole-console.pid',
+
+        'open_length_check' => true,
+        'package_length_type' => 'n',
+        'package_length_offset' => 0,
+        'package_body_offset' => Protocol::HEADER,
+        'package_max_length' => Protocol::PACKAGE_LENGTH,
+    ];
+
+    const LISTEN_HOST = '0.0.0.0';
+
+    const MANAGE_HOST = '127.0.0.1';
+
+    const PORT = 9501;
+
+    public function __construct($command)
+    {
+        switch ($command) {
+            case TaskConstant::START:
+                $this->start();
+                break;
+            case TaskConstant::STOP:
+                 $this->clientSendCommand()(TaskConstant::STOP);
+                break;
+            case TaskConstant::STATUS:
+                $recv = $this->clientSendCommand()(TaskConstant::STATUS);
+                var_dump($recv['body']);
+                break;
+            case TaskConstant::PING:
+                var_dump($this->clientSendCommand()(TaskConstant::PING));
+                break;
+            case TaskConstant::RELOAD:
+                $recv = $this->clientSendCommand()( TaskConstant::RELOAD);
+                echo $recv['body'],PHP_EOL;
+                break;
+            case TaskConstant::RESTART:
+                $recv = $this->clientSendCommand()( TaskConstant::RESTART);
+                echo $recv['body'],PHP_EOL;
+                break;
+        }
+    }
+
+    public function clientSendCommand()
+    {
+        return function ($command) {
+            $client = new Client(SWOOLE_SOCK_TCP);
+            if (!$client->connect(self::MANAGE_HOST, self::PORT, -1)) {
+                exit("connect failed. Error: {$client->errCode}\n");
+            }
+
+            if (in_array($command, TaskConstant::COMMAND_SET)) {
+                $client->send(Protocol::encode($command, TaskConstant::commandIdByName($command)));
+            } else {
+                $client->send(Protocol::encode($command, TaskConstant::commandIdByName(TaskConstant::DATA)));
+            }
+
+            $recv = $client->recv();
+            $client->close();
+            return Protocol::decode($recv);
+        };
+    }
+
+    public function start()
+    {
+        $server = new Server(self::LISTEN_HOST, self::PORT, SWOOLE_BASE, SWOOLE_SOCK_TCP);
+
+        $server->set($this->config);
+
+        $server->on('Connect', [$this, 'onConnect']);
+        $server->on('Close', [$this, 'onClose']);
+        $server->on('Task', [$this, 'onTask']);
+        $server->on('Finish', [$this, 'onFinish']);
+//        $server->on('Start', [$this, 'onStart']); // SWOOLE_BASE 不存在
+        $server->on('WorkerStart', [$this, 'onWorkerStart']);
+        $server->on('WorkerStop', [$this, 'onWorkerStop']);
+        $server->on('ManagerStart', [$this, 'onManagerStart']);
+        $server->on('Shutdown', [$this, 'onShutdown']);
+        $server->on('WorkerExit', [$this, 'onWorkerExit']);
+
+        /**
+         * 用户进程实现了广播功能，循环接收unixSocket的消息，并发给服务器的所有连接
+         */
+        $process = new Process(
+            function ($process) use ($server) {
+                $socket = $process->exportSocket();
+                while (true) {
+                    $msg = $socket->recv();
+
+                    $command = TaskConstant::COMMAND_ID_LIST[$msg];
+                    if ($command == TaskConstant::STATUS) {
+                        $socket->send(json_encode($server->stats()));
+                    } elseif ($command == TaskConstant::RELOAD) {
+                        $server->reload(true);
+                        $socket->send('reload ok');
+                    } elseif ($command == TaskConstant::RESTART) {
+                        Process::kill($server->manager_pid, SIGUSR1);
+                        Process::kill($server->manager_pid, SIGUSR2);
+                        $socket->send('restart ok');
+                    } elseif ($command == TaskConstant::STOP) {
+                        $server->shutdown();
+                    }
+                }
+            },
+            false,
+            2,
+            1
+        );
+
+        $server->addProcess($process);
+
+        $server->on('Receive', function ($server, $fd, $reactorId, $data) use ($process) {
+            $msg = Protocol::decode($data);
+            if (in_array($c = TaskConstant::COMMAND_ID_LIST[$msg['commandId']], TaskConstant::USER_COMMAND)) {
+                $socket = $process->exportSocket();
+                $socket->send($msg['commandId']);
+                $server->send($fd, Protocol::encode($socket->recv(), TaskConstant::commandIdByName(TaskConstant::DATA)));
+            } else {
+                $this->onReceive($server, $fd, $reactorId, $msg);
+            }
+        });
+
+        $server->start();
+    }
+
+    //此回调函数在worker进程中执行
+    public function onReceive(Server $server, int $fd, int $reactorId, $data)
+    {
+        $server->send($fd, Protocol::encode($data['body'], $data['commandId']));
+    }
+
+	// ....
+}
+```
+
+`Server` 的基本基本命令`stop` `restart` `ping` `stop` 就是使用协议里面定义的commandId。 后续还会这里进行深入研究。
+
+跟编解码类似的如编程中序列化，反序列化. 可以看看这边文档 [序列化和反序列化](https://www.infoq.cn/article/serialization-and-deserialization)。
+
+
+
 
 ## 参考
 
@@ -195,3 +510,6 @@ function sendMsg($msg) {
 * [服务端异步风格](https://wiki.swoole.com/#/server/init)
 * [通过swoole理解TCP粘包](https://opso.coding.me/post/swoole-tcp-pack/)
 * [理解字节序](https://www.ruanyifeng.com/blog/2016/11/byte-order.html)
+* [PHP: 深入pack/unpack](https://my.oschina.net/goal/blog/195749)
+* [序列化和反序列化](https://www.infoq.cn/article/serialization-and-deserialization)
+* [自定义swoole协议demo](https://github.com/superman2014/sf-swoole-console/tree/feature-self-protocol)
