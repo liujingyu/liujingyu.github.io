@@ -508,6 +508,7 @@ Escape character is '^]'.
   &lt;li&gt;&lt;a href=&quot;https://my.oschina.net/goal/blog/195749&quot;&gt;PHP: 深入pack/unpack&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://www.infoq.cn/article/serialization-and-deserialization&quot;&gt;序列化和反序列化&lt;/a&gt;&lt;/li&gt;
   &lt;li&gt;&lt;a href=&quot;https://github.com/superman2014/sf-swoole-console/tree/feature-self-protocol&quot;&gt;自定义swoole协议demo&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://github.com/msgpack-rpc/msgpack-rpc&quot;&gt;msgpack rpc&lt;/a&gt;&lt;/li&gt;
 &lt;/ul&gt;
 </description>
 				<pubDate>Sun, 01 Mar 2020 00:00:00 +0800</pubDate>

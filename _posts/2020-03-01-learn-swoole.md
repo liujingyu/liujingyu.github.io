@@ -513,3 +513,4 @@ class TaskServer
 * [PHP: 深入pack/unpack](https://my.oschina.net/goal/blog/195749)
 * [序列化和反序列化](https://www.infoq.cn/article/serialization-and-deserialization)
 * [自定义swoole协议demo](https://github.com/superman2014/sf-swoole-console/tree/feature-self-protocol)
+* [msgpack rpc](https://github.com/msgpack-rpc/msgpack-rpc)
