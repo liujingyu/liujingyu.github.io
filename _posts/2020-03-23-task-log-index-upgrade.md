@@ -8,13 +8,13 @@ markdown: kramdown
 
 ---
 
-### 背景
+#### 背景
 
 ![task log data](/assets/media/WX20200323-135441.png)
 
 索引表数据过大，基于场景，分析该表就是统计任务写入状态使用,便于每天汇总报告.
 
-### 解决方案
+#### 解决方案
 
 利用Index Template 格式如下：
 
@@ -141,9 +141,14 @@ GET task-log/_search
 基本功能实现了，原来的`_source`数据不存在了，一条省个及字节，一天几亿条,那就节省不少空间。
 
 
-### 优化点
+#### 优化点
 
 1. `_source enable false`
 2. `index template` 支持`version, alias, mapping`
 3. 移除副本配置，缩小不必要的数据空间
 4. 一个存储日志的主分片理论值50G，三个主分片可容纳150G数据，基于现有每天的数据量按每条1KB，可容纳150亿条数据，足矣满足现在业务使用场景。
+
+
+#### 参考
+
+https://blog.csdn.net/napoay/article/details/62233031
