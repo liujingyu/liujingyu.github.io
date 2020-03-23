@@ -155,6 +155,164 @@
   <span class="post-date">
     
     March
+    23rd,
+    
+    2020
+  </span>
+
+  <h2>
+    <a href="/elasticsearch/2020/03/23/task-log-index-upgrade.html">优化task-log索引</a>
+  </h2>
+
+  <div>
+    
+    <h3 id="背景">背景</h3>
+
+<p><img src="/assets/media/WX20200323-135441.png" alt="task log data" /></p>
+
+<p>索引表数据过大，基于场景，分析该表就是统计任务写入状态使用,便于每天汇总报告.</p>
+
+<h3 id="解决方案">解决方案</h3>
+
+<p>利用Index Template 格式如下：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PUT _template/task_log
+{
+	"index_patterns": ["task-log-*"],
+	"settings": {
+		"number_of_shards": 3
+	},
+	"mappings": {
+		"_source": {
+			"enabled": false
+		},
+		"dynamic": false,
+		"properties": {
+			"id": {
+				"type": "long"
+			},
+			"success": {
+				"type": "boolean"
+			},
+			"createtime": {
+				"type": "date",
+				"format": "yyyy-MM-dd HH:mm:ss"
+			}
+		}
+	},
+	"aliases": {
+	  "task-log": {}
+	},
+	"version": 2
+}
+</code></pre></div></div>
+
+<p>按天创建索引,而且支持动态创建（task_log Template)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>POST task-log-20200325/_doc
+{
+  "id":1011221,
+  "success":false,
+  "createtime":"2020-12-12 13:12:12"
+}
+</code></pre></div></div>
+
+<p>分析数据（每天的成功个数和失败个数)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>GET task-log/_search
+{
+  "size": 0,
+  "aggs": {
+    "avg_day": {
+      "date_histogram": {
+        "field": "createtime",
+        "interval": "day"
+      },
+      "aggs": {
+        "success": {
+          "terms": {
+            "field": "success",
+            "size": 10
+          }
+        }
+      }
+
+    }
+  }
+}
+</code></pre></div></div>
+
+<p>结果:</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+  "took" : 3,
+  "timed_out" : false,
+  "_shards" : {
+    "total" : 2,
+    "successful" : 2,
+    "skipped" : 0,
+    "failed" : 0
+  },
+  "hits" : {
+    "total" : {
+      "value" : 7,
+      "relation" : "eq"
+    },
+    "max_score" : null,
+    "hits" : [ ]
+  },
+  "aggregations" : {
+    "avg_day" : {
+      "buckets" : [
+        {
+          "key_as_string" : "2020-12-12 00:00:00",
+          "key" : 1607731200000,
+          "doc_count" : 7,
+          "success" : {
+            "doc_count_error_upper_bound" : 0,
+            "sum_other_doc_count" : 0,
+            "buckets" : [
+              {
+                "key" : 1,
+                "key_as_string" : "true",
+                "doc_count" : 5
+              },
+              {
+                "key" : 0,
+                "key_as_string" : "false",
+                "doc_count" : 2
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
+</code></pre></div></div>
+
+<p>基本功能实现了，原来的<code class="highlighter-rouge">_source</code>数据不存在了，一条省个及字节，一天几亿条,那就节省不少空间。</p>
+
+<h3 id="优化点">优化点</h3>
+
+<ol>
+  <li><code class="highlighter-rouge">_source enable false</code></li>
+  <li><code class="highlighter-rouge">index template</code> 支持<code class="highlighter-rouge">version, alias, mapping</code></li>
+  <li>移除副本配置，缩小不必要的数据空间</li>
+  <li>一个存储日志的主分片理论值50G，三个主分片可容纳150G数据，基于现有每天的数据量按每条1KB，可容纳150亿条数据，足矣满足现在业务使用场景。</li>
+</ol>
+
+    
+  </div>
+
+</article>
+
+
+<article class="home">
+
+  <span class="post-date">
+    
+    March
     17th,
     
     2020
@@ -1990,90 +2148,6 @@ int main()
 <p>如何设计含有一个、两个或三个个体的模型或可能域以及在该可能域中改写论证的各分支命题,由此用逻辑类推的反驳方法来证明一个涉及量词的论证的无效性。如果我们能展示这样一个可能域,即它至少含有一个使该论证的所有前提在域中为真而结论在其中为假的个体,那么,我们就证明了这个涉及量词的论证无效</p>
 
 <p>怎样对非三段论论证进行符号化和评价。这些论证含有些不能划归为A、E、I、O命题或单称命题的命题。鉴于除外命题和其他一些命题的复杂性,必须先理解它们的逻辑含义,然后才能用命题函项和量词进行准确的翻译。</p>
-
-    
-  </div>
-
-</article>
-
-
-<article class="home">
-
-  <span class="post-date">
-    
-    January
-    17th,
-    
-    2020
-  </span>
-
-  <h2>
-    <a href="/logical/2020/01/17/syllogism.html">直言三段论</a>
-  </h2>
-
-  <div>
-    
-    <p>标准式直言三段论:
-组成成分、形式、有效性和制约其正确使用的规则。</p>
-
-<p>三段论大项、小项和中项的定义:</p>
-
-<p>大项:结论的谓项</p>
-
-<p>小项:结论的主项</p>
-
-<p>中项:两个前提中都出现, 但结论中不出现的第三个项</p>
-
-<p>继而又分别定义了大前提和小前提,包含大项的前提叫做大前提,包含小项的前提叫做小前提。</p>
-
-<p>如果几个命题出现的次序正好是:大前提在第一位、小前提在第二位、结论在最后,我们就把这样的三段论指定为标准式的。</p>
-
-<p>三段论的式与格是如何确定的。
-段论的式由识别三个命题类型的字母来确定,即A、E、1、O中的三个。总共有64个不同式。
-段论的格由中项在前提中的不同位置来确定。</p>
-
-<p>对四个可能的格描述并定义如下:</p>
-
-<p><strong>第一格</strong>:中项在大前提中做主项、在小前提中做谓项。 模式为:M-P,S-M,所以S-P。</p>
-
-<p><strong>第二格</strong>:中项在两个前提中都儆谓项。 模式为:P-M,S-M,所以S-P</p>
-
-<p><strong>第三格</strong>:中项在两个前提中都做主项。 模式为:M一P,M-S,所以S-P。</p>
-
-<p><strong>第四格</strong>:中项在大前提中做谓项、在小前提中做主项。 模式为:P-M,M-S,所以S-P。</p>
-
-<p>标准式三段论的式与格如何共同地确定其逻辑形式。由于64个式每一个都有四个格,所以共有256个标准式的直言三段论,但其中只有一小部分是有效式。</p>
-
-<p>标准式三段论的六条基本规则,同时定义了违反各条规则所造成的谬误。</p>
-
-<p><strong>规则1</strong>一个有效的标准式直言三段论必须仅仅包含三个项,在整个论证中,每一个项都须在相同的意义上使用。</p>
-
-<p>违反本规则所犯的错误:四项谬误。</p>
-
-<p><strong>规则2</strong>在一个有效的标准式直言三段论中,中项必须至少在一个前提中周延。</p>
-
-<p>违反本规则所犯的错误:中项不周延谬误。</p>
-
-<p><strong>规则3</strong>在一个有效的标准式直言三段论中,在结论中周延的项在前提中也必须周延。</p>
-
-<p>违反本规则所犯的错误:大项不当周延谬误,或者小项不当周延谬误</p>
-
-<p><strong>规则4</strong>任何有两个否定前提的标准式三段论都不是有效的。</p>
-
-<p>违反本规则所犯的错误:排斥前提谬误。</p>
-
-<p><strong>规则5</strong>如果一个标准式三段论有一个前提是否定的,那么结论必须是否定的。</p>
-
-<p>违反本规则所犯的错误:从否定推肯定谬误。</p>
-
-<p><strong>规则6</strong>一个有效的标准式直言三段论,如果结论为特称命题,那么其前提不能都是全称的。</p>
-
-<p>违反本规则所犯的错误:存在谬误。</p>
-
-<p>标准式直言三段论的15个有效形式的说明,识别它们的格与式,并说明了它们传统的拉丁名称:
-AAA-1( Barbara)、EAE-1( parent)、AII1(Dari)、EIO-1(Fe rio)、AEE-2( Camestres)、EAE-2( Cesare)、AOO2( Baroko)、EIO2( Festino)、AII-3( Datisi)、IAI-3( Disamis)、EIO-3( Ferison)、OAO3 ( Bokardo)、AEE-4( amenes)、IAI-4( Dimaris)、EIO-4( Fresison)。</p>
-
-<p>15个有效形式的演绎推导,通过排除法程序,证明了只有15个形式是完全遵守三段论的六条基本规则的。</p>
 
     
   </div>

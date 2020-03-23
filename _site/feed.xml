@@ -7,6 +7,149 @@
 		<atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>优化task-log索引</title>
+				<description>&lt;h3 id=&quot;背景&quot;&gt;背景&lt;/h3&gt;
+
+&lt;p&gt;&lt;img src=&quot;/assets/media/WX20200323-135441.png&quot; alt=&quot;task log data&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;索引表数据过大，基于场景，分析该表就是统计任务写入状态使用,便于每天汇总报告.&lt;/p&gt;
+
+&lt;h3 id=&quot;解决方案&quot;&gt;解决方案&lt;/h3&gt;
+
+&lt;p&gt;利用Index Template 格式如下：&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;PUT _template/task_log
+{
+	&quot;index_patterns&quot;: [&quot;task-log-*&quot;],
+	&quot;settings&quot;: {
+		&quot;number_of_shards&quot;: 3
+	},
+	&quot;mappings&quot;: {
+		&quot;_source&quot;: {
+			&quot;enabled&quot;: false
+		},
+		&quot;dynamic&quot;: false,
+		&quot;properties&quot;: {
+			&quot;id&quot;: {
+				&quot;type&quot;: &quot;long&quot;
+			},
+			&quot;success&quot;: {
+				&quot;type&quot;: &quot;boolean&quot;
+			},
+			&quot;createtime&quot;: {
+				&quot;type&quot;: &quot;date&quot;,
+				&quot;format&quot;: &quot;yyyy-MM-dd HH:mm:ss&quot;
+			}
+		}
+	},
+	&quot;aliases&quot;: {
+	  &quot;task-log&quot;: {}
+	},
+	&quot;version&quot;: 2
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;按天创建索引,而且支持动态创建（task_log Template)&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;POST task-log-20200325/_doc
+{
+  &quot;id&quot;:1011221,
+  &quot;success&quot;:false,
+  &quot;createtime&quot;:&quot;2020-12-12 13:12:12&quot;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;分析数据（每天的成功个数和失败个数)&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;GET task-log/_search
+{
+  &quot;size&quot;: 0,
+  &quot;aggs&quot;: {
+    &quot;avg_day&quot;: {
+      &quot;date_histogram&quot;: {
+        &quot;field&quot;: &quot;createtime&quot;,
+        &quot;interval&quot;: &quot;day&quot;
+      },
+      &quot;aggs&quot;: {
+        &quot;success&quot;: {
+          &quot;terms&quot;: {
+            &quot;field&quot;: &quot;success&quot;,
+            &quot;size&quot;: 10
+          }
+        }
+      }
+
+    }
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;结果:&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;{
+  &quot;took&quot; : 3,
+  &quot;timed_out&quot; : false,
+  &quot;_shards&quot; : {
+    &quot;total&quot; : 2,
+    &quot;successful&quot; : 2,
+    &quot;skipped&quot; : 0,
+    &quot;failed&quot; : 0
+  },
+  &quot;hits&quot; : {
+    &quot;total&quot; : {
+      &quot;value&quot; : 7,
+      &quot;relation&quot; : &quot;eq&quot;
+    },
+    &quot;max_score&quot; : null,
+    &quot;hits&quot; : [ ]
+  },
+  &quot;aggregations&quot; : {
+    &quot;avg_day&quot; : {
+      &quot;buckets&quot; : [
+        {
+          &quot;key_as_string&quot; : &quot;2020-12-12 00:00:00&quot;,
+          &quot;key&quot; : 1607731200000,
+          &quot;doc_count&quot; : 7,
+          &quot;success&quot; : {
+            &quot;doc_count_error_upper_bound&quot; : 0,
+            &quot;sum_other_doc_count&quot; : 0,
+            &quot;buckets&quot; : [
+              {
+                &quot;key&quot; : 1,
+                &quot;key_as_string&quot; : &quot;true&quot;,
+                &quot;doc_count&quot; : 5
+              },
+              {
+                &quot;key&quot; : 0,
+                &quot;key_as_string&quot; : &quot;false&quot;,
+                &quot;doc_count&quot; : 2
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;基本功能实现了，原来的&lt;code class=&quot;highlighter-rouge&quot;&gt;_source&lt;/code&gt;数据不存在了，一条省个及字节，一天几亿条,那就节省不少空间。&lt;/p&gt;
+
+&lt;h3 id=&quot;优化点&quot;&gt;优化点&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;_source enable false&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;index template&lt;/code&gt; 支持&lt;code class=&quot;highlighter-rouge&quot;&gt;version, alias, mapping&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;移除副本配置，缩小不必要的数据空间&lt;/li&gt;
+  &lt;li&gt;一个存储日志的主分片理论值50G，三个主分片可容纳150G数据，基于现有每天的数据量按每条1KB，可容纳150亿条数据，足矣满足现在业务使用场景。&lt;/li&gt;
+&lt;/ol&gt;
+</description>
+				<pubDate>Mon, 23 Mar 2020 00:00:00 +0800</pubDate>
+				<link>/elasticsearch/2020/03/23/task-log-index-upgrade.html</link>
+				<guid isPermaLink="true">/elasticsearch/2020/03/23/task-log-index-upgrade.html</guid>
+			</item>
+		
+			<item>
 				<title>学习费曼学习法</title>
 				<description>&lt;p&gt;&lt;img src=&quot;/assets/media/费曼学习法.png&quot; alt=&quot;费曼学习法&quot; /&gt;&lt;/p&gt;
 
@@ -1716,75 +1859,6 @@ int main()
 				<pubDate>Sun, 19 Jan 2020 00:00:00 +0800</pubDate>
 				<link>/logical/2020/01/19/quantitative-theory.html</link>
 				<guid isPermaLink="true">/logical/2020/01/19/quantitative-theory.html</guid>
-			</item>
-		
-			<item>
-				<title>直言三段论</title>
-				<description>&lt;p&gt;标准式直言三段论:
-组成成分、形式、有效性和制约其正确使用的规则。&lt;/p&gt;
-
-&lt;p&gt;三段论大项、小项和中项的定义:&lt;/p&gt;
-
-&lt;p&gt;大项:结论的谓项&lt;/p&gt;
-
-&lt;p&gt;小项:结论的主项&lt;/p&gt;
-
-&lt;p&gt;中项:两个前提中都出现, 但结论中不出现的第三个项&lt;/p&gt;
-
-&lt;p&gt;继而又分别定义了大前提和小前提,包含大项的前提叫做大前提,包含小项的前提叫做小前提。&lt;/p&gt;
-
-&lt;p&gt;如果几个命题出现的次序正好是:大前提在第一位、小前提在第二位、结论在最后,我们就把这样的三段论指定为标准式的。&lt;/p&gt;
-
-&lt;p&gt;三段论的式与格是如何确定的。
-段论的式由识别三个命题类型的字母来确定,即A、E、1、O中的三个。总共有64个不同式。
-段论的格由中项在前提中的不同位置来确定。&lt;/p&gt;
-
-&lt;p&gt;对四个可能的格描述并定义如下:&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;第一格&lt;/strong&gt;:中项在大前提中做主项、在小前提中做谓项。 模式为:M-P,S-M,所以S-P。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;第二格&lt;/strong&gt;:中项在两个前提中都儆谓项。 模式为:P-M,S-M,所以S-P&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;第三格&lt;/strong&gt;:中项在两个前提中都做主项。 模式为:M一P,M-S,所以S-P。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;第四格&lt;/strong&gt;:中项在大前提中做谓项、在小前提中做主项。 模式为:P-M,M-S,所以S-P。&lt;/p&gt;
-
-&lt;p&gt;标准式三段论的式与格如何共同地确定其逻辑形式。由于64个式每一个都有四个格,所以共有256个标准式的直言三段论,但其中只有一小部分是有效式。&lt;/p&gt;
-
-&lt;p&gt;标准式三段论的六条基本规则,同时定义了违反各条规则所造成的谬误。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;规则1&lt;/strong&gt;一个有效的标准式直言三段论必须仅仅包含三个项,在整个论证中,每一个项都须在相同的意义上使用。&lt;/p&gt;
-
-&lt;p&gt;违反本规则所犯的错误:四项谬误。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;规则2&lt;/strong&gt;在一个有效的标准式直言三段论中,中项必须至少在一个前提中周延。&lt;/p&gt;
-
-&lt;p&gt;违反本规则所犯的错误:中项不周延谬误。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;规则3&lt;/strong&gt;在一个有效的标准式直言三段论中,在结论中周延的项在前提中也必须周延。&lt;/p&gt;
-
-&lt;p&gt;违反本规则所犯的错误:大项不当周延谬误,或者小项不当周延谬误&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;规则4&lt;/strong&gt;任何有两个否定前提的标准式三段论都不是有效的。&lt;/p&gt;
-
-&lt;p&gt;违反本规则所犯的错误:排斥前提谬误。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;规则5&lt;/strong&gt;如果一个标准式三段论有一个前提是否定的,那么结论必须是否定的。&lt;/p&gt;
-
-&lt;p&gt;违反本规则所犯的错误:从否定推肯定谬误。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;规则6&lt;/strong&gt;一个有效的标准式直言三段论,如果结论为特称命题,那么其前提不能都是全称的。&lt;/p&gt;
-
-&lt;p&gt;违反本规则所犯的错误:存在谬误。&lt;/p&gt;
-
-&lt;p&gt;标准式直言三段论的15个有效形式的说明,识别它们的格与式,并说明了它们传统的拉丁名称:
-AAA-1( Barbara)、EAE-1( parent)、AII1(Dari)、EIO-1(Fe rio)、AEE-2( Camestres)、EAE-2( Cesare)、AOO2( Baroko)、EIO2( Festino)、AII-3( Datisi)、IAI-3( Disamis)、EIO-3( Ferison)、OAO3 ( Bokardo)、AEE-4( amenes)、IAI-4( Dimaris)、EIO-4( Fresison)。&lt;/p&gt;
-
-&lt;p&gt;15个有效形式的演绎推导,通过排除法程序,证明了只有15个形式是完全遵守三段论的六条基本规则的。&lt;/p&gt;
-</description>
-				<pubDate>Fri, 17 Jan 2020 00:00:00 +0800</pubDate>
-				<link>/logical/2020/01/17/syllogism.html</link>
-				<guid isPermaLink="true">/logical/2020/01/17/syllogism.html</guid>
 			</item>
 		
 	</channel>
