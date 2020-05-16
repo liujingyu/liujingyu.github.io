@@ -155,6 +155,42 @@
   <span class="post-date">
     
     January
+    19th,
+    
+    2020
+  </span>
+
+  <h2>
+    <a href="/logical/2020/01/19/quantitative-theory.html">量化理论</a>
+  </h2>
+
+  <div>
+    
+    <p>演绎论证,它们的分支命题不是复合命题, 并且其有效性或无效性取决于这些非复合命题的内在逻辑结构。</p>
+
+<p>单称命题,介绍了个体变元符号x,个体常项符号(小写字母从a到u)以及表示属性的符号(大写字母)。介绍了命题函项概念: 个含有一个个体变元的表达式,当以一个个体常元代入个体変元时,它就変成一个陈述。因此,通过列举程序,可以从一个命题函项得到一个命题。</p>
+
+<p>如何用概括的方法,也就是通过使用“每个”、“没有”有些”等量词,从命题函项得到命题。介绍了全称量词(x),其含义是给定任何一个x”,以及存在量词(ヨx),其含义是“至少存在一个如此这般的x”。还用对当方阵表明了全称量化和存在量化之间的关系。</p>
+
+<p>怎样用命题函项和量词正确地符号化以下四种主要命题: A:全称肯定命题E:全称否定命题I:特称肯定命题O:特称否定命题还对A、E、I、O四种命题之间关系的现代解释进行了说明。</p>
+
+<p>通过增加以下四个附加规则,扩展了推论规则表: 全称列举,UI 全称概括,UG 存在列举,E 存在概括,EG并且说明了怎样用这四个和前面已提出的19条推论规则,构造演绎论证有效性的形式证明,这种证明涉及非复合命题的内部结构。</p>
+
+<p>如何设计含有一个、两个或三个个体的模型或可能域以及在该可能域中改写论证的各分支命题,由此用逻辑类推的反驳方法来证明一个涉及量词的论证的无效性。如果我们能展示这样一个可能域,即它至少含有一个使该论证的所有前提在域中为真而结论在其中为假的个体,那么,我们就证明了这个涉及量词的论证无效</p>
+
+<p>怎样对非三段论论证进行符号化和评价。这些论证含有些不能划归为A、E、I、O命题或单称命题的命题。鉴于除外命题和其他一些命题的复杂性,必须先理解它们的逻辑含义,然后才能用命题函项和量词进行准确的翻译。</p>
+
+    
+  </div>
+
+</article>
+
+
+<article class="home">
+
+  <span class="post-date">
+    
+    January
     17th,
     
     2020
@@ -604,156 +640,6 @@ AAA-1( Barbara)、EAE-1( parent)、AII1(Dari)、EIO-1(Fe rio)、AEE-2( Camestres
   <div>
     
     <p><img src="/assets/media/2020.png" alt="2020-plan-and-goals" /></p>
-
-    
-  </div>
-
-</article>
-
-
-<article class="home">
-
-  <span class="post-date">
-    
-    January
-    5th,
-    
-    2020
-  </span>
-
-  <h2>
-    <a href="/tools/2020/01/05/homebrew-usage-for-me.html">我使用Homebrew记录</a>
-  </h2>
-
-  <div>
-    
-    <p>homebrew 官方地址：<a href="https://brew.sh/index_zh-cn">https://brew.sh/index_zh-cn</a>.</p>
-
-<h3 id="安装homebrew">安装homebrew:</h3>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/usr/bin/ruby <span class="nt">-e</span> <span class="s2">"</span><span class="si">$(</span>curl <span class="nt">-fsSL</span> https://raw.githubusercontent.com/Homebrew/install/master/install<span class="si">)</span><span class="s2">"</span>
-</code></pre></div></div>
-
-<p>使用 Homebrew 安装 Apple（或您的 Linux 系统）没有预装但 你需要的东西。</p>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew <span class="nb">install </span>wget
-</code></pre></div></div>
-
-<p>Homebrew 会将软件包安装到独立目录，并将其文件软链接至 /usr/local 。</p>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cd</span> /usr/local
-<span class="nv">$ </span>find Cellar
-Cellar/wget/1.16.1
-Cellar/wget/1.16.1/bin/wget
-Cellar/wget/1.16.1/share/man/man1/wget.1
-
-<span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-l</span> bin
-bin/wget -&gt; ../Cellar/wget/1.16.1/bin/wget
-</code></pre></div></div>
-
-<p>完全基于 Git 和 Ruby，所以自由修改的同时你仍可以轻松撤销你的变更或与上游更新合并。</p>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew edit wget <span class="c"># 使用 $EDITOR 编辑!</span>
-
-</code></pre></div></div>
-
-<p>Homebrew 的配方都是简单的 Ruby 脚本：</p>
-
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">Wget</span> <span class="o">&lt;</span> <span class="no">Formula</span>
-  <span class="n">homepage</span> <span class="s2">"https://www.gnu.org/software/wget/"</span>
-  <span class="n">url</span> <span class="s2">"https://ftp.gnu.org/gnu/wget/wget-1.15.tar.gz"</span>
-  <span class="n">sha256</span> <span class="s2">"52126be8cf1bddd7536886e74c053ad7d0ed2aa89b4b630f76785bac21695fcd"</span>
-
-  <span class="k">def</span> <span class="nf">install</span>
-    <span class="nb">system</span> <span class="s2">"./configure"</span><span class="p">,</span> <span class="s2">"--prefix=</span><span class="si">#{</span><span class="n">prefix</span><span class="si">}</span><span class="s2">"</span>
-    <span class="nb">system</span> <span class="s2">"make"</span><span class="p">,</span> <span class="s2">"install"</span>
-  <span class="k">end</span>
-<span class="k">end</span>
-</code></pre></div></div>
-
-<h3 id="我的安装列表">我的安装列表</h3>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ brew list -1
-ack
-gdbm
-gettext
-git
-icu4c
-libevent
-libidn2
-libunistring
-libyaml
-ncurses
-node
-openssl@1.1
-pcre2
-pkg-config
-python
-readline
-ruby
-sqlite
-thrift@0.9
-tmux
-tmuxinator
-tree
-wget
-xz
-zplug
-
-</code></pre></div></div>
-
-<h3 id="遇到过的问题">遇到过的问题:</h3>
-
-<ul>
-  <li>
-    <p>thrift 安装低版本.</p>
-
-    <p>修改Homebrew的Ruby 脚本。 <code class="highlighter-rouge">git clone https://github.com/Homebrew/homebrew-core</code> 下载到本地，找到thrift 低版本的formula, 然后, <code class="highlighter-rouge">brew install &lt;formula&gt;</code>。</p>
-  </li>
-  <li>
-    <p>磁盘空间不足:</p>
-
-    <p>每天运行一次</p>
-    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code> <span class="c">#!/bin/bash</span>
- brew update <span class="o">&amp;&amp;</span> brew upgrade <span class="o">&amp;&amp;</span> brew cleanup
-</code></pre></div>    </div>
-  </li>
-  <li>
-    <p>brew install php@7.1 安装失败.</p>
-
-    <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-a<span class="o">)</span> git clone https://github.com/Homebrew/homebrew-core
-
-b<span class="o">)</span> git log <span class="nt">--grep</span><span class="o">=</span>php@7.1
-
-  commit d541efc88be7f81e99deaeb1ad4dba7f718754b4
-  Author: Andreas Braun &lt;git@alcaeus.org&gt;
-  Date:   Thu Nov 28 15:02:50 2019 +0100
-
-      Remove php@7.1
-
-      Closes <span class="c">#47385.</span>
-
-      Signed-off-by: Sean Molenaar &lt;smillerdev@me.com&gt;
-
-  commit 5afd75d0216cdf66bdcadd1b101757260f4a3cef <span class="o">(</span>php@7.1<span class="o">)</span>
-  Author: BrewTestBot &lt;homebrew-test-bot@lists.sfconservancy.org&gt;
-  Date:   Fri Oct 25 10:00:42 2019 +0000
-
-      php@7.1: update 7.1.33 bottle.
-  ....
-
-c<span class="o">)</span> git checkout <span class="nt">-b</span> php@7.1 5afd75d0216cdf66bdcadd1b101757260f4a3cef
-
-d<span class="o">)</span> brew <span class="nb">install </span>Formula/php@7.1.rb
-
-e<span class="o">)</span> 完毕
-
-
-</code></pre></div>    </div>
-  </li>
-</ul>
-
 
     
   </div>

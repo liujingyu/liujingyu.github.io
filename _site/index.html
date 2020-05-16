@@ -154,6 +154,289 @@
 
   <span class="post-date">
     
+    May
+    16th,
+    
+    2020
+  </span>
+
+  <h2>
+    <a href="/hashtable/2020/05/16/hashtable.html">HashTable</a>
+  </h2>
+
+  <div>
+    
+    <p>HashTable是一种通过将键(key)映射为值(value)从而实现快速查找的数据结构。实现HashTable的方式有很多种。本次介绍2种，并给出第一种的PHP版本实现。</p>
+
+<p>我们使用一个链表构成的数组与一个散列函数来实现散列表。当插入键（字符串或几乎其他所有数据类型）和值时，我们按照如下方法操作。</p>
+
+<p>(1) 首先，计算键的散列值。键的散列值通常为int或者long型。请注意，不同的两个键可以有相同的散列值，因为键的数量是无穷的，而int型的总数是有限的。</p>
+
+<p>(2) 之后，将散列值映射为数组的索引。可以使用类似于hash(key) % array_length的方式完成这一步骤，不同的两个散列值则会被映射到相同的数组索引。</p>
+
+<p>(3) 此数组索引处存储的元素是一系列由键和值为元素组成的链表。请将映射到此索引的键和值存储在这里。由于存在冲突，我们必须使用链表：有可能对于相同的散列值有不同的键，也有可能不同的散列值被映射到了同一个索引。</p>
+
+<p>通过键来获取值则需重复此过程。首先通过键计算散列值，再通过散列值计算索引。之后，查找链表来获取该键所对应的值。</p>
+
+<p>如果冲突发生很多次，最坏情况下的时间复杂度是O(N)，其中N是键的数量。但是，我们通常假设一个不错的实现方式会将冲突数量保持在最低水平，在此情况下，时间复杂度是O(1)。</p>
+
+<p>另一种方法是通过平衡二叉搜索树来实现散列表。该方法的查找时间是O(logN)。该方法的好处是用到的空间可能更少，因为我们不再需要分配一个大数组。还可以按照键的顺序进行迭代访问，在某些时候这样做很有用</p>
+
+<p>我们实现一个PHP版的HashTable, 数据结构<code class="highlighter-rouge">Element</code>、<code class="highlighter-rouge">HashTable</code>,散列函数，我们使用<code class="highlighter-rouge">Times33*hash</code>。
+功能：添加(覆盖)、删除、获取，内部隐藏逻辑<code class="highlighter-rouge">rehash</code>。
+<code class="highlighter-rouge">rehash</code>两种情况，一种是扩容、一种是缩容。基于<code class="highlighter-rouge">isRehash</code>进行判断。</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+
+<span class="kd">class</span> <span class="nc">Element</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="nv">$key</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$value</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$hash</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="nv">$key</span><span class="p">,</span> <span class="nv">$value</span><span class="p">,</span> <span class="nv">$hash</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">key</span> <span class="o">=</span> <span class="nv">$key</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">value</span> <span class="o">=</span> <span class="nv">$value</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hash</span> <span class="o">=</span> <span class="nv">$hash</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nc">HashTable</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="nv">$item</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">public</span> <span class="nv">$length</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$useElement</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">initHashTable</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">get</span><span class="p">(</span><span class="nv">$key</span><span class="p">)</span><span class="o">:?</span><span class="nx">string</span>
+    <span class="p">{</span>
+        <span class="nv">$e</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_has</span><span class="p">(</span><span class="nv">$key</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$e</span> <span class="nx">instanceof</span> <span class="nx">Element</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nv">$e</span><span class="o">-&gt;</span><span class="na">value</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">store</span><span class="p">(</span><span class="nv">$key</span><span class="p">,</span> <span class="nv">$value</span><span class="p">)</span><span class="o">:</span> <span class="nx">void</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isRehash</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">rehash</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="nv">$hash</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hash</span><span class="p">(</span><span class="nv">$key</span><span class="p">);</span>
+        <span class="nv">$slot</span> <span class="o">=</span> <span class="nv">$hash</span> <span class="o">%</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">length</span><span class="p">;</span>
+
+        <span class="nv">$element</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_has</span><span class="p">(</span><span class="nv">$key</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$element</span> <span class="nx">instanceof</span> <span class="nx">Element</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$element</span><span class="o">-&gt;</span><span class="na">value</span> <span class="o">!==</span> <span class="nv">$value</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">foreach</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">item</span><span class="p">[</span><span class="nv">$slot</span><span class="p">]</span> <span class="k">as</span> <span class="nv">$element</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">if</span> <span class="p">(</span><span class="nv">$element</span><span class="o">-&gt;</span><span class="na">key</span> <span class="o">==</span> <span class="nv">$key</span><span class="p">)</span> <span class="p">{</span>
+                        <span class="nv">$element</span><span class="o">-&gt;</span><span class="na">value</span> <span class="o">=</span> <span class="nv">$value</span><span class="p">;</span>
+                        <span class="k">return</span><span class="p">;</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">empty</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">item</span><span class="p">[</span><span class="nv">$slot</span><span class="p">]))</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">item</span><span class="p">[</span><span class="nv">$slot</span><span class="p">]</span> <span class="o">=</span> <span class="p">[];</span>
+            <span class="p">}</span>
+            <span class="nb">array_push</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">item</span><span class="p">[</span><span class="nv">$slot</span><span class="p">],</span> <span class="k">new</span> <span class="nx">Element</span><span class="p">(</span><span class="nv">$key</span><span class="p">,</span> <span class="nv">$value</span><span class="p">,</span> <span class="nv">$hash</span><span class="p">));</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">useElement</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">del</span><span class="p">(</span><span class="nv">$key</span><span class="p">)</span><span class="o">:?</span><span class="nx">bool</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">((</span><span class="nv">$e</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_has</span><span class="p">(</span><span class="nv">$key</span><span class="p">))</span> <span class="nx">instanceof</span> <span class="nx">Element</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_del</span><span class="p">(</span><span class="nv">$e</span><span class="p">);</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_del</span><span class="p">(</span><span class="nx">Element</span> <span class="nv">$delElement</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">item</span><span class="p">[</span><span class="nv">$slot</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$delElement</span><span class="o">-&gt;</span><span class="na">hash</span> <span class="o">%</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">length</span><span class="p">)]</span> <span class="k">as</span> <span class="nv">$k</span> <span class="o">=&gt;</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$e</span><span class="o">-&gt;</span><span class="na">key</span> <span class="o">==</span> <span class="nv">$delElement</span><span class="o">-&gt;</span><span class="na">key</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nb">unset</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">item</span><span class="p">[</span><span class="nv">$slot</span><span class="p">][</span><span class="nv">$k</span><span class="p">]);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">useElement</span><span class="o">--</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isRehash</span><span class="p">())</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">rehash</span><span class="p">();</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">has</span><span class="p">(</span><span class="nv">$key</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_has</span><span class="p">(</span><span class="nv">$key</span><span class="p">)</span> <span class="nx">instanceof</span> <span class="nx">Element</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_has</span><span class="p">(</span><span class="nv">$key</span><span class="p">)</span><span class="o">:?</span><span class="nx">Element</span>
+    <span class="p">{</span>
+        <span class="nv">$hash</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hash</span><span class="p">(</span><span class="nv">$key</span><span class="p">);</span>
+        <span class="nv">$slot</span> <span class="o">=</span> <span class="nv">$hash</span> <span class="o">%</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">length</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="k">empty</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">item</span><span class="p">[</span><span class="nv">$slot</span><span class="p">]))</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">item</span><span class="p">[</span><span class="nv">$slot</span><span class="p">]</span> <span class="k">as</span> <span class="nv">$element</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$element</span><span class="o">-&gt;</span><span class="na">key</span> <span class="o">==</span> <span class="nv">$key</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="nv">$element</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">hash</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$key</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">is_numeric</span><span class="p">(</span><span class="nv">$key</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nv">$key</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">elseif</span> <span class="p">(</span><span class="nb">is_string</span><span class="p">(</span><span class="nv">$key</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nv">$hash</span> <span class="o">=</span> <span class="mi">5381</span><span class="p">;</span>
+            <span class="nv">$l</span> <span class="o">=</span> <span class="nb">strlen</span><span class="p">(</span><span class="nv">$key</span><span class="p">);</span>
+            <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$l</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$num</span> <span class="o">=</span> <span class="nb">ord</span><span class="p">(</span><span class="nv">$key</span><span class="p">[</span><span class="nv">$i</span><span class="p">]);</span>
+                <span class="nv">$hash</span> <span class="o">+=</span> <span class="nv">$num</span> <span class="o">+</span> <span class="nv">$hash</span> <span class="o">&lt;&lt;</span> <span class="mi">5</span> <span class="o">+</span> <span class="nv">$hash</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="nv">$hash</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">initHashTable</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">length</span> <span class="o">=</span> <span class="mi">8</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">useElement</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">isRehash</span><span class="p">()</span><span class="o">:</span><span class="nx">bool</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">useElement</span> <span class="o">&gt;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">length</span>
+            <span class="o">||</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">useElement</span> <span class="o">&gt;</span> <span class="mi">8</span> <span class="o">&amp;&amp;</span> <span class="mi">2</span><span class="o">*</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">useElement</span> <span class="o">&lt;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">length</span><span class="p">))</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">rehash</span><span class="p">();</span>
+            <span class="k">echo</span> <span class="s1">'rehash'</span><span class="p">,</span><span class="nx">PHP_EOL</span><span class="p">;</span>
+            <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">rehash</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">useElement</span> <span class="o">&gt;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">length</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$newLength</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">length</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nv">$newLength</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="nv">$newItem</span> <span class="o">=</span> <span class="p">[];</span>
+
+        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">item</span> <span class="k">as</span> <span class="nv">$slot</span> <span class="o">=&gt;</span> <span class="nv">$items</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">foreach</span> <span class="p">(</span><span class="nv">$items</span> <span class="k">as</span> <span class="nv">$item</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$slot</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$item</span><span class="o">-&gt;</span><span class="na">hash</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">hash</span><span class="p">(</span><span class="nv">$item</span><span class="o">-&gt;</span><span class="na">key</span><span class="p">))</span> <span class="o">%</span> <span class="nv">$newLength</span><span class="p">;</span>
+
+                <span class="k">if</span> <span class="p">(</span><span class="k">empty</span><span class="p">(</span><span class="nv">$newItem</span><span class="p">[</span><span class="nv">$slot</span><span class="p">]))</span> <span class="p">{</span>
+                    <span class="nv">$newItem</span><span class="p">[</span><span class="nv">$slot</span><span class="p">]</span> <span class="o">=</span> <span class="p">[];</span>
+                <span class="p">}</span>
+                <span class="nb">array_push</span><span class="p">(</span><span class="nv">$newItem</span><span class="p">[</span><span class="nv">$slot</span><span class="p">],</span> <span class="nv">$item</span><span class="p">);</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">length</span> <span class="o">=</span> <span class="nv">$newLength</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">item</span> <span class="o">=</span> <span class="nv">$newItem</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">debugHashTable</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">echo</span> <span class="nb">json_encode</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">item</span><span class="p">,</span> <span class="mi">128</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+
+        <span class="nv">$hashTable</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HashTable</span><span class="p">();</span>
+
+        <span class="nv">$items</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="s1">'key'</span> <span class="o">=&gt;</span> <span class="s1">'1212'</span><span class="p">,</span>
+            <span class="s1">'c'</span> <span class="o">=&gt;</span> <span class="s1">'12311'</span><span class="p">,</span>
+            <span class="mi">122</span> <span class="o">=&gt;</span> <span class="s1">'1231'</span><span class="p">,</span>
+            <span class="s1">'key1'</span> <span class="o">=&gt;</span> <span class="s1">'1212'</span><span class="p">,</span>
+            <span class="s1">'c1'</span> <span class="o">=&gt;</span> <span class="s1">'12311'</span><span class="p">,</span>
+            <span class="mi">1221</span> <span class="o">=&gt;</span> <span class="s1">'1231'</span><span class="p">,</span>
+            <span class="s1">'ke'</span> <span class="o">=&gt;</span> <span class="s1">'1212'</span><span class="p">,</span>
+            <span class="s1">'ky1'</span> <span class="o">=&gt;</span> <span class="s1">'1212'</span><span class="p">,</span>
+            <span class="s1">'ey1'</span> <span class="o">=&gt;</span> <span class="s1">'1212'</span><span class="p">,</span>
+            <span class="s1">'ky'</span> <span class="o">=&gt;</span> <span class="s1">'1212'</span><span class="p">,</span>
+        <span class="p">];</span>
+
+        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$items</span> <span class="k">as</span> <span class="nv">$k</span> <span class="o">=&gt;</span> <span class="nv">$v</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$hashTable</span><span class="o">-&gt;</span><span class="na">store</span><span class="p">(</span><span class="nv">$k</span><span class="p">,</span> <span class="nv">$v</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$items</span> <span class="k">as</span> <span class="nv">$k</span> <span class="o">=&gt;</span> <span class="nv">$v</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">echo</span> <span class="nv">$k</span><span class="p">,</span> <span class="s2">":"</span><span class="p">,</span> <span class="nv">$hashTable</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="nv">$k</span><span class="p">),</span> <span class="nx">PHP_EOL</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">echo</span> <span class="s1">'添加key后结果:'</span><span class="p">,</span><span class="nx">PHP_EOL</span><span class="p">;</span>
+        <span class="nv">$hashTable</span><span class="o">-&gt;</span><span class="na">debugHashTable</span><span class="p">();</span>
+
+        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$items</span> <span class="k">as</span> <span class="nv">$k</span> <span class="o">=&gt;</span> <span class="nv">$v</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$hashTable</span><span class="o">-&gt;</span><span class="na">del</span><span class="p">(</span><span class="nv">$k</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$k</span> <span class="o">==</span> <span class="s1">'ey1'</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">break</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+
+        <span class="k">echo</span> <span class="s1">'删除key后，结果:'</span><span class="p">,</span><span class="nx">PHP_EOL</span><span class="p">;</span>
+        <span class="nv">$hashTable</span><span class="o">-&gt;</span><span class="na">debugHashTable</span><span class="p">();</span>
+        <span class="k">echo</span> <span class="nv">$hashTable</span><span class="o">-&gt;</span><span class="na">length</span><span class="p">;</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">HashTable</span><span class="o">::</span><span class="na">main</span><span class="p">();</span>
+
+</code></pre></div></div>
+
+<p>判断一个哈希算法的好坏有以下几点:</p>
+<ul>
+  <li>一致性，等价的键必然产生相等的哈希值；</li>
+  <li>高效性，计算简便；</li>
+  <li>均匀性，均匀地对所有的键进行哈希。</li>
+</ul>
+
+<p>更多延伸阅读</p>
+<ul>
+  <li>php HashTable</li>
+  <li>redis HashTable</li>
+  <li>php vs redis rehash方式为什么不一样</li>
+  <li>hash 函数实现方式：Times33(djb2), sdbm,lose</li>
+</ul>
+
+    
+  </div>
+
+</article>
+
+
+<article class="home">
+
+  <span class="post-date">
+    
     March
     23rd,
     
@@ -2116,42 +2399,6 @@ int main()
     <p>前几天，听PM圈子的老师分享关于项目经理的职业规划，顺便分享了职业规划的大致框架。</p>
 
 <p><img src="assets/media/职业生涯规划.png" alt="职业规划" /></p>
-
-    
-  </div>
-
-</article>
-
-
-<article class="home">
-
-  <span class="post-date">
-    
-    January
-    19th,
-    
-    2020
-  </span>
-
-  <h2>
-    <a href="/logical/2020/01/19/quantitative-theory.html">量化理论</a>
-  </h2>
-
-  <div>
-    
-    <p>演绎论证,它们的分支命题不是复合命题, 并且其有效性或无效性取决于这些非复合命题的内在逻辑结构。</p>
-
-<p>单称命题,介绍了个体变元符号x,个体常项符号(小写字母从a到u)以及表示属性的符号(大写字母)。介绍了命题函项概念: 个含有一个个体变元的表达式,当以一个个体常元代入个体変元时,它就変成一个陈述。因此,通过列举程序,可以从一个命题函项得到一个命题。</p>
-
-<p>如何用概括的方法,也就是通过使用“每个”、“没有”有些”等量词,从命题函项得到命题。介绍了全称量词(x),其含义是给定任何一个x”,以及存在量词(ヨx),其含义是“至少存在一个如此这般的x”。还用对当方阵表明了全称量化和存在量化之间的关系。</p>
-
-<p>怎样用命题函项和量词正确地符号化以下四种主要命题: A:全称肯定命题E:全称否定命题I:特称肯定命题O:特称否定命题还对A、E、I、O四种命题之间关系的现代解释进行了说明。</p>
-
-<p>通过增加以下四个附加规则,扩展了推论规则表: 全称列举,UI 全称概括,UG 存在列举,E 存在概括,EG并且说明了怎样用这四个和前面已提出的19条推论规则,构造演绎论证有效性的形式证明,这种证明涉及非复合命题的内部结构。</p>
-
-<p>如何设计含有一个、两个或三个个体的模型或可能域以及在该可能域中改写论证的各分支命题,由此用逻辑类推的反驳方法来证明一个涉及量词的论证的无效性。如果我们能展示这样一个可能域,即它至少含有一个使该论证的所有前提在域中为真而结论在其中为假的个体,那么,我们就证明了这个涉及量词的论证无效</p>
-
-<p>怎样对非三段论论证进行符号化和评价。这些论证含有些不能划归为A、E、I、O命题或单称命题的命题。鉴于除外命题和其他一些命题的复杂性,必须先理解它们的逻辑含义,然后才能用命题函项和量词进行准确的翻译。</p>
 
     
   </div>
