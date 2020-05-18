@@ -161,6 +161,246 @@
   </span>
 
   <h2>
+    <a href="/trie/2020/05/16/trie-node.html">Trie</a>
+  </h2>
+
+  <div>
+    
+    <h2 id="介绍">介绍</h2>
+
+<p>Trie树,又称单词查找树、字典树，是一种树形结构，是一种哈希树的变种，是一种用于快速检索的多叉树结构。典型应用是用于统计和排序大量的字符串（但不仅限于字符串），所以经常被搜索引擎系统用于文本词频统计。</p>
+
+<p>它的优点是：最大限度地减少无谓的字符串比较，查询效率比哈希表高。Trie 的强大之处就在于它的时间复杂度，插入和查询的效率很高，都为O(N)，其中 N 是待插入/查询的字符串的长度，而与 Trie 中保存了多少个元素无关。
+Trie的核心思想是空间换时间。利用字符串的公共前缀来降低查询时间的开销以达到提高效率的目的。
+Trie树也有它的缺点,Trie树的内存消耗非常大。</p>
+
+<h2 id="三个基本特性">三个基本特性</h2>
+<p>1）根节点不包含字符，除根节点外每一个节点都只包含一个字符。　　</p>
+
+<p>2）从根节点到某一节点，路径上经过的字符连接起来，为该节点对应的字符串。　</p>
+
+<p>3）每个节点的所有子节点包含的字符都不相同。</p>
+
+<h2 id="用php实现一版">用PHP实现一版。</h2>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="cp">&lt;?php</span>
+
+<span class="kd">class</span> <span class="nc">TrieNode</span>
+<span class="p">{</span>
+    <span class="c1">// &lt;char, TrieNode&gt;</span>
+    <span class="k">public</span> <span class="nv">$children</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="k">public</span> <span class="nv">$isEnfOfWord</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nc">Trie</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="nv">$root</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">root</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">TrieNode</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">insert</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$word</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$current</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">root</span><span class="p">;</span>
+
+        <span class="nv">$l</span> <span class="o">=</span> <span class="nb">strlen</span><span class="p">(</span><span class="nv">$word</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$l</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$c</span> <span class="o">=</span> <span class="nv">$word</span><span class="p">[</span><span class="nv">$i</span><span class="p">];</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">empty</span><span class="p">(</span><span class="nv">$current</span><span class="o">-&gt;</span><span class="na">children</span><span class="p">[</span><span class="nv">$c</span><span class="p">]))</span> <span class="p">{</span>
+                <span class="nv">$current</span><span class="o">-&gt;</span><span class="na">children</span><span class="p">[</span><span class="nv">$c</span><span class="p">]</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">TrieNode</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="nv">$current</span> <span class="o">=</span> <span class="nv">$current</span><span class="o">-&gt;</span><span class="na">children</span><span class="p">[</span><span class="nv">$c</span><span class="p">];</span>
+        <span class="p">}</span>
+        <span class="nv">$current</span><span class="o">-&gt;</span><span class="na">isEnfOfWord</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">search</span><span class="p">(</span><span class="nx">string</span> <span class="nv">$word</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$current</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">root</span><span class="p">;</span>
+
+        <span class="nv">$l</span> <span class="o">=</span> <span class="nb">strlen</span><span class="p">(</span><span class="nv">$word</span><span class="p">);</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$l</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$c</span> <span class="o">=</span> <span class="nv">$word</span><span class="p">[</span><span class="nv">$i</span><span class="p">];</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">empty</span><span class="p">(</span><span class="nv">$current</span><span class="o">-&gt;</span><span class="na">children</span><span class="p">[</span><span class="nv">$c</span><span class="p">]))</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="nv">$current</span> <span class="o">=</span> <span class="nv">$current</span><span class="o">-&gt;</span><span class="na">children</span><span class="p">[</span><span class="nv">$c</span><span class="p">];</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="p">(</span><span class="nv">$current</span> <span class="o">&amp;&amp;</span> <span class="nv">$current</span><span class="o">-&gt;</span><span class="na">isEnfOfWord</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_remove</span><span class="p">(</span><span class="nv">$root</span><span class="p">,</span> <span class="nx">string</span> <span class="nv">$word</span><span class="p">,</span> <span class="nx">int</span> <span class="nv">$depth</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$root</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">// If last character of key is being processed</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$depth</span> <span class="o">==</span> <span class="nb">strlen</span><span class="p">(</span><span class="nv">$word</span><span class="p">))</span> <span class="p">{</span>
+            <span class="c1">// This node is no more end of word after removal of given key</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$root</span><span class="o">-&gt;</span><span class="na">isEnfOfWord</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$root</span><span class="o">-&gt;</span><span class="na">isEnfOfWord</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="c1">// If given is not prefix of any other word</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isEmpty</span><span class="p">(</span><span class="nv">$root</span><span class="p">))</span> <span class="p">{</span>
+                <span class="nv">$root</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="nv">$root</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">// If not last character, recur for the child</span>
+        <span class="c1">// obtained using ASCII value</span>
+        <span class="nv">$root</span><span class="o">-&gt;</span><span class="na">children</span><span class="p">[</span><span class="nv">$word</span><span class="p">[</span><span class="nv">$depth</span><span class="p">]]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_remove</span><span class="p">(</span>
+            <span class="nv">$root</span><span class="o">-&gt;</span><span class="na">children</span><span class="p">[</span><span class="nv">$word</span><span class="p">[</span><span class="nv">$depth</span><span class="p">]],</span>
+            <span class="nv">$word</span><span class="p">,</span>
+            <span class="nv">$depth</span> <span class="o">+</span> <span class="mi">1</span>
+        <span class="p">);</span>
+
+        <span class="c1">// If root does not have any child (its only child got</span>
+        <span class="c1">// deleted), and it is not end of another word.</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">isEmpty</span><span class="p">(</span><span class="nv">$root</span><span class="p">)</span> <span class="o">&amp;&amp;</span> <span class="nv">$root</span><span class="o">-&gt;</span><span class="na">isEnfOfWord</span> <span class="o">==</span> <span class="kc">false</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$root</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="nv">$root</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">remove</span><span class="p">(</span><span class="nv">$word</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_remove</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">root</span><span class="p">,</span> <span class="nv">$word</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">isEmpty</span><span class="p">(</span><span class="nv">$root</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$root</span><span class="o">-&gt;</span><span class="na">children</span> <span class="k">as</span> <span class="nv">$child</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">empty</span><span class="p">(</span><span class="nv">$child</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">display</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$words</span> <span class="o">=</span> <span class="p">[];</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_display</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">root</span><span class="p">,</span> <span class="s1">''</span><span class="p">,</span> <span class="nv">$words</span><span class="p">);</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$words</span> <span class="k">as</span> <span class="nv">$word</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">echo</span> <span class="nv">$word</span><span class="p">,</span> <span class="nx">PHP_EOL</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_display</span><span class="p">(</span><span class="nv">$root</span><span class="p">,</span> <span class="nv">$prefix</span><span class="p">,</span> <span class="o">&amp;</span><span class="nv">$words</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">empty</span><span class="p">(</span><span class="nv">$root</span><span class="o">-&gt;</span><span class="na">children</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">return</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="nv">$old</span> <span class="o">=</span> <span class="nv">$prefix</span><span class="p">;</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$root</span><span class="o">-&gt;</span><span class="na">children</span> <span class="k">as</span> <span class="nv">$char</span> <span class="o">=&gt;</span> <span class="nv">$child</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">empty</span><span class="p">(</span><span class="nv">$child</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">continue</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="nv">$prefix</span> <span class="o">=</span> <span class="nv">$old</span> <span class="o">.</span> <span class="nv">$char</span><span class="p">;</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$child</span><span class="o">-&gt;</span><span class="na">isEnfOfWord</span><span class="p">)</span> <span class="p">{</span>
+                <span class="nv">$words</span><span class="p">[]</span> <span class="o">=</span> <span class="nv">$prefix</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_display</span><span class="p">(</span><span class="nv">$child</span><span class="p">,</span> <span class="nv">$prefix</span><span class="p">,</span> <span class="nv">$words</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">wordCount</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_wordCount</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">root</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">_wordCount</span><span class="p">(</span><span class="nv">$root</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$result</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$root</span><span class="o">-&gt;</span><span class="na">isEnfOfWord</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$result</span><span class="o">++</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$root</span><span class="o">-&gt;</span><span class="na">children</span> <span class="k">as</span> <span class="nv">$char</span> <span class="o">=&gt;</span> <span class="nv">$child</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$result</span> <span class="o">+=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">_wordCount</span><span class="p">(</span><span class="nv">$child</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="nv">$result</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">main</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="c1">// Input keys (use only 'a' through 'z' and lower case)</span>
+        <span class="nv">$keys</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"the"</span><span class="p">,</span> <span class="s2">"a"</span><span class="p">,</span> <span class="s2">"there"</span><span class="p">,</span> <span class="s2">"answer"</span><span class="p">,</span> <span class="s2">"any"</span><span class="p">,</span> <span class="s2">"by"</span><span class="p">,</span> <span class="s2">"bye"</span><span class="p">,</span> <span class="s2">"their"</span><span class="p">];</span>
+        <span class="nv">$output</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"Not present in trie"</span><span class="p">,</span> <span class="s2">"Present in trie"</span><span class="p">];</span>
+
+        <span class="nv">$trie</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Trie</span><span class="p">;</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="nv">$keys</span> <span class="k">as</span> <span class="nv">$key</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$trie</span><span class="o">-&gt;</span><span class="na">insert</span><span class="p">(</span><span class="nv">$key</span><span class="p">);</span>
+        <span class="p">}</span>
+        <span class="nv">$trie</span><span class="o">-&gt;</span><span class="na">remove</span><span class="p">(</span><span class="s1">'by'</span><span class="p">);</span>
+
+        <span class="nv">$trie</span><span class="o">-&gt;</span><span class="na">display</span><span class="p">();</span>
+        <span class="k">echo</span> <span class="nv">$trie</span><span class="o">-&gt;</span><span class="na">wordCount</span><span class="p">(),</span> <span class="nx">PHP_EOL</span><span class="p">;</span>
+
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">Trie</span><span class="o">::</span><span class="na">main</span><span class="p">();</span>
+
+</code></pre></div></div>
+
+<p>延伸</p>
+<ul>
+  <li>使用Trie实现一个字典
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class TrieNode
+{
+  // &lt;char, TrieNode&gt;
+  public $children = [];
+  public $isEnfOfWord = false;
+  public $meaning = ''; // 字典的释义
+}
+</code></pre></div>    </div>
+  </li>
+  <li>词频统计
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>class TrieNode
+{
+  // &lt;char, TrieNode&gt;
+  public $children = [];
+  public $isEnfOfWord = false;
+  public $wordFreq = 0; // 词频统计
+}
+</code></pre></div>    </div>
+  </li>
+  <li>字典序排序</li>
+  <li>前缀匹配</li>
+  <li>最长公共前缀</li>
+</ul>
+
+<h2 id="参考">参考</h2>
+<ul>
+  <li>https://blog.csdn.net/hguisu/article/details/8131559</li>
+</ul>
+
+    
+  </div>
+
+</article>
+
+
+<article class="home">
+
+  <span class="post-date">
+    
+    May
+    16th,
+    
+    2020
+  </span>
+
+  <h2>
     <a href="/hashtable/2020/05/16/hashtable.html">HashTable</a>
   </h2>
 
@@ -2373,32 +2613,6 @@ int main()
 #error	当遇到标准错误时，输出错误消息
 #pragma	使用标准化方法，向编译器发布特殊的命令到编译器中
 </code></pre></div></div>
-
-    
-  </div>
-
-</article>
-
-
-<article class="home">
-
-  <span class="post-date">
-    
-    February
-    8th,
-    
-    2020
-  </span>
-
-  <h2>
-    <a href="/plan/2020/02/08/work-plan.html">职业规划</a>
-  </h2>
-
-  <div>
-    
-    <p>前几天，听PM圈子的老师分享关于项目经理的职业规划，顺便分享了职业规划的大致框架。</p>
-
-<p><img src="assets/media/职业生涯规划.png" alt="职业规划" /></p>
 
     
   </div>
