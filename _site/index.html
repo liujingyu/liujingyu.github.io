@@ -155,6 +155,212 @@
   <span class="post-date">
     
     May
+    22nd,
+    
+    2020
+  </span>
+
+  <h2>
+    <a href="/heap/2020/05/22/heap.html">二叉堆笔记</a>
+  </h2>
+
+  <div>
+    
+    <h2 id="介绍">介绍</h2>
+
+<p>一个小顶堆(或大顶堆)是一个完整的二叉树。其中每个节点都小于其子节点。因此，根是树中的最小元素。</p>
+
+<p><img src="assets/media/WX20200522-192421@2x.png" alt="图-2" /></p>
+
+<p>在最小堆中有两个关键操作：<code class="highlighter-rouge">insert</code>和<code class="highlighter-rouge">extract_min</code>。</p>
+
+<h2 id="插入操作">插入操作</h2>
+
+<p>当我们向一个最小堆插入元素时，总是从底部开始。从最右边的节点开始插入操作以保持树的完整性。然后，通过与其祖先节点进行交换来“修复”树，直到找到新元素的适当位置。我们基本上是在向上传递最小的元素</p>
+
+<p><img src="assets/media/WX20200522-192404@2x.png" alt="图-1" /></p>
+
+<h2 id="提取最小元素">提取最小元素</h2>
+
+<p>找到小顶堆的最小元素是小菜一碟：它总是在顶部。颇为棘手的是如何删除该元素（其实也不是那么棘手）。首先，删除最小元素并将其与堆中的最后一个元素（位于最底层、最右边的元素）进行交换。然后，向下传递这个元素，不断使其与自身子节点之一进行交换，直到小顶堆的属性得以恢复。是和左边的孩子节点还是右边的孩子节点进行交换取决于它们的值。左右元素之间没有固定的顺序，但是为了保持小顶堆的元素有序，你需要选择两者中较小的元素。</p>
+
+<p><img src="assets/media/WX20200522-192346@2x.png" alt="图-3" /></p>
+
+<h2 id="堆的基本操作">堆的基本操作</h2>
+
+<p>堆的几个基本操作都依赖于两个重要的函数<code class="highlighter-rouge">siftUp</code>和<code class="highlighter-rouge">siftDown</code>，堆的insert通常是在堆尾插入新元素并siftUp调整堆，而<code class="highlighter-rouge">extractMin</code>是在删除堆顶元素，然后将最后一个元素放置堆顶并调用<code class="highlighter-rouge">siftDown</code>调整堆。
+堆得基本操作的时间复杂度如下表所示：</p>
+<ul>
+  <li>heapify O(N)</li>
+  <li>insert O(logN)</li>
+  <li>extractMin O(logN)</li>
+  <li>delete O(logN)</li>
+  <li>peek O(1)</li>
+</ul>
+
+<h2 id="总结">总结</h2>
+
+<ul>
+  <li>（1）堆是一颗完全二叉树；</li>
+  <li>（2）小（大）顶堆中的每一个节点都不小于（不大于）它的父节点；</li>
+  <li>（3）堆的插入、删除元素的时间复杂度都是O(log n)；</li>
+  <li>（4）建堆的时间复杂度是O(n)；</li>
+  <li>（5）堆排序的时间复杂度是O(nlog n)；</li>
+  <li>（6）堆排序的空间复杂度是O(1)；</li>
+</ul>
+
+<h2 id="代码">代码</h2>
+
+<p>二叉堆排序代码如下:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+
+<span class="kd">class</span> <span class="nc">HeapSort</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="nv">$items</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="k">array</span> <span class="nv">$items</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span> <span class="o">=</span> <span class="nv">$items</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">sort</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$arrLen</span> <span class="o">=</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">buildMaxHeap</span><span class="p">(</span><span class="nv">$arrLen</span><span class="p">);</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="nv">$arrLen</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">list</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">[</span><span class="nv">$i</span><span class="p">])</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">[</span><span class="nv">$i</span><span class="p">],</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="p">];</span>
+
+            <span class="nv">$arrLen</span> <span class="o">-=</span> <span class="mi">1</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">heapify</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nv">$arrLen</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">buildMaxHeap</span><span class="p">(</span><span class="nv">$arrLen</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="nb">intval</span><span class="p">(</span><span class="nv">$arrLen</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span> <span class="nv">$i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">heapify</span><span class="p">(</span><span class="nv">$i</span><span class="p">,</span> <span class="nv">$arrLen</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">heapify</span><span class="p">(</span><span class="nv">$i</span><span class="p">,</span> <span class="nv">$arrLen</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$left</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nv">$i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="nv">$right</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nv">$i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="nv">$largest</span> <span class="o">=</span> <span class="nv">$i</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$left</span> <span class="o">&lt;</span> <span class="nv">$arrLen</span> <span class="o">&amp;&amp;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">[</span><span class="nv">$left</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">[</span><span class="nv">$largest</span><span class="p">])</span> <span class="p">{</span>
+            <span class="nv">$largest</span> <span class="o">=</span> <span class="nv">$left</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$right</span> <span class="o">&lt;</span> <span class="nv">$arrLen</span> <span class="o">&amp;&amp;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">[</span><span class="nv">$right</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">[</span><span class="nv">$largest</span><span class="p">])</span> <span class="p">{</span>
+            <span class="nv">$largest</span> <span class="o">=</span> <span class="nv">$right</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$largest</span> <span class="o">!=</span> <span class="nv">$i</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">list</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">[</span><span class="nv">$i</span><span class="p">],</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">[</span><span class="nv">$largest</span><span class="p">])</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">[</span><span class="nv">$largest</span><span class="p">],</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">[</span><span class="nv">$i</span><span class="p">]</span>
+            <span class="p">];</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">heapify</span><span class="p">(</span><span class="nv">$largest</span><span class="p">,</span> <span class="nv">$arrLen</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">main</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$items</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="mi">1</span><span class="p">,</span>
+            <span class="mi">5</span><span class="p">,</span>
+            <span class="mi">3</span><span class="p">,</span>
+            <span class="mi">6</span><span class="p">,</span>
+            <span class="mi">2</span><span class="p">,</span>
+            <span class="mi">7</span><span class="p">,</span>
+            <span class="mi">4</span><span class="p">,</span>
+        <span class="p">];</span>
+        <span class="k">echo</span> <span class="s1">'排序前'</span><span class="p">,</span> <span class="nx">PHP_EOL</span><span class="p">;</span>
+        <span class="nb">var_dump</span><span class="p">(</span><span class="nv">$items</span><span class="p">);</span>
+
+        <span class="nv">$self</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">self</span><span class="p">(</span><span class="nv">$items</span><span class="p">);</span>
+        <span class="k">echo</span> <span class="s1">'排序后'</span><span class="p">,</span> <span class="nx">PHP_EOL</span><span class="p">;</span>
+        <span class="nb">var_dump</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="na">sort</span><span class="p">());</span>
+
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">HeapSort</span><span class="o">::</span><span class="na">main</span><span class="p">();</span>
+
+</code></pre></div></div>
+
+<p>运行结果:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/usr/local/opt/php@7.1/bin/php /Users/martin/heapsort.php
+排序前
+/Users/martin/heapsort.php:70:
+array(7) {
+  [0] =&gt;
+  int(1)
+  [1] =&gt;
+  int(5)
+  [2] =&gt;
+  int(3)
+  [3] =&gt;
+  int(6)
+  [4] =&gt;
+  int(2)
+  [5] =&gt;
+  int(7)
+  [6] =&gt;
+  int(4)
+}
+排序后
+/Users/martin/heapsort.php:74:
+array(7) {
+  [0] =&gt;
+  int(1)
+  [1] =&gt;
+  int(2)
+  [2] =&gt;
+  int(3)
+  [3] =&gt;
+  int(4)
+  [4] =&gt;
+  int(5)
+  [5] =&gt;
+  int(6)
+  [6] =&gt;
+  int(7)
+}
+
+</code></pre></div></div>
+
+<h2 id="延伸">延伸</h2>
+
+<ul>
+  <li>优先队列</li>
+  <li>堆排序</li>
+  <li>海量实数中（一亿级别以上）找到TopK（一万级别以下）的数集合。</li>
+</ul>
+
+<h2 id="参考">参考</h2>
+<ul>
+  <li>https://blog.csdn.net/u014532901/article/details/78573556</li>
+  <li>https://zhuanlan.zhihu.com/p/78146654</li>
+</ul>
+
+    
+  </div>
+
+</article>
+
+
+<article class="home">
+
+  <span class="post-date">
+    
+    May
     16th,
     
     2020
@@ -2283,336 +2489,6 @@ unimplemented: 返回给浏览器表明收到的 HTTP 请求所用的 method 不
   </li>
 </ul>
 
-
-    
-  </div>
-
-</article>
-
-
-<article class="home">
-
-  <span class="post-date">
-    
-    February
-    10th,
-    
-    2020
-  </span>
-
-  <h2>
-    <a href="/c/2020/02/10/c-demo.html">C 语言 Demo示例学习</a>
-  </h2>
-
-  <div>
-    
-    <h3 id="函数指针">函数指针</h3>
-
-<p>函数指针是指向函数的指针变量。</p>
-
-<p>通常我们说的指针变量是指向一个整型、字符型或数组等变量，而函数指针是指向函数。</p>
-
-<p>函数指针可以像一般函数一样，用于调用函数、传递参数。</p>
-
-<p>函数指针变量的声明：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typedef int (*fun_ptr)(int,int); // 声明一个指向同样参数、返回值的函数指针类型
-</code></pre></div></div>
-
-<p>实例</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;stdio.h&gt;
-
-int max(int x, int y)
-{
-    return x &gt; y ? x : y;
-}
-
-int main(void)
-{
-    /* p 是函数指针 */
-    int (* p)(int, int) = &amp; max; // &amp;可以省略
-    int a, b, c, d;
-
-    printf("请输入三个数字:");
-    scanf("%d %d %d", &amp; a, &amp; b, &amp; c);
-
-    /* 与直接调用函数等价，d = max(max(a, b), c) */
-    d = p(p(a, b), c);
-
-    printf("最大的数字是: %d\n", d);
-
-    return 0;
-}
-</code></pre></div></div>
-
-<p>编译执行，输出结果如下：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>请输入三个数字:1 2 3
-最大的数字是: 3
-</code></pre></div></div>
-
-<h3 id="回调函数">回调函数</h3>
-
-<p>函数指针作为某个函数的参数</p>
-
-<p>函数指针变量可以作为某个函数的参数来使用的，回调函数就是一个通过函数指针调用的函数。</p>
-
-<p>简单讲：回调函数是由别人的函数执行时调用你实现的函数。</p>
-
-<h3 id="c-typedef">C typedef</h3>
-
-<p>C 语言提供了 typedef 关键字，您可以使用它来为类型取一个新的名字。下面的实例为单字节数字定义了一个术语 BYTE：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typedef unsigned char BYTE;
-</code></pre></div></div>
-<p>在这个类型定义之后，标识符 BYTE 可作为类型 unsigned char 的缩写，例如：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>BYTE  b1, b2;
-</code></pre></div></div>
-<p>按照惯例，定义时会大写字母，以便提醒用户类型名称是一个象征性的缩写，但您也可以使用小写字母，如下：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>typedef unsigned char byte;
-</code></pre></div></div>
-
-<p>示例</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;stdio.h&gt;
-#include &lt;string.h&gt;
-
-typedef struct Books
-{
-   char  title[50];
-   char  author[50];
-   char  subject[100];
-   int   book_id;
-} Book;
-
-int main( )
-{
-   Book book;
-
-   strcpy( book.title, "C 教程");
-   strcpy( book.author, "Runoob");
-   strcpy( book.subject, "编程语言");
-   book.book_id = 12345;
-
-   printf( "书标题 : %s\n", book.title);
-   printf( "书作者 : %s\n", book.author);
-   printf( "书类目 : %s\n", book.subject);
-   printf( "书 ID : %d\n", book.book_id);
-
-   return 0;
-}
-</code></pre></div></div>
-
-<h3 id="typedef-vs-define">typedef vs #define</h3>
-
-<p>#define 是 C 指令，用于为各种数据类型定义别名，与 typedef 类似，但是它们有以下几点不同：</p>
-<ul>
-  <li>typedef 仅限于为类型定义符号名称，#define 不仅可以为类型定义别名，也能为数值定义别名，比如您可以定义 1 为 ONE。</li>
-  <li>typedef 是由编译器执行解释的，#define 语句是由预编译器进行处理的。</li>
-</ul>
-
-<p>下面是 #define 的最简单的用法：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;stdio.h&gt;
-
-#define TRUE  1
-#define FALSE 0
-
-int main( )
-{
-   printf( "TRUE 的值: %d\n", TRUE);
-   printf( "FALSE 的值: %d\n", FALSE);
-
-   return 0;
-}
-</code></pre></div></div>
-
-<h3 id="枚举类型vs常量">枚举类型vs常量</h3>
-
-<p>枚举常量是另外一种类型的常量。枚举是一个常量整型值的列表。</p>
-
-<h3 id="c-enum枚举">C enum(枚举)</h3>
-
-<p>枚举是 C 语言中的一种基本数据类型，它可以让数据更简洁，更易读。</p>
-
-<p>枚举语法定义格式为：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>enum　枚举名　{枚举元素1,枚举元素2,……};
-</code></pre></div></div>
-
-<p>接下来我们举个例子，比如：一星期有 7 天，如果不用枚举，我们需要使用 #define 来为每个整数定义一个别名：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#define MON  1
-#define TUE  2
-#define WED  3
-#define THU  4
-#define FRI  5
-#define SAT  6
-#define SUN  7
-</code></pre></div></div>
-
-<p>这个看起来代码量就比较多，接下来我们看看使用枚举的方式：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>enum DAY
-{
-      MON=1, TUE, WED, THU, FRI, SAT, SUN
-};
-</code></pre></div></div>
-
-<h3 id="c-命令行参数">C 命令行参数</h3>
-
-<p>执行程序时，可以从命令行传值给 C 程序。这些值被称为命令行参数，它们对程序很重要，特别是当您想从外部控制程序，而不是在代码内对这些值进行硬编码时，就显得尤为重要了。</p>
-
-<p>命令行参数是使用 main() 函数参数来处理的，其中，argc 是指传入参数的个数，argv[] 是一个指针数组，指向传递给程序的每个参数。下面是一个简单的实例，检查命令行是否有提供参数，并根据参数执行相应的动作：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;stdio.h&gt;
-
-int main( int argc, char *argv[] )
-{
-   if( argc == 2 )
-   {
-      printf("The argument supplied is %s\n", argv[1]);
-   }
-   else if( argc &gt; 2 )
-   {
-      printf("Too many arguments supplied.\n");
-   }
-   else
-   {
-      printf("One argument expected.\n");
-   }
-}
-</code></pre></div></div>
-<p>使用一个参数，编译并执行上面的代码，它会产生下列结果：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$./a.out testing
-The argument supplied is testing
-</code></pre></div></div>
-
-<h3 id="c-内存管理">C 内存管理</h3>
-
-<p><code class="highlighter-rouge">void *calloc(int num, int size);</code>
-在内存中动态地分配 num 个长度为 size 的连续空间，并将每一个字节都初始化为 0。所以它的结果是分配了 <code class="highlighter-rouge">num*size</code> 个字节长度的内存空间，并且每个字节的值都是0。</p>
-
-<p><code class="highlighter-rouge">void free(void *address);</code>
-该函数释放 address 所指向的内存块,释放的是动态分配的内存空间。</p>
-
-<p><code class="highlighter-rouge">void *malloc(int num);</code>
-在堆区分配一块指定大小的内存空间，用来存放数据。这块内存空间在函数执行完成后不会被初始化，它们的值是未知的。</p>
-
-<p><code class="highlighter-rouge">void *realloc(void *address, int newsize);</code>
-该函数重新分配内存，把内存扩展到 newsize。</p>
-
-<p>注意：void * 类型表示未确定类型的指针。C、C++ 规定 void * 类型可以通过类型转换强制转换为任何其它类型的指针。</p>
-
-<h4 id="动态分配内存">动态分配内存</h4>
-
-<p>编程时，如果您预先知道数组的大小，那么定义数组时就比较容易。例如，一个存储人名的数组，它最多容纳 100 个字符，所以您可以定义数组，如下所示：</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>char name[100];
-</code></pre></div></div>
-
-<p>但是，如果您预先不知道需要存储的文本长度，例如您向存储有关一个主题的详细描述。在这里，我们需要定义一个指针，该指针指向未定义所需内存大小的字符，后续再根据需求来分配内存，如下所示：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-#include &lt;string.h&gt;
-
-int main()
-{
-   char name[100];
-   char *description;
-
-   strcpy(name, "Zara Ali");
-
-   /* 动态分配内存 */
-   description = (char *)malloc( 200 * sizeof(char) );
-   if( description == NULL )
-   {
-      fprintf(stderr, "Error - unable to allocate required memory\n");
-   }
-   else
-   {
-      strcpy( description, "Zara ali a DPS student in class 10th");
-   }
-   printf("Name = %s\n", name );
-   printf("Description: %s\n", description );
-}
-</code></pre></div></div>
-
-<p>上面的程序也可以使用 calloc() 来编写，只需要把 malloc 替换为 calloc 即可，如下所示：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>calloc(200, sizeof(char));
-</code></pre></div></div>
-
-<p>当动态分配内存时，您有完全控制权，可以传递任何大小的值。而那些预先定义了大小的数组，一旦定义则无法改变大小。</p>
-
-<h4 id="重新调整内存的大小和释放内存">重新调整内存的大小和释放内存</h4>
-
-<p>当程序退出时，操作系统会自动释放所有分配给程序的内存，但是，建议您在不需要内存时，都应该调用函数 free() 来释放内存。</p>
-
-<p>或者，您可以通过调用函数 realloc() 来增加或减少已分配的内存块的大小。让我们使用 realloc() 和 free() 函数，再次查看上面的实例：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-#include &lt;string.h&gt;
-
-int main()
-{
-   char name[100];
-   char *description;
-
-   strcpy(name, "Zara Ali");
-
-   /* 动态分配内存 */
-   description = (char *)malloc( 30 * sizeof(char) );
-   if( description == NULL )
-   {
-      fprintf(stderr, "Error - unable to allocate required memory\n");
-   }
-   else
-   {
-      strcpy( description, "Zara ali a DPS student.");
-   }
-   /* 假设您想要存储更大的描述信息 */
-   description = (char *) realloc( description, 100 * sizeof(char) );
-   if( description == NULL )
-   {
-      fprintf(stderr, "Error - unable to allocate required memory\n");
-   }
-   else
-   {
-      strcat( description, "She is in class 10th");
-   }
-
-   printf("Name = %s\n", name );
-   printf("Description: %s\n", description );
-
-   /* 使用 free() 函数释放内存 */
-   free(description);
-}
-</code></pre></div></div>
-
-<h3 id="c-预处理器">C 预处理器</h3>
-
-<p>C 预处理器不是编译器的组成部分，但是它是编译过程中一个单独的步骤。简言之，C 预处理器只不过是一个文本替换工具而已，它们会指示编译器在实际编译之前完成所需的预处理。我们将把 C 预处理器（C Preprocessor）简写为 CPP。</p>
-
-<p>所有的预处理器命令都是以井号（#）开头。它必须是第一个非空字符，为了增强可读性，预处理器指令应从第一列开始。下面列出了所有重要的预处理器指令：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>指令	描述
-#define	定义宏
-#include	包含一个源代码文件
-#undef	取消已定义的宏
-#ifdef	如果宏已经定义，则返回真
-#ifndef	如果宏没有定义，则返回真
-#if	如果给定条件为真，则编译下面代码
-#else	#if 的替代方案
-#elif	如果前面的 #if 给定条件不为真，当前条件为真，则编译下面代码
-#endif	结束一个 #if……#else 条件编译块
-#error	当遇到标准错误时，输出错误消息
-#pragma	使用标准化方法，向编译器发布特殊的命令到编译器中
-</code></pre></div></div>
 
     
   </div>

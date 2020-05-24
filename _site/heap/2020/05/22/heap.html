@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>二叉堆笔记</title>
+	
+	<meta name="author" content="JY">
+
+	<!-- Enable responsive viewport -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	<!-- Le styles -->
+	<link href="/assets/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/assets/resources/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	<link href="/assets/resources/syntax/syntax.css" rel="stylesheet">
+	<link href="/assets/css/style.css" rel="stylesheet">
+
+	<!-- Le fav and touch icons -->
+	<!-- Update these with your own images
+	<link rel="shortcut icon" href="images/favicon.ico">
+	<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+	-->
+
+	<link rel="alternate" type="application/rss+xml" title="" href="/feed.xml">
+</head>
+
+<body>
+	<nav class="navbar navbar-default visible-xs" role="navigation">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			
+			<a type="button" class="navbar-toggle nav-link" href="http://github.com/liujingyu">
+				<i class="fa fa-github"></i>
+			</a>
+			
+			
+			
+			<a type="button" class="navbar-toggle nav-link" href="mailto:jingyu525@gmail.com">
+				<i class="fa fa-envelope"></i>
+			</a>
+			
+			<a class="navbar-brand" href="/">
+                <img src="/assets/media/dragon.jpeg" class="img-circle" />
+				JY
+			</a>
+		</div>
+
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="/">Home</a></li>
+				<li><a href="/categories.html">Categories</a></li>
+				<li><a href="/tags.html">Tags</a></li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</nav>
+
+	<!-- nav-menu-dropdown -->
+	<div class="btn-group hidden-xs" id="nav-menu">
+		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+			<i class="fa fa-bars"></i>
+		</button>
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="/"><i class="fa fa-home"></i>Home</a></li>
+			<li><a href="/categories.html"><i class="fa fa-folder"></i>Categories</a></li>
+			<li><a href="/tags.html"><i class="fa fa-tags"></i>Tags</a></li>
+			<li class="divider"></li>
+			<li><a href="#"><i class="fa fa-arrow-up"></i>Top of Page</a></li>
+		</ul>
+	</div>
+
+	<div class="col-sm-3 sidebar hidden-xs" style="background: url(/assets/media/sky.png) no-repeat !important;">
+		<!-- sidebar.html -->
+<header class="sidebar-header" role="banner">
+	<a href="/">
+        <img src="/assets/media/dragon.jpeg" class="img-circle"  height="150" width="150" />
+	</a>
+	<h3 class="title">
+        <a href="/">JY</a>
+    </h3>
+</header>
+
+
+<div id="bio" class="text-center">
+	目前就职于小猪短租
+</div>
+
+
+<div id="contact-list" class="text-center">
+	<ul class="list-unstyled list-inline">
+		
+		<li>
+			<a class="btn btn-default btn-sm" href="https://github.com/liujingyu">
+				<i class="fa fa-github-alt fa-lg"></i>
+			</a>
+		</li>
+		
+		
+		<li>
+			<a class="btn btn-default btn-sm" href="mailto:jingyu525@gmail.com">
+				<i class="fa fa-envelope fa-lg"></i>
+			</a>
+		</li>
+		
+		<li>
+			<a class="btn btn-default btn-sm" href="/feed.xml">
+				<i class="fa fa-rss fa-lg"></i>
+			</a>
+		</li>
+	</ul>
+	<ul class="list-unstyled list-inline">
+		<li>
+            <a class="btn btn-default btn-sm" href="/about">
+                关于
+			</a>
+		</li>
+		<li>
+            <a class="btn btn-default btn-sm" href="/elasticsearch">
+                elasticsearch
+			</a>
+		</li>
+		<li>
+            <a class="btn btn-default btn-sm" href="/open-source">
+                开源项目
+			</a>
+		</li>
+	</ul>
+</div>
+<!-- sidebar.html end -->
+
+	</div>
+
+	<div class="col-sm-9 col-sm-offset-3">
+		<div class="page-header">
+  <h1>二叉堆笔记 </h1>
+</div>
+	
+<article>
+
+	<div class="col-sm-10">
+	 <span class="post-date">
+	   
+	   May 
+	   22nd,
+	     
+	   2020
+	 </span>
+	  <div class="article_body">
+	  <h2 id="介绍">介绍</h2>
+
+<p>一个小顶堆(或大顶堆)是一个完整的二叉树。其中每个节点都小于其子节点。因此，根是树中的最小元素。</p>
+
+<p><img src="assets/media/WX20200522-192421@2x.png" alt="图-2" /></p>
+
+<p>在最小堆中有两个关键操作：<code class="highlighter-rouge">insert</code>和<code class="highlighter-rouge">extract_min</code>。</p>
+
+<h2 id="插入操作">插入操作</h2>
+
+<p>当我们向一个最小堆插入元素时，总是从底部开始。从最右边的节点开始插入操作以保持树的完整性。然后，通过与其祖先节点进行交换来“修复”树，直到找到新元素的适当位置。我们基本上是在向上传递最小的元素</p>
+
+<p><img src="assets/media/WX20200522-192404@2x.png" alt="图-1" /></p>
+
+<h2 id="提取最小元素">提取最小元素</h2>
+
+<p>找到小顶堆的最小元素是小菜一碟：它总是在顶部。颇为棘手的是如何删除该元素（其实也不是那么棘手）。首先，删除最小元素并将其与堆中的最后一个元素（位于最底层、最右边的元素）进行交换。然后，向下传递这个元素，不断使其与自身子节点之一进行交换，直到小顶堆的属性得以恢复。是和左边的孩子节点还是右边的孩子节点进行交换取决于它们的值。左右元素之间没有固定的顺序，但是为了保持小顶堆的元素有序，你需要选择两者中较小的元素。</p>
+
+<p><img src="assets/media/WX20200522-192346@2x.png" alt="图-3" /></p>
+
+<h2 id="堆的基本操作">堆的基本操作</h2>
+
+<p>堆的几个基本操作都依赖于两个重要的函数<code class="highlighter-rouge">siftUp</code>和<code class="highlighter-rouge">siftDown</code>，堆的insert通常是在堆尾插入新元素并siftUp调整堆，而<code class="highlighter-rouge">extractMin</code>是在删除堆顶元素，然后将最后一个元素放置堆顶并调用<code class="highlighter-rouge">siftDown</code>调整堆。
+堆得基本操作的时间复杂度如下表所示：</p>
+<ul>
+  <li>heapify O(N)</li>
+  <li>insert O(logN)</li>
+  <li>extractMin O(logN)</li>
+  <li>delete O(logN)</li>
+  <li>peek O(1)</li>
+</ul>
+
+<h2 id="总结">总结</h2>
+
+<ul>
+  <li>（1）堆是一颗完全二叉树；</li>
+  <li>（2）小（大）顶堆中的每一个节点都不小于（不大于）它的父节点；</li>
+  <li>（3）堆的插入、删除元素的时间复杂度都是O(log n)；</li>
+  <li>（4）建堆的时间复杂度是O(n)；</li>
+  <li>（5）堆排序的时间复杂度是O(nlog n)；</li>
+  <li>（6）堆排序的空间复杂度是O(1)；</li>
+</ul>
+
+<h2 id="代码">代码</h2>
+
+<p>二叉堆排序代码如下:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+
+<span class="kd">class</span> <span class="nc">HeapSort</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="nv">$items</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="k">array</span> <span class="nv">$items</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span> <span class="o">=</span> <span class="nv">$items</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">sort</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$arrLen</span> <span class="o">=</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">buildMaxHeap</span><span class="p">(</span><span class="nv">$arrLen</span><span class="p">);</span>
+
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="nv">$arrLen</span><span class="o">-</span><span class="mi">1</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">list</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">[</span><span class="nv">$i</span><span class="p">])</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">[</span><span class="nv">$i</span><span class="p">],</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="p">];</span>
+
+            <span class="nv">$arrLen</span> <span class="o">-=</span> <span class="mi">1</span><span class="p">;</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">heapify</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nv">$arrLen</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">buildMaxHeap</span><span class="p">(</span><span class="nv">$arrLen</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="nb">intval</span><span class="p">(</span><span class="nv">$arrLen</span><span class="o">/</span><span class="mi">2</span><span class="p">);</span> <span class="nv">$i</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span><span class="o">--</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">heapify</span><span class="p">(</span><span class="nv">$i</span><span class="p">,</span> <span class="nv">$arrLen</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">private</span> <span class="k">function</span> <span class="nf">heapify</span><span class="p">(</span><span class="nv">$i</span><span class="p">,</span> <span class="nv">$arrLen</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$left</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nv">$i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">;</span>
+        <span class="nv">$right</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="nv">$i</span> <span class="o">+</span> <span class="mi">2</span><span class="p">;</span>
+        <span class="nv">$largest</span> <span class="o">=</span> <span class="nv">$i</span><span class="p">;</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$left</span> <span class="o">&lt;</span> <span class="nv">$arrLen</span> <span class="o">&amp;&amp;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">[</span><span class="nv">$left</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">[</span><span class="nv">$largest</span><span class="p">])</span> <span class="p">{</span>
+            <span class="nv">$largest</span> <span class="o">=</span> <span class="nv">$left</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$right</span> <span class="o">&lt;</span> <span class="nv">$arrLen</span> <span class="o">&amp;&amp;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">[</span><span class="nv">$right</span><span class="p">]</span> <span class="o">&gt;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">[</span><span class="nv">$largest</span><span class="p">])</span> <span class="p">{</span>
+            <span class="nv">$largest</span> <span class="o">=</span> <span class="nv">$right</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$largest</span> <span class="o">!=</span> <span class="nv">$i</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">list</span><span class="p">(</span><span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">[</span><span class="nv">$i</span><span class="p">],</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">[</span><span class="nv">$largest</span><span class="p">])</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">[</span><span class="nv">$largest</span><span class="p">],</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">items</span><span class="p">[</span><span class="nv">$i</span><span class="p">]</span>
+            <span class="p">];</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">heapify</span><span class="p">(</span><span class="nv">$largest</span><span class="p">,</span> <span class="nv">$arrLen</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">main</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$items</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="mi">1</span><span class="p">,</span>
+            <span class="mi">5</span><span class="p">,</span>
+            <span class="mi">3</span><span class="p">,</span>
+            <span class="mi">6</span><span class="p">,</span>
+            <span class="mi">2</span><span class="p">,</span>
+            <span class="mi">7</span><span class="p">,</span>
+            <span class="mi">4</span><span class="p">,</span>
+        <span class="p">];</span>
+        <span class="k">echo</span> <span class="s1">'排序前'</span><span class="p">,</span> <span class="nx">PHP_EOL</span><span class="p">;</span>
+        <span class="nb">var_dump</span><span class="p">(</span><span class="nv">$items</span><span class="p">);</span>
+
+        <span class="nv">$self</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">self</span><span class="p">(</span><span class="nv">$items</span><span class="p">);</span>
+        <span class="k">echo</span> <span class="s1">'排序后'</span><span class="p">,</span> <span class="nx">PHP_EOL</span><span class="p">;</span>
+        <span class="nb">var_dump</span><span class="p">(</span><span class="nv">$self</span><span class="o">-&gt;</span><span class="na">sort</span><span class="p">());</span>
+
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nx">HeapSort</span><span class="o">::</span><span class="na">main</span><span class="p">();</span>
+
+</code></pre></div></div>
+
+<p>运行结果:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/usr/local/opt/php@7.1/bin/php /Users/martin/heapsort.php
+排序前
+/Users/martin/heapsort.php:70:
+array(7) {
+  [0] =&gt;
+  int(1)
+  [1] =&gt;
+  int(5)
+  [2] =&gt;
+  int(3)
+  [3] =&gt;
+  int(6)
+  [4] =&gt;
+  int(2)
+  [5] =&gt;
+  int(7)
+  [6] =&gt;
+  int(4)
+}
+排序后
+/Users/martin/heapsort.php:74:
+array(7) {
+  [0] =&gt;
+  int(1)
+  [1] =&gt;
+  int(2)
+  [2] =&gt;
+  int(3)
+  [3] =&gt;
+  int(4)
+  [4] =&gt;
+  int(5)
+  [5] =&gt;
+  int(6)
+  [6] =&gt;
+  int(7)
+}
+
+</code></pre></div></div>
+
+<h2 id="延伸">延伸</h2>
+
+<ul>
+  <li>优先队列</li>
+  <li>堆排序</li>
+  <li>海量实数中（一亿级别以上）找到TopK（一万级别以下）的数集合。</li>
+</ul>
+
+<h2 id="参考">参考</h2>
+<ul>
+  <li>https://blog.csdn.net/u014532901/article/details/78573556</li>
+  <li>https://zhuanlan.zhihu.com/p/78146654</li>
+</ul>
+
+	  </div>
+
+		
+		<ul class="tag_box list-unstyled list-inline">
+		  <li><i class="fa fa-folder-open"></i></li>
+		  
+		  
+			 
+				<li><a href="/categories.html#heap-ref">
+					heap <span>(1)</span>
+					
+				</a></li>
+			
+		  
+		</ul>
+		  
+
+		
+		<ul class="list-inline">
+		  <li><i class="fa fa-tags"></i></li>
+		  
+		  
+			 
+				<li>
+					<a href="/tags.html#heap-ref">
+					heap <span>(1)</span>
+					
+					</a>
+				</li>
+			
+		  
+		  
+		</ul>
+		  
+
+		<hr>
+
+		<div>
+      <section class="share col-sm-6">
+        <h4 class="section-title">Share Post</h4>
+        <a class="btn btn-default btn-sm twitter" href="http://twitter.com/share?text=二叉堆笔记"
+           onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+          <i class="fa fa-twitter fa-lg"></i>
+          Twitter
+        </a>
+        <a class="btn btn-default btn-sm facebook" href="https://www.facebook.com/sharer/sharer.php"
+           onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+          <i class="fa fa-facebook fa-lg"></i>
+          Facebook
+        </a>
+        <a class="btn btn-default btn-sm gplus"
+           onclick="window.open('https://plus.google.com/share?url='+window.location.href, 'google-plus-share', 'width=490,height=530');return false;">
+          <i class="fa fa-google-plus fa-lg"></i>
+          Google+
+        </a>
+      </section>
+
+      <section class="col-sm-6 author">
+        <img src="/assets/media/dragon.jpeg" class="img-rounded author-image" width="100" height="100" />
+        <h4 class="section-title author-name">JY</h4>
+        <p class="author-bio">目前就职于小猪短租</p>
+      </section>
+    </div>
+
+    <div class="clearfix"></div>
+
+		<ul class="pager">
+		  
+		  <li class="previous"><a href="/trie/2020/05/16/trie-node.html" title="Trie">&larr; Previous</a></li>
+		  
+		  
+			<li class="next disabled"><a>Next &rarr;</a>
+		  
+		</ul>
+
+		<hr>
+	</div>
+	
+	<div class="col-sm-2 sidebar-2">
+	
+	</div>
+</article>
+<div class="clearfix"></div>
+
+
+
+
+
+		<footer>
+			<hr/>
+			<p>
+				&copy; 2020 JY with <a href="http://jekyllrb.com/">Jekyll</a>. Theme: <a href="https://github.com/dbtek/dbyll">dbyll</a> by dbtek.
+			</p>
+		</footer>
+	</div>
+
+	<script type="text/javascript" src="/assets/resources/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="/assets/resources/bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/assets/js/app.js"></script>
+</body>
+</html>
+
+
+

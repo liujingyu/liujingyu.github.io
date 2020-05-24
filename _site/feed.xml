@@ -7,6 +7,197 @@
 		<atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>二叉堆笔记</title>
+				<description>&lt;h2 id=&quot;介绍&quot;&gt;介绍&lt;/h2&gt;
+
+&lt;p&gt;一个小顶堆(或大顶堆)是一个完整的二叉树。其中每个节点都小于其子节点。因此，根是树中的最小元素。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/media/WX20200522-192421@2x.png&quot; alt=&quot;图-2&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;在最小堆中有两个关键操作：&lt;code class=&quot;highlighter-rouge&quot;&gt;insert&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;extract_min&lt;/code&gt;。&lt;/p&gt;
+
+&lt;h2 id=&quot;插入操作&quot;&gt;插入操作&lt;/h2&gt;
+
+&lt;p&gt;当我们向一个最小堆插入元素时，总是从底部开始。从最右边的节点开始插入操作以保持树的完整性。然后，通过与其祖先节点进行交换来“修复”树，直到找到新元素的适当位置。我们基本上是在向上传递最小的元素&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/media/WX20200522-192404@2x.png&quot; alt=&quot;图-1&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;提取最小元素&quot;&gt;提取最小元素&lt;/h2&gt;
+
+&lt;p&gt;找到小顶堆的最小元素是小菜一碟：它总是在顶部。颇为棘手的是如何删除该元素（其实也不是那么棘手）。首先，删除最小元素并将其与堆中的最后一个元素（位于最底层、最右边的元素）进行交换。然后，向下传递这个元素，不断使其与自身子节点之一进行交换，直到小顶堆的属性得以恢复。是和左边的孩子节点还是右边的孩子节点进行交换取决于它们的值。左右元素之间没有固定的顺序，但是为了保持小顶堆的元素有序，你需要选择两者中较小的元素。&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&quot;assets/media/WX20200522-192346@2x.png&quot; alt=&quot;图-3&quot; /&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;堆的基本操作&quot;&gt;堆的基本操作&lt;/h2&gt;
+
+&lt;p&gt;堆的几个基本操作都依赖于两个重要的函数&lt;code class=&quot;highlighter-rouge&quot;&gt;siftUp&lt;/code&gt;和&lt;code class=&quot;highlighter-rouge&quot;&gt;siftDown&lt;/code&gt;，堆的insert通常是在堆尾插入新元素并siftUp调整堆，而&lt;code class=&quot;highlighter-rouge&quot;&gt;extractMin&lt;/code&gt;是在删除堆顶元素，然后将最后一个元素放置堆顶并调用&lt;code class=&quot;highlighter-rouge&quot;&gt;siftDown&lt;/code&gt;调整堆。
+堆得基本操作的时间复杂度如下表所示：&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;heapify O(N)&lt;/li&gt;
+  &lt;li&gt;insert O(logN)&lt;/li&gt;
+  &lt;li&gt;extractMin O(logN)&lt;/li&gt;
+  &lt;li&gt;delete O(logN)&lt;/li&gt;
+  &lt;li&gt;peek O(1)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;总结&quot;&gt;总结&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;（1）堆是一颗完全二叉树；&lt;/li&gt;
+  &lt;li&gt;（2）小（大）顶堆中的每一个节点都不小于（不大于）它的父节点；&lt;/li&gt;
+  &lt;li&gt;（3）堆的插入、删除元素的时间复杂度都是O(log n)；&lt;/li&gt;
+  &lt;li&gt;（4）建堆的时间复杂度是O(n)；&lt;/li&gt;
+  &lt;li&gt;（5）堆排序的时间复杂度是O(nlog n)；&lt;/li&gt;
+  &lt;li&gt;（6）堆排序的空间复杂度是O(1)；&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;代码&quot;&gt;代码&lt;/h2&gt;
+
+&lt;p&gt;二叉堆排序代码如下:&lt;/p&gt;
+
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;HeapSort&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;__construct&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;array&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;items&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;sort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;$arrLen&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;buildMaxHeap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$arrLen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$arrLen&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+                &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+                &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+
+            &lt;span class=&quot;nv&quot;&gt;$arrLen&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;heapify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$arrLen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;buildMaxHeap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$arrLen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;intval&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$arrLen&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;heapify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$arrLen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;heapify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$arrLen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;$left&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;$right&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;$largest&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$left&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$arrLen&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$largest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nv&quot;&gt;$largest&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$right&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$arrLen&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$largest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nv&quot;&gt;$largest&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$largest&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;list&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$largest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+                &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$largest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;
+                &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+            &lt;span class=&quot;nv&quot;&gt;$this&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;heapify&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$largest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$arrLen&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nv&quot;&gt;$items&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+            &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;mi&quot;&gt;7&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+            &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'排序前'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;PHP_EOL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;nb&quot;&gt;var_dump&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+        &lt;span class=&quot;nv&quot;&gt;$self&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;new&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$items&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'排序后'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;PHP_EOL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+        &lt;span class=&quot;nb&quot;&gt;var_dump&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;sort&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;());&lt;/span&gt;
+
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nx&quot;&gt;HeapSort&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;na&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;();&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;运行结果:&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/usr/local/opt/php@7.1/bin/php /Users/martin/heapsort.php
+排序前
+/Users/martin/heapsort.php:70:
+array(7) {
+  [0] =&amp;gt;
+  int(1)
+  [1] =&amp;gt;
+  int(5)
+  [2] =&amp;gt;
+  int(3)
+  [3] =&amp;gt;
+  int(6)
+  [4] =&amp;gt;
+  int(2)
+  [5] =&amp;gt;
+  int(7)
+  [6] =&amp;gt;
+  int(4)
+}
+排序后
+/Users/martin/heapsort.php:74:
+array(7) {
+  [0] =&amp;gt;
+  int(1)
+  [1] =&amp;gt;
+  int(2)
+  [2] =&amp;gt;
+  int(3)
+  [3] =&amp;gt;
+  int(4)
+  [4] =&amp;gt;
+  int(5)
+  [5] =&amp;gt;
+  int(6)
+  [6] =&amp;gt;
+  int(7)
+}
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;延伸&quot;&gt;延伸&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;优先队列&lt;/li&gt;
+  &lt;li&gt;堆排序&lt;/li&gt;
+  &lt;li&gt;海量实数中（一亿级别以上）找到TopK（一万级别以下）的数集合。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;参考&quot;&gt;参考&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;https://blog.csdn.net/u014532901/article/details/78573556&lt;/li&gt;
+  &lt;li&gt;https://zhuanlan.zhihu.com/p/78146654&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+				<pubDate>Fri, 22 May 2020 00:00:00 +0800</pubDate>
+				<link>/heap/2020/05/22/heap.html</link>
+				<guid isPermaLink="true">/heap/2020/05/22/heap.html</guid>
+			</item>
+		
+			<item>
 				<title>Trie</title>
 				<description>&lt;h2 id=&quot;介绍&quot;&gt;介绍&lt;/h2&gt;
 
@@ -2009,321 +2200,6 @@ unimplemented: 返回给浏览器表明收到的 HTTP 请求所用的 method 不
 				<pubDate>Thu, 20 Feb 2020 00:00:00 +0800</pubDate>
 				<link>/c/protocol/2020/02/20/learn-http.html</link>
 				<guid isPermaLink="true">/c/protocol/2020/02/20/learn-http.html</guid>
-			</item>
-		
-			<item>
-				<title>C 语言 Demo示例学习</title>
-				<description>&lt;h3 id=&quot;函数指针&quot;&gt;函数指针&lt;/h3&gt;
-
-&lt;p&gt;函数指针是指向函数的指针变量。&lt;/p&gt;
-
-&lt;p&gt;通常我们说的指针变量是指向一个整型、字符型或数组等变量，而函数指针是指向函数。&lt;/p&gt;
-
-&lt;p&gt;函数指针可以像一般函数一样，用于调用函数、传递参数。&lt;/p&gt;
-
-&lt;p&gt;函数指针变量的声明：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typedef int (*fun_ptr)(int,int); // 声明一个指向同样参数、返回值的函数指针类型
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;实例&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#include &amp;lt;stdio.h&amp;gt;
-
-int max(int x, int y)
-{
-    return x &amp;gt; y ? x : y;
-}
-
-int main(void)
-{
-    /* p 是函数指针 */
-    int (* p)(int, int) = &amp;amp; max; // &amp;amp;可以省略
-    int a, b, c, d;
-
-    printf(&quot;请输入三个数字:&quot;);
-    scanf(&quot;%d %d %d&quot;, &amp;amp; a, &amp;amp; b, &amp;amp; c);
-
-    /* 与直接调用函数等价，d = max(max(a, b), c) */
-    d = p(p(a, b), c);
-
-    printf(&quot;最大的数字是: %d\n&quot;, d);
-
-    return 0;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;编译执行，输出结果如下：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;请输入三个数字:1 2 3
-最大的数字是: 3
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;回调函数&quot;&gt;回调函数&lt;/h3&gt;
-
-&lt;p&gt;函数指针作为某个函数的参数&lt;/p&gt;
-
-&lt;p&gt;函数指针变量可以作为某个函数的参数来使用的，回调函数就是一个通过函数指针调用的函数。&lt;/p&gt;
-
-&lt;p&gt;简单讲：回调函数是由别人的函数执行时调用你实现的函数。&lt;/p&gt;
-
-&lt;h3 id=&quot;c-typedef&quot;&gt;C typedef&lt;/h3&gt;
-
-&lt;p&gt;C 语言提供了 typedef 关键字，您可以使用它来为类型取一个新的名字。下面的实例为单字节数字定义了一个术语 BYTE：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typedef unsigned char BYTE;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;在这个类型定义之后，标识符 BYTE 可作为类型 unsigned char 的缩写，例如：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;BYTE  b1, b2;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;按照惯例，定义时会大写字母，以便提醒用户类型名称是一个象征性的缩写，但您也可以使用小写字母，如下：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;typedef unsigned char byte;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;示例&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#include &amp;lt;stdio.h&amp;gt;
-#include &amp;lt;string.h&amp;gt;
-
-typedef struct Books
-{
-   char  title[50];
-   char  author[50];
-   char  subject[100];
-   int   book_id;
-} Book;
-
-int main( )
-{
-   Book book;
-
-   strcpy( book.title, &quot;C 教程&quot;);
-   strcpy( book.author, &quot;Runoob&quot;);
-   strcpy( book.subject, &quot;编程语言&quot;);
-   book.book_id = 12345;
-
-   printf( &quot;书标题 : %s\n&quot;, book.title);
-   printf( &quot;书作者 : %s\n&quot;, book.author);
-   printf( &quot;书类目 : %s\n&quot;, book.subject);
-   printf( &quot;书 ID : %d\n&quot;, book.book_id);
-
-   return 0;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;typedef-vs-define&quot;&gt;typedef vs #define&lt;/h3&gt;
-
-&lt;p&gt;#define 是 C 指令，用于为各种数据类型定义别名，与 typedef 类似，但是它们有以下几点不同：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;typedef 仅限于为类型定义符号名称，#define 不仅可以为类型定义别名，也能为数值定义别名，比如您可以定义 1 为 ONE。&lt;/li&gt;
-  &lt;li&gt;typedef 是由编译器执行解释的，#define 语句是由预编译器进行处理的。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;下面是 #define 的最简单的用法：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#include &amp;lt;stdio.h&amp;gt;
-
-#define TRUE  1
-#define FALSE 0
-
-int main( )
-{
-   printf( &quot;TRUE 的值: %d\n&quot;, TRUE);
-   printf( &quot;FALSE 的值: %d\n&quot;, FALSE);
-
-   return 0;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;枚举类型vs常量&quot;&gt;枚举类型vs常量&lt;/h3&gt;
-
-&lt;p&gt;枚举常量是另外一种类型的常量。枚举是一个常量整型值的列表。&lt;/p&gt;
-
-&lt;h3 id=&quot;c-enum枚举&quot;&gt;C enum(枚举)&lt;/h3&gt;
-
-&lt;p&gt;枚举是 C 语言中的一种基本数据类型，它可以让数据更简洁，更易读。&lt;/p&gt;
-
-&lt;p&gt;枚举语法定义格式为：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;enum　枚举名　{枚举元素1,枚举元素2,……};
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;接下来我们举个例子，比如：一星期有 7 天，如果不用枚举，我们需要使用 #define 来为每个整数定义一个别名：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#define MON  1
-#define TUE  2
-#define WED  3
-#define THU  4
-#define FRI  5
-#define SAT  6
-#define SUN  7
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;这个看起来代码量就比较多，接下来我们看看使用枚举的方式：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;enum DAY
-{
-      MON=1, TUE, WED, THU, FRI, SAT, SUN
-};
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;c-命令行参数&quot;&gt;C 命令行参数&lt;/h3&gt;
-
-&lt;p&gt;执行程序时，可以从命令行传值给 C 程序。这些值被称为命令行参数，它们对程序很重要，特别是当您想从外部控制程序，而不是在代码内对这些值进行硬编码时，就显得尤为重要了。&lt;/p&gt;
-
-&lt;p&gt;命令行参数是使用 main() 函数参数来处理的，其中，argc 是指传入参数的个数，argv[] 是一个指针数组，指向传递给程序的每个参数。下面是一个简单的实例，检查命令行是否有提供参数，并根据参数执行相应的动作：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#include &amp;lt;stdio.h&amp;gt;
-
-int main( int argc, char *argv[] )
-{
-   if( argc == 2 )
-   {
-      printf(&quot;The argument supplied is %s\n&quot;, argv[1]);
-   }
-   else if( argc &amp;gt; 2 )
-   {
-      printf(&quot;Too many arguments supplied.\n&quot;);
-   }
-   else
-   {
-      printf(&quot;One argument expected.\n&quot;);
-   }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;使用一个参数，编译并执行上面的代码，它会产生下列结果：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$./a.out testing
-The argument supplied is testing
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;c-内存管理&quot;&gt;C 内存管理&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;void *calloc(int num, int size);&lt;/code&gt;
-在内存中动态地分配 num 个长度为 size 的连续空间，并将每一个字节都初始化为 0。所以它的结果是分配了 &lt;code class=&quot;highlighter-rouge&quot;&gt;num*size&lt;/code&gt; 个字节长度的内存空间，并且每个字节的值都是0。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;void free(void *address);&lt;/code&gt;
-该函数释放 address 所指向的内存块,释放的是动态分配的内存空间。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;void *malloc(int num);&lt;/code&gt;
-在堆区分配一块指定大小的内存空间，用来存放数据。这块内存空间在函数执行完成后不会被初始化，它们的值是未知的。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;void *realloc(void *address, int newsize);&lt;/code&gt;
-该函数重新分配内存，把内存扩展到 newsize。&lt;/p&gt;
-
-&lt;p&gt;注意：void * 类型表示未确定类型的指针。C、C++ 规定 void * 类型可以通过类型转换强制转换为任何其它类型的指针。&lt;/p&gt;
-
-&lt;h4 id=&quot;动态分配内存&quot;&gt;动态分配内存&lt;/h4&gt;
-
-&lt;p&gt;编程时，如果您预先知道数组的大小，那么定义数组时就比较容易。例如，一个存储人名的数组，它最多容纳 100 个字符，所以您可以定义数组，如下所示：&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;char name[100];
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;但是，如果您预先不知道需要存储的文本长度，例如您向存储有关一个主题的详细描述。在这里，我们需要定义一个指针，该指针指向未定义所需内存大小的字符，后续再根据需求来分配内存，如下所示：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#include &amp;lt;stdio.h&amp;gt;
-#include &amp;lt;stdlib.h&amp;gt;
-#include &amp;lt;string.h&amp;gt;
-
-int main()
-{
-   char name[100];
-   char *description;
-
-   strcpy(name, &quot;Zara Ali&quot;);
-
-   /* 动态分配内存 */
-   description = (char *)malloc( 200 * sizeof(char) );
-   if( description == NULL )
-   {
-      fprintf(stderr, &quot;Error - unable to allocate required memory\n&quot;);
-   }
-   else
-   {
-      strcpy( description, &quot;Zara ali a DPS student in class 10th&quot;);
-   }
-   printf(&quot;Name = %s\n&quot;, name );
-   printf(&quot;Description: %s\n&quot;, description );
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;上面的程序也可以使用 calloc() 来编写，只需要把 malloc 替换为 calloc 即可，如下所示：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;calloc(200, sizeof(char));
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;当动态分配内存时，您有完全控制权，可以传递任何大小的值。而那些预先定义了大小的数组，一旦定义则无法改变大小。&lt;/p&gt;
-
-&lt;h4 id=&quot;重新调整内存的大小和释放内存&quot;&gt;重新调整内存的大小和释放内存&lt;/h4&gt;
-
-&lt;p&gt;当程序退出时，操作系统会自动释放所有分配给程序的内存，但是，建议您在不需要内存时，都应该调用函数 free() 来释放内存。&lt;/p&gt;
-
-&lt;p&gt;或者，您可以通过调用函数 realloc() 来增加或减少已分配的内存块的大小。让我们使用 realloc() 和 free() 函数，再次查看上面的实例：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#include &amp;lt;stdio.h&amp;gt;
-#include &amp;lt;stdlib.h&amp;gt;
-#include &amp;lt;string.h&amp;gt;
-
-int main()
-{
-   char name[100];
-   char *description;
-
-   strcpy(name, &quot;Zara Ali&quot;);
-
-   /* 动态分配内存 */
-   description = (char *)malloc( 30 * sizeof(char) );
-   if( description == NULL )
-   {
-      fprintf(stderr, &quot;Error - unable to allocate required memory\n&quot;);
-   }
-   else
-   {
-      strcpy( description, &quot;Zara ali a DPS student.&quot;);
-   }
-   /* 假设您想要存储更大的描述信息 */
-   description = (char *) realloc( description, 100 * sizeof(char) );
-   if( description == NULL )
-   {
-      fprintf(stderr, &quot;Error - unable to allocate required memory\n&quot;);
-   }
-   else
-   {
-      strcat( description, &quot;She is in class 10th&quot;);
-   }
-
-   printf(&quot;Name = %s\n&quot;, name );
-   printf(&quot;Description: %s\n&quot;, description );
-
-   /* 使用 free() 函数释放内存 */
-   free(description);
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;c-预处理器&quot;&gt;C 预处理器&lt;/h3&gt;
-
-&lt;p&gt;C 预处理器不是编译器的组成部分，但是它是编译过程中一个单独的步骤。简言之，C 预处理器只不过是一个文本替换工具而已，它们会指示编译器在实际编译之前完成所需的预处理。我们将把 C 预处理器（C Preprocessor）简写为 CPP。&lt;/p&gt;
-
-&lt;p&gt;所有的预处理器命令都是以井号（#）开头。它必须是第一个非空字符，为了增强可读性，预处理器指令应从第一列开始。下面列出了所有重要的预处理器指令：&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;指令	描述
-#define	定义宏
-#include	包含一个源代码文件
-#undef	取消已定义的宏
-#ifdef	如果宏已经定义，则返回真
-#ifndef	如果宏没有定义，则返回真
-#if	如果给定条件为真，则编译下面代码
-#else	#if 的替代方案
-#elif	如果前面的 #if 给定条件不为真，当前条件为真，则编译下面代码
-#endif	结束一个 #if……#else 条件编译块
-#error	当遇到标准错误时，输出错误消息
-#pragma	使用标准化方法，向编译器发布特殊的命令到编译器中
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-</description>
-				<pubDate>Mon, 10 Feb 2020 00:00:00 +0800</pubDate>
-				<link>/c/2020/02/10/c-demo.html</link>
-				<guid isPermaLink="true">/c/2020/02/10/c-demo.html</guid>
 			</item>
 		
 	</channel>
