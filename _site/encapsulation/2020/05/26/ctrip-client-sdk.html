@@ -1,0 +1,1354 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>携程酒店SDK封装</title>
+	
+	<meta name="author" content="JY">
+
+	<!-- Enable responsive viewport -->
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<!-- Le HTML5 shim, for IE6-8 support of HTML elements -->
+	<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+	<![endif]-->
+
+	<!-- Le styles -->
+	<link href="/assets/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	<link href="/assets/resources/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+	<link href="/assets/resources/syntax/syntax.css" rel="stylesheet">
+	<link href="/assets/css/style.css" rel="stylesheet">
+
+	<!-- Le fav and touch icons -->
+	<!-- Update these with your own images
+	<link rel="shortcut icon" href="images/favicon.ico">
+	<link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+	<link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+	<link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+	-->
+
+	<link rel="alternate" type="application/rss+xml" title="" href="/feed.xml">
+</head>
+
+<body>
+	<nav class="navbar navbar-default visible-xs" role="navigation">
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			
+			<a type="button" class="navbar-toggle nav-link" href="http://github.com/liujingyu">
+				<i class="fa fa-github"></i>
+			</a>
+			
+			
+			
+			<a type="button" class="navbar-toggle nav-link" href="mailto:jingyu525@gmail.com">
+				<i class="fa fa-envelope"></i>
+			</a>
+			
+			<a class="navbar-brand" href="/">
+                <img src="/assets/media/dragon.jpeg" class="img-circle" />
+				JY
+			</a>
+		</div>
+
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="/">Home</a></li>
+				<li><a href="/categories.html">Categories</a></li>
+				<li><a href="/tags.html">Tags</a></li>
+			</ul>
+		</div><!-- /.navbar-collapse -->
+	</nav>
+
+	<!-- nav-menu-dropdown -->
+	<div class="btn-group hidden-xs" id="nav-menu">
+		<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+			<i class="fa fa-bars"></i>
+		</button>
+		<ul class="dropdown-menu" role="menu">
+			<li><a href="/"><i class="fa fa-home"></i>Home</a></li>
+			<li><a href="/categories.html"><i class="fa fa-folder"></i>Categories</a></li>
+			<li><a href="/tags.html"><i class="fa fa-tags"></i>Tags</a></li>
+			<li class="divider"></li>
+			<li><a href="#"><i class="fa fa-arrow-up"></i>Top of Page</a></li>
+		</ul>
+	</div>
+
+	<div class="col-sm-3 sidebar hidden-xs" style="background: url(/assets/media/sky.png) no-repeat !important;">
+		<!-- sidebar.html -->
+<header class="sidebar-header" role="banner">
+	<a href="/">
+        <img src="/assets/media/dragon.jpeg" class="img-circle"  height="150" width="150" />
+	</a>
+	<h3 class="title">
+        <a href="/">JY</a>
+    </h3>
+</header>
+
+
+<div id="bio" class="text-center">
+	目前就职于小猪短租
+</div>
+
+
+<div id="contact-list" class="text-center">
+	<ul class="list-unstyled list-inline">
+		
+		<li>
+			<a class="btn btn-default btn-sm" href="https://github.com/liujingyu">
+				<i class="fa fa-github-alt fa-lg"></i>
+			</a>
+		</li>
+		
+		
+		<li>
+			<a class="btn btn-default btn-sm" href="mailto:jingyu525@gmail.com">
+				<i class="fa fa-envelope fa-lg"></i>
+			</a>
+		</li>
+		
+		<li>
+			<a class="btn btn-default btn-sm" href="/feed.xml">
+				<i class="fa fa-rss fa-lg"></i>
+			</a>
+		</li>
+	</ul>
+	<ul class="list-unstyled list-inline">
+		<li>
+            <a class="btn btn-default btn-sm" href="/about">
+                关于
+			</a>
+		</li>
+		<li>
+            <a class="btn btn-default btn-sm" href="/elasticsearch">
+                elasticsearch
+			</a>
+		</li>
+		<li>
+            <a class="btn btn-default btn-sm" href="/open-source">
+                开源项目
+			</a>
+		</li>
+	</ul>
+</div>
+<!-- sidebar.html end -->
+
+	</div>
+
+	<div class="col-sm-9 col-sm-offset-3">
+		<div class="page-header">
+  <h1>携程酒店SDK封装 </h1>
+</div>
+	
+<article>
+
+	<div class="col-sm-10">
+	 <span class="post-date">
+	   
+	   May 
+	   26th,
+	   
+	   2020
+	 </span>
+	  <div class="article_body">
+	  <p>最近做的分销业务，携程只提供了HTTP API，没有提供php sdk。这方面，淘宝做的不错（飞猪）直接点击下载sdk。</p>
+
+<p>虽然提供了两个客户端sdk，跟现有框架融合是一个问题。淘宝的sdk直接利用<code class="highlighter-rouge">composer</code>包的方式加载:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>╰─$ ls -lh .
+total 744
+-rw-r--r--   1 martin  staff   6.3K  5 23 16:48 README.md
+....
+-rw-r--r--   1 martin  staff   229B  5  8 12:02 codeception.yml
+-rw-r--r--   1 martin  staff   3.0K  5 26 17:33 composer.json
+-rw-r--r--   1 martin  staff   327K  5 26 17:33 composer.lock
+-rw-r--r--   1 martin  staff    15K  5 26 17:33 symfony.lock
+lrwxr-xr-x   1 martin  staff    43B  5  8 12:02 taobao-sdk -&gt; taobao-sdk-PHP-auto_1568088312300-20191114/
+drwxr-xr-x  11 martin  staff   352B  5  8 12:02 taobao-sdk-PHP-auto_1568088312300-20191114
+drwxr-xr-x  53 martin  staff   1.7K  5 26 17:33 vendor
+</code></pre></div></div>
+
+<p>composer.json再加入仓库引入源:</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>    },
+    "repositories": [
+        {
+            "type": "path",
+            "url": "./taobao-sdk"
+        }
+    ],
+    "minimum-stability":"dev"
+}
+</code></pre></div></div>
+<p>这样就纳入了包管理。</p>
+
+<p>淘宝的sdk，需要增加一个<code class="highlighter-rouge">composer.json</code>文件。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>{
+    "name": "martin/taobao-sdk",
+    "authors": [
+        {
+            "name": "liujingyu",
+            "email": "liujingyu@xiaozhu.com"
+        }
+    ],
+    "require": {},
+    "autoload":{
+        "classmap": [
+            "top/",
+            "aliyun/",
+            "dingtalk/",
+            "QimenCloud/"
+        ]
+    },
+    "minimum-stability":"dev"
+}
+</code></pre></div></div>
+
+<p>安装可。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>composer install martin/taobao-sdk
+</code></pre></div></div>
+
+<p>接下来聊聊，携程sdk<code class="highlighter-rouge">https://dev.ctrip.com/#/document?id=83</code>。
+基于携程接口特点设计如下:</p>
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+<span class="kd">class</span> <span class="nc">CtripConfig</span>
+<span class="p">{</span>
+    <span class="k">const</span> <span class="no">SOURCE</span> <span class="o">=</span> <span class="nx">CommonSetting</span><span class="o">::</span><span class="na">CTRIP</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">MODE</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">FORMAT</span> <span class="o">=</span> <span class="s1">'json'</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">REFRESH_TOKEN_EXPIRE</span> <span class="o">=</span> <span class="mi">900</span><span class="p">;</span> <span class="c1">// expire 15min</span>
+
+    <span class="c1">// 携程API列表</span>
+    <span class="k">const</span> <span class="no">API_LIST</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="c1">// api_name</span>
+        <span class="c1">// @see ....</span>
+        <span class="c1">//'api_name' =&gt; [</span>
+            <span class="c1">//'path' =&gt; [</span>
+                <span class="c1">//'prod' =&gt; '',</span>
+                <span class="c1">//'test' =&gt; '',</span>
+                <span class="c1">//'dev' =&gt; '',</span>
+                <span class="c1">//'*' =&gt; '',</span>
+            <span class="c1">//],</span>
+        <span class="c1">//],</span>
+
+        <span class="c1">// 获取全量城市信息</span>
+        <span class="c1">// @see https://dev.ctrip.com/#/document?id=121</span>
+        <span class="s1">'getAllCityInfo'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'path'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                <span class="s1">'prod'</span> <span class="o">=&gt;</span> <span class="s1">'f321ca3356b643ec8e32db0aec6a4b70'</span><span class="p">,</span>
+                <span class="s1">'test'</span> <span class="o">=&gt;</span> <span class="s1">'da97859659134aab9bfea1afbfa96d83'</span><span class="p">,</span>
+                <span class="s1">'dev'</span> <span class="o">=&gt;</span> <span class="s1">'da97859659134aab9bfea1afbfa96d83'</span><span class="p">,</span>
+                <span class="s1">'*'</span> <span class="o">=&gt;</span> <span class="s1">'da97859659134aab9bfea1afbfa96d83'</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="s1">'rate'</span> <span class="o">=&gt;</span> <span class="mi">200</span><span class="p">,</span> <span class="c1">// 每分钟200次</span>
+        <span class="p">],</span>
+
+        <span class="c1">// 获取酒店清单</span>
+        <span class="c1">// @see https://dev.ctrip.com/#/document?id=144</span>
+        <span class="s1">'getHotelList'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'path'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                <span class="s1">'prod'</span> <span class="o">=&gt;</span> <span class="s1">'3a46e1d3100d46d8a46f52c3dc6b0273'</span><span class="p">,</span>
+                <span class="s1">'test'</span> <span class="o">=&gt;</span> <span class="s1">'4c81467f1e5843fbb0a5eaba23906d70'</span><span class="p">,</span>
+                <span class="s1">'dev'</span> <span class="o">=&gt;</span> <span class="s1">'4c81467f1e5843fbb0a5eaba23906d70'</span><span class="p">,</span>
+                <span class="s1">'*'</span> <span class="o">=&gt;</span> <span class="s1">'4c81467f1e5843fbb0a5eaba23906d70'</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="s1">'rate'</span> <span class="o">=&gt;</span> <span class="mi">200</span><span class="p">,</span> <span class="c1">// 每分钟200次</span>
+        <span class="p">],</span>
+
+        <span class="c1">// 获取酒店静态信息</span>
+        <span class="c1">// @see https://dev.ctrip.com/#/document?id=145</span>
+        <span class="s1">'getHotelStaticInfo'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'path'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                <span class="s1">'prod'</span> <span class="o">=&gt;</span> <span class="s1">'becf5b5008064a26be77cac065688ca7'</span><span class="p">,</span>
+                <span class="s1">'test'</span> <span class="o">=&gt;</span> <span class="s1">'62a8bb573582435bbe8b361334efe36f'</span><span class="p">,</span>
+                <span class="s1">'dev'</span> <span class="o">=&gt;</span> <span class="s1">'62a8bb573582435bbe8b361334efe36f'</span><span class="p">,</span>
+                <span class="s1">'*'</span> <span class="o">=&gt;</span> <span class="s1">'62a8bb573582435bbe8b361334efe36f'</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="s1">'rate'</span> <span class="o">=&gt;</span> <span class="mi">600</span><span class="p">,</span> <span class="c1">//每分钟600</span>
+        <span class="p">],</span>
+
+        <span class="c1">// 获取房型静态信息</span>
+        <span class="c1">// @see https://dev.ctrip.com/#/document?id=146</span>
+        <span class="s1">'getRoomTypeStaticInfo'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'path'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                <span class="s1">'prod'</span> <span class="o">=&gt;</span> <span class="s1">'39122604bf0e4b33a9569658cf273161'</span><span class="p">,</span>
+                <span class="s1">'test'</span> <span class="o">=&gt;</span> <span class="s1">'c04d1d7b7af449999dba88896fcc0811'</span><span class="p">,</span>
+                <span class="s1">'dev'</span> <span class="o">=&gt;</span> <span class="s1">'c04d1d7b7af449999dba88896fcc0811'</span><span class="p">,</span>
+                <span class="s1">'*'</span> <span class="o">=&gt;</span> <span class="s1">'c04d1d7b7af449999dba88896fcc0811'</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="s1">'rate'</span> <span class="o">=&gt;</span> <span class="mi">600</span><span class="p">,</span> <span class="c1">//每分钟600</span>
+        <span class="p">],</span>
+
+        <span class="c1">// 监测静态信息变化</span>
+        <span class="c1">// @see https://dev.ctrip.com/#/document?id=56</span>
+        <span class="s1">'listenStaticInfo'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'path'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                <span class="s1">'prod'</span> <span class="o">=&gt;</span> <span class="s1">'66fd1e3089fb448e912808cccbe017c0'</span><span class="p">,</span>
+                <span class="s1">'test'</span> <span class="o">=&gt;</span> <span class="s1">'d0e65061aef24f88854031c60cabfd91'</span><span class="p">,</span>
+                <span class="s1">'dev'</span> <span class="o">=&gt;</span> <span class="s1">'d0e65061aef24f88854031c60cabfd91'</span><span class="p">,</span>
+                <span class="s1">'*'</span> <span class="o">=&gt;</span> <span class="s1">'d0e65061aef24f88854031c60cabfd91'</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="s1">'filter'</span> <span class="o">=&gt;</span> <span class="s1">'ChangeInfos'</span><span class="p">,</span>
+            <span class="s1">'rate'</span> <span class="o">=&gt;</span> <span class="mi">1000</span><span class="p">,</span> <span class="c1">// 每分钟1000次</span>
+        <span class="p">],</span>
+
+        <span class="c1">// 监测房价、房量、房态增量变化接口</span>
+        <span class="c1">// @see https://dev.ctrip.com/#/document?id=98</span>
+        <span class="s1">'listenRoomPriceNumberStatus'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'path'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                <span class="s1">'prod'</span> <span class="o">=&gt;</span> <span class="s1">'a8f721b9716a41ca9df8b326f10655df'</span><span class="p">,</span>
+                <span class="s1">'test'</span> <span class="o">=&gt;</span> <span class="s1">'68c959f3d5a94d7ca4ddd97cbe97d424'</span><span class="p">,</span>
+                <span class="s1">'dev'</span> <span class="o">=&gt;</span> <span class="s1">'68c959f3d5a94d7ca4ddd97cbe97d424'</span><span class="p">,</span>
+                <span class="s1">'*'</span> <span class="o">=&gt;</span> <span class="s1">'68c959f3d5a94d7ca4ddd97cbe97d424'</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="s1">'filter'</span> <span class="o">=&gt;</span> <span class="s1">'ChangeInfos'</span><span class="p">,</span>
+            <span class="s1">'rate'</span> <span class="o">=&gt;</span> <span class="mi">1000</span><span class="p">,</span> <span class="c1">// 每分钟1000次</span>
+        <span class="p">],</span>
+
+        <span class="c1">// 监测房型上下线</span>
+        <span class="c1">// @see https://dev.ctrip.com/#/document?id=161</span>
+        <span class="s1">'listenRoomTypeOnAndOffLine'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'path'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                <span class="s1">'prod'</span> <span class="o">=&gt;</span> <span class="s1">'4536a4178961443a937423c1eb8fa2ba'</span><span class="p">,</span>
+                <span class="s1">'test'</span> <span class="o">=&gt;</span> <span class="s1">'ef89b1f6ec8e49d39d5debac065a9a4a'</span><span class="p">,</span>
+                <span class="s1">'dev'</span> <span class="o">=&gt;</span> <span class="s1">'ef89b1f6ec8e49d39d5debac065a9a4a'</span><span class="p">,</span>
+                <span class="s1">'*'</span> <span class="o">=&gt;</span> <span class="s1">'ef89b1f6ec8e49d39d5debac065a9a4a'</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="s1">'filter'</span> <span class="o">=&gt;</span> <span class="s1">'RoomStatusChangeItems'</span><span class="p">,</span>
+            <span class="s1">'rate'</span> <span class="o">=&gt;</span> <span class="mi">100</span><span class="p">,</span> <span class="c1">// 每分钟100次</span>
+        <span class="p">],</span>
+
+        <span class="c1">// 每日价格拉取接口（仅国内酒店）&lt;落地价&gt;</span>
+        <span class="c1">// @see https://dev.ctrip.com/#/document?id=95</span>
+        <span class="s1">'fetchLandPrice'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'path'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                <span class="s1">'prod'</span> <span class="o">=&gt;</span> <span class="s1">''</span><span class="p">,</span>
+                <span class="s1">'test'</span> <span class="o">=&gt;</span> <span class="s1">'99503c56b9fa4417a8bc77b92ea56d41'</span><span class="p">,</span>
+                <span class="s1">'dev'</span> <span class="o">=&gt;</span> <span class="s1">'99503c56b9fa4417a8bc77b92ea56d41'</span><span class="p">,</span>
+                <span class="s1">'*'</span> <span class="o">=&gt;</span> <span class="s1">'99503c56b9fa4417a8bc77b92ea56d41'</span><span class="p">,</span>
+            <span class="p">],</span>
+        <span class="p">],</span>
+
+        <span class="c1">// 报价实时查询接口（国内酒店+海外酒店） &lt;直连价&gt;</span>
+        <span class="c1">// @see https://dev.ctrip.com/#/document?id=94</span>
+        <span class="s1">'fetchDirectPrice'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'path'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                <span class="s1">'prod'</span> <span class="o">=&gt;</span> <span class="s1">'4c15cadb05f14aa9836260c53ab74526'</span><span class="p">,</span>
+                <span class="s1">'test'</span> <span class="o">=&gt;</span> <span class="s1">'14a14763194648f5b9d2427f00b3ca04'</span><span class="p">,</span>
+                <span class="s1">'dev'</span> <span class="o">=&gt;</span> <span class="s1">'14a14763194648f5b9d2427f00b3ca04'</span><span class="p">,</span>
+                <span class="s1">'*'</span> <span class="o">=&gt;</span> <span class="s1">'14a14763194648f5b9d2427f00b3ca04'</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="s1">'rate'</span> <span class="o">=&gt;</span> <span class="mi">6000</span><span class="p">,</span> <span class="c1">//每分钟6000次</span>
+        <span class="p">],</span>
+
+        <span class="c1">// 可预订检查</span>
+        <span class="c1">// @see https://dev.ctrip.com/#/document?id=62</span>
+        <span class="s1">'checkBookAble'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'path'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                <span class="s1">'prod'</span> <span class="o">=&gt;</span> <span class="s1">'419f7a688e3c45f481d295708b870323'</span><span class="p">,</span>
+                <span class="s1">'test'</span> <span class="o">=&gt;</span> <span class="s1">'d67d24cfdc2940cd858f506c708cf0d4'</span><span class="p">,</span>
+                <span class="s1">'dev'</span> <span class="o">=&gt;</span> <span class="s1">'d67d24cfdc2940cd858f506c708cf0d4'</span><span class="p">,</span>
+                <span class="s1">'*'</span> <span class="o">=&gt;</span> <span class="s1">'d67d24cfdc2940cd858f506c708cf0d4'</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">],</span>
+
+        <span class="c1">// 订单保存</span>
+        <span class="c1">// @see https://dev.ctrip.com/#/document?id=63</span>
+        <span class="s1">'saveOrderBook'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'path'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                <span class="s1">'prod'</span> <span class="o">=&gt;</span> <span class="s1">'2b0c7e0eebe2467a97be3d284313a129'</span><span class="p">,</span>
+                <span class="s1">'test'</span> <span class="o">=&gt;</span> <span class="s1">'acf5c44749234668ba3c539cc1d26c87'</span><span class="p">,</span>
+                <span class="s1">'dev'</span> <span class="o">=&gt;</span> <span class="s1">'acf5c44749234668ba3c539cc1d26c87'</span><span class="p">,</span>
+                <span class="s1">'*'</span> <span class="o">=&gt;</span> <span class="s1">'acf5c44749234668ba3c539cc1d26c87'</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">],</span>
+
+        <span class="c1">// 订单提交</span>
+        <span class="c1">// @see https://dev.ctrip.com/#/document?id=64</span>
+        <span class="s1">'submitOrderBook'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'path'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                <span class="s1">'prod'</span> <span class="o">=&gt;</span> <span class="s1">'f40c5c71f84745cbbc73238252d9d43c'</span><span class="p">,</span>
+                <span class="s1">'test'</span> <span class="o">=&gt;</span> <span class="s1">'5f3c81bc0c90458ba94bfe2dafea8459'</span><span class="p">,</span>
+                <span class="s1">'dev'</span>  <span class="o">=&gt;</span> <span class="s1">'5f3c81bc0c90458ba94bfe2dafea8459'</span><span class="p">,</span>
+                <span class="s1">'*'</span>    <span class="o">=&gt;</span> <span class="s1">'5f3c81bc0c90458ba94bfe2dafea8459'</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">],</span>
+
+        <span class="c1">// 获取订单详情</span>
+        <span class="c1">// @see https://dev.ctrip.com/#/document?id=67</span>
+        <span class="s1">'getOrderBookDetail'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'path'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                <span class="s1">'prod'</span> <span class="o">=&gt;</span> <span class="s1">'e4a2a8ac057f4b378c9e153ef3f35249'</span><span class="p">,</span>
+                <span class="s1">'test'</span> <span class="o">=&gt;</span> <span class="s1">'5db9d7e805ef4b36a8cf0e57900e118a'</span><span class="p">,</span>
+                <span class="s1">'dev'</span>  <span class="o">=&gt;</span> <span class="s1">'5db9d7e805ef4b36a8cf0e57900e118a'</span><span class="p">,</span>
+                <span class="s1">'*'</span>    <span class="o">=&gt;</span> <span class="s1">'5db9d7e805ef4b36a8cf0e57900e118a'</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">],</span>
+
+        <span class="c1">// 取消订单</span>
+        <span class="c1">// @see https://dev.ctrip.com/#/document?id=68</span>
+        <span class="s1">'cancelBookOrder'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'path'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                <span class="s1">'prod'</span> <span class="o">=&gt;</span> <span class="s1">'f40a36ac2dfe42518fb883d33fa33391'</span><span class="p">,</span>
+                <span class="s1">'test'</span> <span class="o">=&gt;</span> <span class="s1">'519114d791b94babba31f32eb5d559eb'</span><span class="p">,</span>
+                <span class="s1">'dev'</span>  <span class="o">=&gt;</span> <span class="s1">'519114d791b94babba31f32eb5d559eb'</span><span class="p">,</span>
+                <span class="s1">'*'</span>    <span class="o">=&gt;</span> <span class="s1">'519114d791b94babba31f32eb5d559eb'</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">],</span>
+
+        <span class="c1">// 检测订单状态变化</span>
+        <span class="c1">// @see https://dev.ctrip.com/#/document?id=66</span>
+        <span class="s1">'listenOrderStatusChange'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'path'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                <span class="s1">'prod'</span> <span class="o">=&gt;</span> <span class="s1">'e5e981e2cf9340f99f9cbf79c82668ac'</span><span class="p">,</span>
+                <span class="s1">'test'</span> <span class="o">=&gt;</span> <span class="s1">'61aebb32ae1347c5a274fc9fb4b4f962'</span><span class="p">,</span>
+                <span class="s1">'dev'</span>  <span class="o">=&gt;</span> <span class="s1">'61aebb32ae1347c5a274fc9fb4b4f962'</span><span class="p">,</span>
+                <span class="s1">'*'</span>    <span class="o">=&gt;</span> <span class="s1">'61aebb32ae1347c5a274fc9fb4b4f962'</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">],</span>
+
+        <span class="c1">//查询某城市下各酒店的起价</span>
+        <span class="c1">// @see https://dev.ctrip.com/#/document?id=93</span>
+        <span class="s1">'fetchLowerPrice'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+            <span class="s1">'path'</span> <span class="o">=&gt;</span> <span class="p">[</span>
+                <span class="s1">'prod'</span> <span class="o">=&gt;</span> <span class="s1">'4c6f5dcc4663443b8d8ae044ad8bee10'</span><span class="p">,</span>
+                <span class="s1">'test'</span> <span class="o">=&gt;</span> <span class="s1">'c659a717bf23422b907ff7f9c75022ed'</span><span class="p">,</span>
+                <span class="s1">'dev'</span>  <span class="o">=&gt;</span> <span class="s1">'c659a717bf23422b907ff7f9c75022ed'</span><span class="p">,</span>
+                <span class="s1">'*'</span>    <span class="o">=&gt;</span> <span class="s1">'c659a717bf23422b907ff7f9c75022ed'</span><span class="p">,</span>
+            <span class="p">],</span>
+            <span class="s1">'rate'</span> <span class="o">=&gt;</span> <span class="mi">200</span><span class="p">,</span> <span class="c1">// 每分钟200次</span>
+        <span class="p">]</span>
+    <span class="p">];</span>
+
+    <span class="cd">/**
+     * 根据key获取携程api icode
+     *
+     * @param $api
+     * @return bool|string
+     */</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">getCtripIcode</span><span class="p">(</span><span class="nv">$api</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$env</span> <span class="o">=</span> <span class="nb">getenv</span><span class="p">(</span><span class="s1">'APP_ENV'</span><span class="p">);</span>
+        <span class="nv">$default</span> <span class="o">=</span> <span class="s1">'*'</span><span class="p">;</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nx">CtripConfig</span><span class="o">::</span><span class="na">API_LIST</span><span class="p">[</span><span class="nv">$api</span><span class="p">][</span><span class="s1">'path'</span><span class="p">][</span><span class="nv">$env</span><span class="p">]))</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">CtripConfig</span><span class="o">::</span><span class="na">API_LIST</span><span class="p">[</span><span class="nv">$api</span><span class="p">][</span><span class="s1">'path'</span><span class="p">][</span><span class="nv">$env</span><span class="p">];</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nx">CtripConfig</span><span class="o">::</span><span class="na">API_LIST</span><span class="p">[</span><span class="nv">$api</span><span class="p">]))</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="nx">CtripConfig</span><span class="o">::</span><span class="na">API_LIST</span><span class="p">[</span><span class="nv">$api</span><span class="p">][</span><span class="s1">'path'</span><span class="p">][</span><span class="nv">$default</span><span class="p">];</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cd">/**
+     * 获取结果过滤器
+     */</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">getApiFilter</span><span class="p">(</span><span class="nv">$api</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">empty</span><span class="p">(</span><span class="nx">CtripConfig</span><span class="o">::</span><span class="na">API_LIST</span><span class="p">[</span><span class="nv">$api</span><span class="p">][</span><span class="s1">'filter'</span><span class="p">]))</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="nx">CtripConfig</span><span class="o">::</span><span class="na">API_LIST</span><span class="p">[</span><span class="nv">$api</span><span class="p">][</span><span class="s1">'filter'</span><span class="p">];</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nc">CtripToken</span>
+<span class="p">{</span>
+
+    <span class="k">private</span> <span class="nv">$aid</span><span class="p">;</span>
+    <span class="k">private</span> <span class="nv">$sid</span><span class="p">;</span>
+    <span class="k">private</span> <span class="nv">$key</span><span class="p">;</span>
+    <span class="k">private</span> <span class="nv">$container</span><span class="p">;</span>
+    <span class="k">private</span> <span class="nv">$redis</span><span class="p">;</span>
+    <span class="k">private</span> <span class="nv">$client</span><span class="p">;</span>
+    <span class="k">private</span> <span class="nv">$logger</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span>
+        <span class="nx">ContainerInterface</span> <span class="nv">$container</span><span class="p">,</span>
+        <span class="nx">ClientInterface</span> <span class="nv">$redis</span><span class="p">,</span>
+        <span class="nx">LoggerInterface</span> <span class="nv">$logger</span>
+    <span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">container</span> <span class="o">=</span> <span class="nv">$container</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">redis</span> <span class="o">=</span> <span class="nv">$redis</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">client</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">container</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">'bl_guzzle.client.ctrip'</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">logger</span> <span class="o">=</span> <span class="nv">$logger</span><span class="p">;</span>
+
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">aid</span> <span class="o">=</span> <span class="nb">getenv</span><span class="p">(</span><span class="s1">'CTRIP_AID'</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sid</span> <span class="o">=</span> <span class="nb">getenv</span><span class="p">(</span><span class="s1">'CTRIP_SID'</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">key</span> <span class="o">=</span> <span class="nb">getenv</span><span class="p">(</span><span class="s1">'CTRIP_KEY'</span><span class="p">);</span>
+    <span class="p">}</span>
+
+
+    <span class="cd">/**
+     * (支持分布式获取Token)获取 token.
+     */</span>
+    <span class="k">protected</span> <span class="k">function</span> <span class="nf">getToken</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$token</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">redis</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="na">SOURCE</span><span class="o">.</span><span class="s2">"_token"</span><span class="p">);</span>
+        <span class="nv">$refreshToken</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">redis</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="na">SOURCE</span><span class="o">.</span><span class="s2">"_refresh_token"</span><span class="p">);</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">empty</span><span class="p">(</span><span class="nv">$token</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nv">$token</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="c1">// 加锁，避免重复刷新token</span>
+        <span class="nv">$lock</span> <span class="o">=</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$key</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">redis</span><span class="o">-&gt;</span><span class="na">set</span><span class="p">(</span><span class="s2">"ctrip:lock"</span><span class="p">,</span> <span class="nv">$key</span><span class="p">,</span> <span class="s2">"nx"</span><span class="p">,</span> <span class="s2">"ex"</span><span class="p">,</span> <span class="mi">10</span><span class="p">);</span>
+        <span class="p">};</span>
+
+        <span class="nv">$unlock</span> <span class="o">=</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$key</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$script</span> <span class="o">=</span> <span class="sh">&lt;&lt;&lt;LUA
+if redis.call("get",KEYS[1]) == ARGV[1]
+then
+    return redis.call("del",KEYS[1])
+else
+    return 0
+end
+LUA;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">redis</span><span class="o">-&gt;</span><span class="na">eval</span><span class="p">(</span><span class="nv">$script</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">"ctrip:lock"</span><span class="p">,</span> <span class="nv">$key</span><span class="p">);</span>
+        <span class="p">};</span>
+
+        <span class="nv">$key</span> <span class="o">=</span> <span class="nb">rand</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">100000</span><span class="p">);</span>
+
+        <span class="nx">token</span><span class="o">:</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$lock</span><span class="p">(</span><span class="nv">$key</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">empty</span><span class="p">(</span><span class="nv">$refreshToken</span><span class="p">))</span> <span class="p">{</span>
+                <span class="c1">// token 初始化</span>
+                <span class="nv">$res</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">client</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span>
+                    <span class="s1">'/openserviceauth/authorize.ashx?'</span> <span class="o">.</span>
+                    <span class="nb">http_build_query</span><span class="p">([</span>
+                        <span class="s1">'AID'</span> <span class="o">=&gt;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">aid</span><span class="p">,</span>
+                        <span class="s1">'SID'</span> <span class="o">=&gt;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sid</span><span class="p">,</span>
+                        <span class="s1">'KEY'</span> <span class="o">=&gt;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">key</span><span class="p">,</span>
+                    <span class="p">])</span>
+                <span class="p">);</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="c1">// token 更新</span>
+                <span class="nv">$res</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">client</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span>
+                    <span class="s1">'/openserviceauth/refresh.ashx?'</span><span class="o">.</span>
+                    <span class="nb">http_build_query</span><span class="p">([</span>
+                        <span class="s1">'AID'</span> <span class="o">=&gt;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">aid</span><span class="p">,</span>
+                        <span class="s1">'SID'</span> <span class="o">=&gt;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sid</span><span class="p">,</span>
+                        <span class="s1">'refresh_token'</span> <span class="o">=&gt;</span> <span class="nv">$refreshToken</span><span class="p">,</span>
+                    <span class="p">])</span>
+                <span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="c1">// 解锁失败，说明锁超时，返回null，上层进行重试</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$unlock</span><span class="p">(</span><span class="nv">$key</span><span class="p">))</span> <span class="p">{</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">logger</span><span class="o">-&gt;</span><span class="na">warning</span><span class="p">(</span><span class="s1">'unlock failure'</span><span class="p">);</span>
+                <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">logger</span><span class="o">-&gt;</span><span class="na">warning</span><span class="p">(</span><span class="s1">'lock failure'</span><span class="p">);</span>
+            <span class="c1">// 未取得锁，上层进行重试</span>
+            <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="c1">// 加锁结束</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="mi">200</span> <span class="o">!=</span> <span class="nv">$res</span><span class="o">-&gt;</span><span class="na">getStatusCode</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nx">Exception</span><span class="p">(</span><span class="s1">'CTRIP GET Token Http Client error'</span><span class="p">);</span>
+        <span class="p">}</span>
+
+        <span class="nv">$data</span> <span class="o">=</span> <span class="nb">json_decode</span><span class="p">(</span><span class="nv">$res</span><span class="o">-&gt;</span><span class="na">getBody</span><span class="p">(),</span> <span class="kc">true</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">empty</span><span class="p">(</span><span class="nv">$data</span><span class="p">[</span><span class="s1">'ErrCode'</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nv">$data</span><span class="p">[</span><span class="s1">'ErrCode'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1005</span><span class="p">)</span> <span class="p">{</span>
+            <span class="c1">// 重置刷新Token</span>
+            <span class="nv">$refreshToken</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+            <span class="nx">goto</span> <span class="nx">token</span><span class="p">;</span>
+        <span class="p">}</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">empty</span><span class="p">(</span><span class="nv">$data</span><span class="p">[</span><span class="s1">'Expires_In'</span><span class="p">])</span> <span class="o">||</span> <span class="k">empty</span><span class="p">(</span><span class="nv">$data</span><span class="p">[</span><span class="s1">'Access_Token'</span><span class="p">])</span> <span class="o">||</span> <span class="k">empty</span><span class="p">(</span><span class="nv">$data</span><span class="p">[</span><span class="s1">'Refresh_Token'</span><span class="p">]))</span> <span class="p">{</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nx">Exception</span><span class="p">(</span><span class="s1">'CTRIP GET TOKNE Http Client error, response data format error:'</span><span class="o">.</span><span class="nb">json_encode</span><span class="p">(</span><span class="nv">$data</span><span class="p">));</span>
+        <span class="p">}</span>
+
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">redis</span><span class="o">-&gt;</span><span class="na">setex</span><span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="na">SOURCE</span><span class="o">.</span><span class="s2">"_token"</span><span class="p">,</span> <span class="nv">$data</span><span class="p">[</span><span class="s1">'Expires_In'</span><span class="p">],</span> <span class="nv">$data</span><span class="p">[</span><span class="s1">'Access_Token'</span><span class="p">]);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">redis</span><span class="o">-&gt;</span><span class="na">setex</span><span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="na">SOURCE</span><span class="o">.</span><span class="s2">"_refresh_token"</span><span class="p">,</span> <span class="nx">self</span><span class="o">::</span><span class="na">REFRESH_TOKEN_EXPIRE</span><span class="p">,</span> <span class="nv">$data</span><span class="p">[</span><span class="s1">'Refresh_Token'</span><span class="p">]);</span>
+
+        <span class="k">return</span> <span class="nv">$data</span><span class="p">[</span><span class="s1">'Access_Token'</span><span class="p">];</span>
+    <span class="p">}</span>
+
+    <span class="k">protected</span> <span class="k">function</span> <span class="nf">removeCtripAccessToken</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">redis</span><span class="o">-&gt;</span><span class="na">del</span><span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="na">SOURCE</span><span class="o">.</span><span class="s2">"_token"</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="nc">CtripClient</span>
+<span class="p">{</span>
+
+    <span class="k">private</span> <span class="nv">$aid</span><span class="p">;</span>
+    <span class="k">private</span> <span class="nv">$sid</span><span class="p">;</span>
+    <span class="k">private</span> <span class="nv">$key</span><span class="p">;</span>
+    <span class="k">private</span> <span class="nv">$container</span><span class="p">;</span>
+    <span class="k">private</span> <span class="nv">$redis</span><span class="p">;</span>
+    <span class="k">private</span> <span class="nv">$client</span><span class="p">;</span>
+    <span class="k">private</span> <span class="nv">$messageControl</span><span class="p">;</span>
+    <span class="k">private</span> <span class="nv">$logger</span><span class="p">;</span>
+    <span class="k">private</span> <span class="nv">$apiRateControl</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span>
+        <span class="nx">ContainerInterface</span> <span class="nv">$container</span><span class="p">,</span>
+        <span class="nx">ClientInterface</span> <span class="nv">$redis</span><span class="p">,</span>
+        <span class="nx">MessageControl</span> <span class="nv">$messageControl</span><span class="p">,</span>
+        <span class="nx">LoggerInterface</span> <span class="nv">$logger</span><span class="p">,</span>
+        <span class="nx">APIRateControl</span> <span class="nv">$apiRateControl</span><span class="p">,</span>
+        <span class="nx">Token</span> <span class="nv">$token</span>
+    <span class="p">)</span> <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">container</span> <span class="o">=</span> <span class="nv">$container</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">redis</span> <span class="o">=</span> <span class="nv">$redis</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">client</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">container</span><span class="o">-&gt;</span><span class="na">get</span><span class="p">(</span><span class="s1">'bl_guzzle.client.ctrip'</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">messageControl</span> <span class="o">=</span> <span class="nv">$messageControl</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">logger</span> <span class="o">=</span> <span class="nv">$logger</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">apiRateControl</span> <span class="o">=</span> <span class="nv">$apiRateControl</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">token</span> <span class="o">=</span> <span class="nv">$token</span><span class="p">;</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">aid</span> <span class="o">=</span> <span class="nb">getenv</span><span class="p">(</span><span class="s1">'CTRIP_AID'</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sid</span> <span class="o">=</span> <span class="nb">getenv</span><span class="p">(</span><span class="s1">'CTRIP_SID'</span><span class="p">);</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">key</span> <span class="o">=</span> <span class="nb">getenv</span><span class="p">(</span><span class="s1">'CTRIP_KEY'</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="cd">/**
+     * 支持 API_LIST 里面的所有接口.
+     *
+     * @param $name
+     * @param $arguments
+     * @return array
+     * @throws FatalException
+     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">__call</span><span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$arguments</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nb">isset</span><span class="p">(</span><span class="nx">CtripConfig</span><span class="o">::</span><span class="na">API_LIST</span><span class="p">[</span><span class="nv">$name</span><span class="p">]))</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$arguments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="nx">instanceof</span> <span class="nx">HotelRequest</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getDetailData</span><span class="p">(</span><span class="nv">$name</span><span class="p">,</span> <span class="nv">$arguments</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">-&gt;</span><span class="na">toArray</span><span class="p">());</span>
+            <span class="p">}</span>
+            <span class="k">throw</span> <span class="k">new</span> <span class="nx">\InvalidArgumentException</span><span class="p">();</span>
+        <span class="p">}</span>
+
+        <span class="k">throw</span> <span class="k">new</span> <span class="nx">\BadMethodCallException</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="cd">/**
+     * @param $response
+     * @return array|mixed
+     */</span>
+    <span class="k">protected</span> <span class="k">function</span> <span class="nf">getContent</span><span class="p">(</span><span class="nv">$response</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="mi">200</span> <span class="o">==</span> <span class="nv">$response</span><span class="o">-&gt;</span><span class="na">getStatusCode</span><span class="p">())</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nx">\GuzzleHttp\json_decode</span><span class="p">(</span><span class="nv">$response</span><span class="o">-&gt;</span><span class="na">getBody</span><span class="p">(),</span> <span class="kc">true</span><span class="p">);</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="p">[];</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cd">/**
+     * 获取数据接口.
+     *
+     * @param string $api
+     * @param array $dataParam
+     *
+     * @return array
+     **/</span>
+    <span class="k">protected</span> <span class="k">function</span> <span class="nf">getDetailData</span><span class="p">(</span><span class="nv">$api</span><span class="p">,</span> <span class="nv">$dataParam</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">try</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="p">(</span><span class="nv">$icode</span> <span class="o">=</span> <span class="nx">CtripConfig</span><span class="o">::</span><span class="na">getCtripIcode</span><span class="p">(</span><span class="nv">$api</span><span class="p">)))</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\InvalidArgumentException</span><span class="p">(</span><span class="nb">sprintf</span><span class="p">(</span><span class="s2">"icode find by api, not found the api:%s"</span><span class="p">,</span> <span class="nv">$api</span><span class="p">));</span>
+            <span class="p">}</span>
+
+            <span class="c1">// api 接口测试限制</span>
+            <span class="k">if</span> <span class="p">((</span><span class="nv">$coolingSecond</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">apiRateControl</span><span class="o">-&gt;</span><span class="na">getCoolingSecondForAPI</span><span class="p">(</span><span class="nv">$api</span><span class="p">)))</span> <span class="p">{</span>
+                <span class="nb">sleep</span><span class="p">(</span><span class="nv">$coolingSecond</span><span class="p">);</span>
+            <span class="p">}</span>
+
+<span class="nx">token</span><span class="o">:</span>
+            <span class="nv">$token</span> <span class="o">=</span> <span class="nx">Util</span><span class="o">::</span><span class="na">try</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="k">function</span> <span class="p">()</span> <span class="p">{</span>
+                    <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">token</span><span class="o">-&gt;</span><span class="na">getToken</span><span class="p">();</span>
+                    <span class="p">},</span> <span class="kc">true</span><span class="p">);</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="kc">null</span> <span class="o">==</span> <span class="nv">$token</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">throw</span> <span class="k">new</span> <span class="nx">\Exception</span><span class="p">(</span><span class="s1">'get token retry 3 failure'</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="nv">$params</span> <span class="o">=</span> <span class="nb">http_build_query</span><span class="p">([</span>
+                    <span class="s1">'AID'</span>   <span class="o">=&gt;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">aid</span><span class="p">,</span>
+                    <span class="s1">'SID'</span>   <span class="o">=&gt;</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">sid</span><span class="p">,</span>
+                    <span class="s1">'ICODE'</span> <span class="o">=&gt;</span> <span class="nv">$icode</span><span class="p">,</span>
+                    <span class="s1">'UUID'</span>  <span class="o">=&gt;</span> <span class="nx">Util</span><span class="o">::</span><span class="na">getUUID</span><span class="p">(),</span>
+                    <span class="s1">'Token'</span> <span class="o">=&gt;</span> <span class="nv">$token</span><span class="p">,</span>
+                    <span class="s1">'Mode'</span>  <span class="o">=&gt;</span> <span class="nx">self</span><span class="o">::</span><span class="na">MODE</span><span class="p">,</span>
+                    <span class="s1">'Format'</span><span class="o">=&gt;</span> <span class="nx">self</span><span class="o">::</span><span class="na">FORMAT</span>
+            <span class="p">]);</span>
+
+            <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">client</span><span class="o">-&gt;</span><span class="na">post</span><span class="p">(</span>
+                    <span class="s1">'/openservice/serviceproxy.ashx?'</span><span class="o">.</span><span class="nv">$params</span><span class="p">,</span>
+                    <span class="p">[</span>
+                    <span class="s1">'json'</span> <span class="o">=&gt;</span> <span class="nv">$dataParam</span>
+                    <span class="p">]</span>
+                    <span class="p">);</span>
+
+            <span class="nv">$content</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getContent</span><span class="p">(</span><span class="nv">$response</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">empty</span><span class="p">(</span><span class="nv">$content</span><span class="p">[</span><span class="s1">'ErrCode'</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nv">$content</span><span class="p">[</span><span class="s1">'ErrCode'</span><span class="p">]</span> <span class="o">==</span> <span class="mi">232</span><span class="p">)</span> <span class="p">{</span>
+                <span class="c1">// clear store redis token and retry</span>
+                <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">token</span><span class="o">-&gt;</span><span class="na">removeCtripAccessToken</span><span class="p">();</span>
+                <span class="nx">goto</span> <span class="nx">token</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="p">((</span><span class="nv">$field</span> <span class="o">=</span> <span class="nx">CtripConfig</span><span class="o">::</span><span class="na">getApiFilter</span><span class="p">(</span><span class="nv">$api</span><span class="p">))</span> <span class="o">&amp;&amp;</span> <span class="o">!</span><span class="k">empty</span><span class="p">(</span><span class="nv">$content</span><span class="p">[</span><span class="nv">$field</span><span class="p">]))</span> <span class="p">{</span>
+                <span class="c1">// 去除重复调用的数据</span>
+                <span class="nv">$content</span><span class="p">[</span><span class="nv">$field</span><span class="p">]</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">messageControl</span><span class="o">-&gt;</span><span class="na">filterMessage</span><span class="p">(</span><span class="nv">$content</span><span class="p">[</span><span class="nv">$field</span><span class="p">]);</span>
+                <span class="k">return</span> <span class="nv">$content</span><span class="p">;</span>
+            <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="nv">$content</span><span class="p">;</span>
+            <span class="p">}</span>
+        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">Throwable</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">logger</span><span class="o">-&gt;</span><span class="na">error</span><span class="p">(</span><span class="s1">'CtripClient Throwable'</span><span class="p">,</span> <span class="p">[</span>
+                    <span class="s1">'api'</span> <span class="o">=&gt;</span> <span class="nv">$api</span><span class="p">,</span>
+                    <span class="s1">'data'</span> <span class="o">=&gt;</span> <span class="nv">$dataParam</span><span class="p">,</span>
+                    <span class="s1">'message'</span> <span class="o">=&gt;</span> <span class="nv">$e</span><span class="o">-&gt;</span><span class="na">getMessage</span><span class="p">(),</span>
+            <span class="p">]);</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">successAndReturnLastRecordId</span><span class="p">(</span><span class="nv">$response</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$successAndReturnLastRecordId</span> <span class="o">=</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$response</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="na">success</span><span class="p">(</span><span class="nv">$response</span><span class="p">))</span> <span class="p">{</span>
+                <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">empty</span><span class="p">(</span><span class="nv">$response</span><span class="p">[</span><span class="s1">'PagingInfo'</span><span class="p">][</span><span class="s1">'LastRecordID'</span><span class="p">]))</span> <span class="p">{</span>
+                    <span class="k">return</span> <span class="nv">$response</span><span class="p">[</span><span class="s1">'PagingInfo'</span><span class="p">][</span><span class="s1">'LastRecordID'</span><span class="p">];</span>
+                <span class="p">}</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="p">};</span>
+        <span class="k">return</span> <span class="nv">$successAndReturnLastRecordId</span><span class="p">(</span><span class="nv">$response</span><span class="p">);</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">success</span><span class="p">(</span><span class="nv">$response</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$success</span> <span class="o">=</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$response</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="k">empty</span><span class="p">(</span><span class="nv">$response</span><span class="p">[</span><span class="s1">'ResponseStatus'</span><span class="p">][</span><span class="s1">'Ack'</span><span class="p">])</span> <span class="o">&amp;&amp;</span> <span class="nv">$response</span><span class="p">[</span><span class="s1">'ResponseStatus'</span><span class="p">][</span><span class="s1">'Ack'</span><span class="p">]</span> <span class="o">==</span> <span class="s1">'Success'</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="kc">true</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="k">return</span> <span class="kc">false</span><span class="p">;</span>
+        <span class="p">};</span>
+        <span class="k">return</span> <span class="nv">$success</span><span class="p">(</span><span class="nv">$response</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 工具类封装</span>
+<span class="kd">class</span> <span class="nc">Util</span>
+<span class="p">{</span>
+	<span class="c1">// 重试逻辑，正常逻辑和异常逻辑分开</span>
+	<span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">retry</span><span class="p">(</span><span class="nv">$retries</span><span class="p">,</span> <span class="nx">callable</span> <span class="nv">$fn</span><span class="p">,</span> <span class="nv">$sleep</span> <span class="o">=</span> <span class="kc">false</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$base</span> <span class="o">=</span> <span class="nv">$retries</span> <span class="o">*</span> <span class="mi">2</span><span class="p">;</span>
+
+        <span class="nx">beginning</span><span class="o">:</span>
+        <span class="k">try</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nv">$fn</span><span class="p">();</span>
+        <span class="p">}</span> <span class="k">catch</span> <span class="p">(</span><span class="nx">\Exception</span> <span class="nv">$e</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nv">$retries</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="kc">null</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="nv">$sleep</span><span class="p">)</span> <span class="p">{</span>
+                <span class="c1">// 休眠时间递增(单位s), 1, 2, 5</span>
+                <span class="nv">$sleepTime</span> <span class="o">=</span> <span class="p">(</span><span class="nv">$base</span> <span class="o">-</span> <span class="nv">$retries</span><span class="p">)</span> <span class="o">/</span> <span class="nv">$retries</span><span class="p">;</span>
+                <span class="nb">sleep</span><span class="p">(</span><span class="nv">$sleepTime</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="nv">$retries</span><span class="o">--</span><span class="p">;</span>
+            <span class="nx">goto</span> <span class="nx">beginning</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">const</span> <span class="no">LOOP_RUN_CONTINUE</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">LOOP_NORMAL_STOP</span> <span class="o">=</span> <span class="mi">1</span><span class="p">;</span>
+    <span class="k">const</span> <span class="no">LOOP_API_EXCEPTION_STOP</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+
+    <span class="cd">/**
+     * 任务循环器, 可复用,用于分页数据获取.
+     *
+     * @param $run
+     * @param mixed ...$args
+     */</span>
+    <span class="k">public</span> <span class="k">static</span> <span class="k">function</span> <span class="nf">loop</span><span class="p">(</span><span class="nv">$run</span><span class="p">,</span> <span class="o">...</span><span class="nv">$args</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$loop</span> <span class="o">=</span> <span class="k">function</span> <span class="p">()</span> <span class="k">use</span> <span class="p">(</span><span class="nv">$run</span><span class="p">,</span> <span class="nv">$args</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">do</span> <span class="p">{</span>
+                <span class="c1">// status: 0 循环, 1 正常结束, 2 接口异常结束</span>
+                <span class="nv">$status</span> <span class="o">=</span> <span class="nv">$run</span><span class="p">(</span><span class="o">...</span><span class="nv">$args</span><span class="p">);</span>
+                <span class="k">if</span> <span class="p">(</span><span class="nv">$status</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+                    <span class="k">break</span><span class="p">;</span>
+                <span class="p">}</span>
+            <span class="p">}</span> <span class="k">while</span> <span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+        <span class="p">};</span>
+        <span class="nv">$loop</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// 携程接口API调用频次记录，并且返回冷却时间</span>
+<span class="kd">class</span> <span class="nc">APIRateControl</span>
+<span class="p">{</span>
+    <span class="k">private</span> <span class="nv">$redis</span><span class="p">;</span>
+
+    <span class="k">const</span> <span class="no">KEY_PREFIX</span> <span class="o">=</span> <span class="s1">'ctrip:rate:'</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="nx">ClientInterface</span> <span class="nv">$redis</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">redis</span> <span class="o">=</span> <span class="nv">$redis</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="cd">/**
+     * 获取API冷却时间.
+     *
+     * @param string $api
+     * @param string $second
+     * @param int $times
+     *
+     * @return int
+     * @throws \Exception
+     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">getAPICoolingSecond</span><span class="p">(</span><span class="nv">$api</span><span class="p">,</span> <span class="nv">$second</span><span class="p">,</span> <span class="nv">$times</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="nv">$lockedTimes</span> <span class="o">=</span> <span class="k">function</span> <span class="p">(</span><span class="nv">$api</span><span class="p">,</span> <span class="nv">$expire</span><span class="p">,</span> <span class="nv">$times</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$script</span> <span class="o">=</span> <span class="sh">&lt;&lt;&lt;LUA
+local times = redis.call('incr',KEYS[1])
+
+-- 第一次访问的时候加上过期时间60秒（60秒过后从新计数）
+if times == 1 then
+    redis.call('expire',KEYS[1], ARGV[1])
+end
+
+-- 注意，从redis进来的默认为字符串，lua同种数据类型只能和同种数据类型比较
+if times &gt; tonumber(ARGV[2]) then
+    return 0
+end
+return 1
+LUA;</span>
+            <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">redis</span><span class="o">-&gt;</span><span class="na">eval</span><span class="p">(</span><span class="nv">$script</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="nx">self</span><span class="o">::</span><span class="na">KEY_PREFIX</span><span class="o">.</span><span class="nv">$api</span><span class="p">,</span> <span class="nv">$expire</span><span class="p">,</span> <span class="nv">$times</span><span class="p">);</span>
+        <span class="p">};</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$lockedTimes</span><span class="p">(</span><span class="nv">$api</span><span class="p">,</span> <span class="nv">$second</span><span class="p">,</span> <span class="nv">$times</span><span class="p">))</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="nv">$sleep</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">redis</span><span class="o">-&gt;</span><span class="na">ttl</span><span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="na">KEY_PREFIX</span><span class="o">.</span><span class="nv">$api</span><span class="p">);</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$sleep</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="nv">$sleep</span><span class="p">;</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="cd">/**
+     * 冷却时间.
+     *
+     * @param string $api
+     *
+     * @return int
+     */</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">getCoolingSecondForAPI</span><span class="p">(</span><span class="nv">$api</span><span class="p">)</span>
+    <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="k">empty</span><span class="p">(</span><span class="nx">CtripConfig</span><span class="o">::</span><span class="na">API_LIST</span><span class="p">[</span><span class="nv">$api</span><span class="p">][</span><span class="s1">'rate'</span><span class="p">]))</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="mi">0</span><span class="p">;</span>
+        <span class="p">}</span>
+
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">getAPICoolingSecond</span><span class="p">(</span>
+            <span class="nv">$api</span><span class="p">,</span>
+            <span class="mi">60</span><span class="p">,</span>
+            <span class="nx">CtripConfig</span><span class="o">::</span><span class="na">API_LIST</span><span class="p">[</span><span class="nv">$api</span><span class="p">][</span><span class="s1">'rate'</span><span class="p">]</span>
+        <span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="o">&lt;?</span><span class="nx">php</span>
+
+<span class="kn">use</span> <span class="nn">Adbar\Dot</span><span class="p">;</span>
+
+<span class="cd">/**
+ *
+ * 使用如下：
+ *  // 测试HotelRequest toArray
+ * $r = new HotelRequest();
+ * $r-&gt;PagingSettings_LastRecordID = 100;
+ * $r-&gt;PagingSettings_PageSize = 200;
+ * $r-&gt;Settings_ExtendedNodes = [ 'HotelStaticInfo.GeoInfo' ];
+ * $r-&gt;Settings_PrimaryLangID = 'zh_cn';
+ * echo $r-&gt;toJson(),PHP_EOL;
+ * var_dump($r-&gt;toArray());
+ */</span>
+
+<span class="kd">class</span> <span class="nc">HotelRequest</span>
+<span class="p">{</span>
+    <span class="c1">// 格式     'SearchCandidate_HotelID' =&gt; 'SearchCandidate.HotelID',</span>
+    <span class="k">const</span> <span class="no">RULES</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="c1">// 酒店</span>
+        <span class="s1">'SearchCandidate_HotelID'</span> <span class="o">=&gt;</span> <span class="s1">'SearchCandidate.HotelID'</span><span class="p">,</span>
+        <span class="s1">'SearchCandidate_RoomIDs'</span> <span class="o">=&gt;</span> <span class="s1">'SearchCandidate.RoomIDs'</span><span class="p">,</span>
+        <span class="s1">'Settings_PrimaryLangID'</span> <span class="o">=&gt;</span> <span class="s1">'Settings.PrimaryLangID'</span><span class="p">,</span>
+        <span class="s1">'Settings_ExtendedNodes'</span> <span class="o">=&gt;</span> <span class="s1">'Settings.ExtendedNodes'</span><span class="p">,</span>
+        <span class="s1">'Settings_SearchTags'</span> <span class="o">=&gt;</span> <span class="s1">'Settings.SearchTags'</span><span class="p">,</span>
+        <span class="s1">'PagingSettings_PageSize'</span> <span class="o">=&gt;</span> <span class="s1">'PagingSettings.PageSize'</span><span class="p">,</span>
+        <span class="s1">'PagingSettings_LastRecordID'</span> <span class="o">=&gt;</span> <span class="s1">'PagingSettings.LastRecordID'</span><span class="p">,</span>
+        <span class="s1">'SearchCandidate_DateTimeRange_Start'</span> <span class="o">=&gt;</span> <span class="s1">'SearchCandidate.DateTimeRange.Start'</span><span class="p">,</span>
+        <span class="s1">'SearchCandidate_DateTimeRange_End'</span> <span class="o">=&gt;</span> <span class="s1">'SearchCandidate.DateTimeRange.End'</span><span class="p">,</span>
+        <span class="s1">'SearchCandidate_StartTime'</span> <span class="o">=&gt;</span> <span class="s1">'SearchCandidate.StartTime'</span><span class="p">,</span>
+        <span class="s1">'SearchCandidate_Duration'</span> <span class="o">=&gt;</span> <span class="s1">'SearchCandidate.Duration'</span><span class="p">,</span>
+        <span class="s1">'Settings_ShowDataRange'</span> <span class="o">=&gt;</span> <span class="s1">'Settings.ShowDataRange'</span><span class="p">,</span>
+        <span class="s1">'Settings_IsShowChangeDetails'</span> <span class="o">=&gt;</span> <span class="s1">'Settings.IsShowChangeDetails'</span><span class="p">,</span>
+        <span class="s1">'Settings_DataCategory'</span> <span class="o">=&gt;</span> <span class="s1">'Settings.DataCategory'</span><span class="p">,</span>
+        <span class="s1">'SearchCandidate_SearchByType_SearchType'</span> <span class="o">=&gt;</span> <span class="s1">'SearchCandidate.SearchByType.SearchType'</span><span class="p">,</span>
+        <span class="s1">'SearchCandidate_SearchByType_IsHaveHotel'</span> <span class="o">=&gt;</span> <span class="s1">'SearchCandidate.SearchByType.IsHaveHotel'</span><span class="p">,</span>
+        <span class="s1">'SearchCandidate_SearchByCityID_CityID'</span> <span class="o">=&gt;</span> <span class="s1">'SearchCandidate.SearchByCityID.CityID'</span><span class="p">,</span>
+
+        <span class="c1">// 订单部分 //</span>
+        <span class="c1">// 可预订检查</span>
+        <span class="s1">'AvailRequestSegments_Version'</span> <span class="o">=&gt;</span> <span class="s1">'AvailRequestSegments.Version'</span><span class="p">,</span>
+        <span class="s1">'AvailRequestSegments_TransactionIdentifier'</span> <span class="o">=&gt;</span> <span class="s1">'AvailRequestSegments.TransactionIdentifier'</span><span class="p">,</span>
+        <span class="s1">'AvailRequestSegments_AvailRequestSegment_HotelSearchCriteria_Criterion_HotelRef_HotelCode'</span> <span class="o">=&gt;</span>
+        <span class="s1">'AvailRequestSegments.AvailRequestSegment.HotelSearchCriteria.Criterion.HotelRef.HotelCode'</span><span class="p">,</span>
+        <span class="s1">'AvailRequestSegments_AvailRequestSegment_HotelSearchCriteria_Criterion_StayDateRange_Start'</span> <span class="o">=&gt;</span> <span class="s1">'AvailRequestSegments.AvailRequestSegment.HotelSearchCriteria.Criterion.StayDateRange.Start'</span><span class="p">,</span>
+        <span class="s1">'AvailRequestSegments_AvailRequestSegment_HotelSearchCriteria_Criterion_StayDateRange_End'</span> <span class="o">=&gt;</span> <span class="s1">'AvailRequestSegments.AvailRequestSegment.HotelSearchCriteria.Criterion.StayDateRange.End'</span><span class="p">,</span>
+        <span class="s1">'AvailRequestSegments_AvailRequestSegment_HotelSearchCriteria_Criterion_RatePlanCandidates_RatePlanCandidate_RoomID'</span> <span class="o">=&gt;</span> <span class="s1">'AvailRequestSegments.AvailRequestSegment.HotelSearchCriteria.Criterion.RatePlanCandidates.RatePlanCandidate.RoomID'</span><span class="p">,</span>
+        <span class="s1">'AvailRequestSegments_AvailRequestSegment_HotelSearchCriteria_Criterion_RatePlanCandidates_RatePlanCandidate_RatePlanID'</span> <span class="o">=&gt;</span> <span class="s1">'AvailRequestSegments.AvailRequestSegment.HotelSearchCriteria.Criterion.RatePlanCandidates.RatePlanCandidate.RatePlanID'</span><span class="p">,</span>
+        <span class="s1">'AvailRequestSegments_AvailRequestSegment_HotelSearchCriteria_Criterion_RatePlanCandidates_RatePlanCandidate_RatePlanCategory'</span> <span class="o">=&gt;</span> <span class="s1">'AvailRequestSegments.AvailRequestSegment.HotelSearchCriteria.Criterion.RatePlanCandidates.RatePlanCandidate.RatePlanCategory'</span><span class="p">,</span>
+        <span class="s1">'AvailRequestSegments_AvailRequestSegment_HotelSearchCriteria_Criterion_RatePlanCandidates_RatePlanCandidate_PrepaidIndicator'</span> <span class="o">=&gt;</span> <span class="s1">'AvailRequestSegments.AvailRequestSegment.HotelSearchCriteria.Criterion.RatePlanCandidates.RatePlanCandidate.PrepaidIndicator'</span><span class="p">,</span>
+        <span class="s1">'AvailRequestSegments_AvailRequestSegment_HotelSearchCriteria_Criterion_RoomStayCandidates_RoomStayCandidate_GuestCounts_GuestCount_Count'</span> <span class="o">=&gt;</span> <span class="s1">'AvailRequestSegments.AvailRequestSegment.HotelSearchCriteria.Criterion.RoomStayCandidates.RoomStayCandidate.GuestCounts.GuestCount.Count'</span><span class="p">,</span>
+        <span class="s1">'AvailRequestSegments_AvailRequestSegment_HotelSearchCriteria_Criterion_RoomStayCandidates_RoomStayCandidate_Quantity'</span> <span class="o">=&gt;</span> <span class="s1">'AvailRequestSegments.AvailRequestSegment.HotelSearchCriteria.Criterion.RoomStayCandidates.RoomStayCandidate.Quantity'</span><span class="p">,</span>
+        <span class="s1">'AvailRequestSegments_AvailRequestSegment_HotelSearchCriteria_Criterion_TPA_Extensions_LateArrivalTime'</span> <span class="o">=&gt;</span> <span class="s1">'AvailRequestSegments.AvailRequestSegment.HotelSearchCriteria.Criterion.TPA_Extensions.LateArrivalTime'</span><span class="p">,</span>
+        <span class="c1">// 保存订单</span>
+        <span class="s1">'Version'</span> <span class="o">=&gt;</span> <span class="s1">'Version'</span><span class="p">,</span>
+        <span class="s1">'TransactionIdentifier'</span> <span class="o">=&gt;</span> <span class="s1">'TransactionIdentifier'</span><span class="p">,</span>
+        <span class="s1">'UniqueID'</span> <span class="o">=&gt;</span> <span class="s1">'UniqueID'</span><span class="p">,</span>
+        <span class="s1">'UniqueID_Type'</span> <span class="o">=&gt;</span> <span class="s1">'UniqueID.Type'</span><span class="p">,</span>
+        <span class="s1">'UniqueID_ID'</span> <span class="o">=&gt;</span> <span class="s1">'UniqueID.ID'</span><span class="p">,</span>
+        <span class="s1">'HotelReservations_HotelReservation_RoomStays_RoomStay_RoomTypes_RoomType_NumberOfUnits'</span> <span class="o">=&gt;</span> <span class="s1">'HotelReservations.HotelReservation.RoomStays.RoomStay.RoomTypes.RoomType.NumberOfUnits'</span><span class="p">,</span>
+        <span class="s1">'HotelReservations_HotelReservation_RoomStays_RoomStay_RatePlans_RatePlan_RoomID'</span> <span class="o">=&gt;</span> <span class="s1">'HotelReservations.HotelReservation.RoomStays.RoomStay.RatePlans.RatePlan.RoomID'</span><span class="p">,</span>
+        <span class="s1">'HotelReservations_HotelReservation_RoomStays_RoomStay_RatePlans_RatePlan_RatePlanCategory'</span> <span class="o">=&gt;</span> <span class="s1">'HotelReservations.HotelReservation.RoomStays.RoomStay.RatePlans.RatePlan.RatePlanCategory'</span><span class="p">,</span>
+        <span class="s1">'HotelReservations_HotelReservation_RoomStays_RoomStay_RatePlans_RatePlan_PrepaidIndicator'</span> <span class="o">=&gt;</span> <span class="s1">'HotelReservations.HotelReservation.RoomStays.RoomStay.RatePlans.RatePlan.PrepaidIndicator'</span><span class="p">,</span>
+        <span class="s1">'HotelReservations_HotelReservation_RoomStays_RoomStay_RatePlans_RatePlan_RatePlanID'</span> <span class="o">=&gt;</span> <span class="s1">'HotelReservations.HotelReservation.RoomStays.RoomStay.RatePlans.RatePlan.RatePlanID'</span><span class="p">,</span>
+        <span class="s1">'HotelReservations_HotelReservation_RoomStays_RoomStay_BasicPropertyInfo_HotelCode'</span> <span class="o">=&gt;</span> <span class="s1">'HotelReservations.HotelReservation.RoomStays.RoomStay.BasicPropertyInfo.HotelCode'</span><span class="p">,</span>
+        <span class="s1">'HotelReservations_HotelReservation_ResGuests_ResGuest_Profiles_ProfileInfo_Profile_Customer_PersonName'</span> <span class="o">=&gt;</span> <span class="s1">'HotelReservations.HotelReservation.ResGuests.ResGuest.Profiles.ProfileInfo.Profile.Customer.PersonName'</span><span class="p">,</span>
+        <span class="s1">'HotelReservations_HotelReservation_ResGuests_ResGuest_Profiles_ProfileInfo_Profile_Customer_ContactPerson_PersonName_Name'</span> <span class="o">=&gt;</span> <span class="s1">'HotelReservations.HotelReservation.ResGuests.ResGuest.Profiles.ProfileInfo.Profile.Customer.ContactPerson.PersonName.Name'</span><span class="p">,</span>
+        <span class="s1">'HotelReservations_HotelReservation_ResGuests_ResGuest_Profiles_ProfileInfo_Profile_Customer_ContactPerson_Telephone_PhoneTechType'</span> <span class="o">=&gt;</span> <span class="s1">'HotelReservations.HotelReservation.ResGuests.ResGuest.Profiles.ProfileInfo.Profile.Customer.ContactPerson.Telephone.PhoneTechType'</span><span class="p">,</span>
+        <span class="s1">'HotelReservations_HotelReservation_ResGuests_ResGuest_Profiles_ProfileInfo_Profile_Customer_ContactPerson_Telephone_PhoneNumber'</span> <span class="o">=&gt;</span> <span class="s1">'HotelReservations.HotelReservation.ResGuests.ResGuest.Profiles.ProfileInfo.Profile.Customer.ContactPerson.Telephone.PhoneNumber'</span><span class="p">,</span>
+
+        <span class="s1">'HotelReservations_HotelReservation_ResGuests_ResGuest_Profiles_ProfileInfo_Profile_Customer_ContactPerson_ContactType'</span> <span class="o">=&gt;</span> <span class="s1">'HotelReservations.HotelReservation.ResGuests.ResGuest.Profiles.ProfileInfo.Profile.Customer.ContactPerson.ContactType'</span><span class="p">,</span>
+        <span class="s1">'HotelReservations_HotelReservation_ResGuests_ResGuest_Profiles_ProfileInfo_Profile_Customer_ContactPerson'</span> <span class="o">=&gt;</span> <span class="s1">'HotelReservations.HotelReservation.ResGuests.ResGuest.Profiles.ProfileInfo.Profile.Customer.ContactPerson'</span><span class="p">,</span>
+        <span class="s1">'HotelReservations_HotelReservation_ResGuests_ResGuest_TPA_Extensions_LateArrivalTime'</span> <span class="o">=&gt;</span> <span class="s1">'HotelReservations.HotelReservation.ResGuests.ResGuest.TPA_Extensions.LateArrivalTime'</span><span class="p">,</span>
+        <span class="s1">'HotelReservations_HotelReservation_ResGuests_ResGuest_ArrivalTime'</span> <span class="o">=&gt;</span> <span class="s1">'HotelReservations.HotelReservation.ResGuests.ResGuest.ArrivalTime'</span><span class="p">,</span>
+        <span class="s1">'HotelReservations_HotelReservation_ResGlobalInfo_GuestCounts_GuestCount_Count'</span> <span class="o">=&gt;</span> <span class="s1">'HotelReservations.HotelReservation.ResGlobalInfo.GuestCounts.GuestCount.Count'</span><span class="p">,</span>
+        <span class="s1">'HotelReservations_HotelReservation_ResGlobalInfo_TimeSpan_Start'</span> <span class="o">=&gt;</span> <span class="s1">'HotelReservations.HotelReservation.ResGlobalInfo.TimeSpan.Start'</span><span class="p">,</span>
+        <span class="s1">'HotelReservations_HotelReservation_ResGlobalInfo_TimeSpan_End'</span> <span class="o">=&gt;</span> <span class="s1">'HotelReservations.HotelReservation.ResGlobalInfo.TimeSpan.End'</span><span class="p">,</span>
+        <span class="c1">//'HotelReservations_HotelReservation_ResGlobalInfo_DepositPayments' =&gt; 'HotelReservations.HotelReservation.ResGlobalInfo.DepositPayments',</span>
+        <span class="s1">'HotelReservations_HotelReservation_ResGlobalInfo_Total_ExclusiveAmount'</span> <span class="o">=&gt;</span> <span class="s1">'HotelReservations.HotelReservation.ResGlobalInfo.Total.ExclusiveAmount'</span><span class="p">,</span>
+        <span class="s1">'HotelReservations_HotelReservation_ResGlobalInfo_Total_InclusiveAmount'</span> <span class="o">=&gt;</span> <span class="s1">'HotelReservations.HotelReservation.ResGlobalInfo.Total.InclusiveAmount'</span><span class="p">,</span>
+        <span class="s1">'HotelReservations_HotelReservation_ResGlobalInfo_Total_CurrencyCode'</span> <span class="o">=&gt;</span> <span class="s1">'HotelReservations.HotelReservation.ResGlobalInfo.Total.CurrencyCode'</span><span class="p">,</span>
+        <span class="s1">'HotelReservations_HotelReservation_ResGlobalInfo_TPA_Extensions_TotalCost_ExclusiveAmount'</span> <span class="o">=&gt;</span> <span class="s1">'HotelReservations.HotelReservation.ResGlobalInfo.TPA_Extensions.TotalCost.ExclusiveAmount'</span><span class="p">,</span>
+        <span class="s1">'HotelReservations_HotelReservation_ResGlobalInfo_TPA_Extensions_TotalCost_InclusiveAmount'</span> <span class="o">=&gt;</span> <span class="s1">'HotelReservations.HotelReservation.ResGlobalInfo.TPA_Extensions.TotalCost.InclusiveAmount'</span><span class="p">,</span>
+        <span class="s1">'HotelReservations_HotelReservation_ResGlobalInfo_TPA_Extensions_TotalCost_CurrencyCode'</span> <span class="o">=&gt;</span> <span class="s1">'HotelReservations.HotelReservation.ResGlobalInfo.TPA_Extensions.TotalCost.CurrencyCode'</span><span class="p">,</span>
+
+        <span class="c1">// 订单提交</span>
+        <span class="s1">'ReservationPayment_ReservationID_Type'</span> <span class="o">=&gt;</span> <span class="s1">'ReservationPayment.ReservationID.Type'</span><span class="p">,</span>
+        <span class="s1">'ReservationPayment_ReservationID_ID'</span> <span class="o">=&gt;</span> <span class="s1">'ReservationPayment.ReservationID.ID'</span><span class="p">,</span>
+        <span class="s1">'ReservationPayment_PaymentDetail'</span> <span class="o">=&gt;</span> <span class="s1">'ReservationPayment.PaymentDetail'</span><span class="p">,</span>
+        <span class="s1">'ReservationPayment_Invoice'</span> <span class="o">=&gt;</span> <span class="s1">'ReservationPayment.Invoice'</span><span class="p">,</span>
+
+        <span class="c1">// 监测订单状态变化</span>
+        <span class="s1">'HotelReservations'</span> <span class="o">=&gt;</span> <span class="s1">'HotelReservations'</span><span class="p">,</span>
+        <span class="s1">'SearchTypeEntity_SearchType'</span> <span class="o">=&gt;</span> <span class="s1">'SearchTypeEntity.SearchType'</span><span class="p">,</span>
+        <span class="s1">'SearchTypeEntity_HotelCount'</span> <span class="o">=&gt;</span> <span class="s1">'SearchTypeEntity.HotelCount'</span><span class="p">,</span>
+        <span class="s1">'SearchTypeEntity_PageIndex'</span> <span class="o">=&gt;</span> <span class="s1">'SearchTypeEntity.PageIndex'</span><span class="p">,</span>
+        <span class="s1">'PublicSearchParameter_City'</span> <span class="o">=&gt;</span> <span class="s1">'PublicSearchParameter.City'</span><span class="p">,</span>
+        <span class="s1">'PublicSearchParameter_CheckInDate'</span> <span class="o">=&gt;</span> <span class="s1">'PublicSearchParameter.CheckInDate'</span><span class="p">,</span>
+        <span class="s1">'PublicSearchParameter_CheckOutDate'</span> <span class="o">=&gt;</span> <span class="s1">'PublicSearchParameter.CheckOutDate'</span><span class="p">,</span>
+        <span class="s1">'PublicSearchParameter_HotelList'</span> <span class="o">=&gt;</span> <span class="s1">'PublicSearchParameter.HotelList'</span><span class="p">,</span>
+        <span class="s1">'PublicSearchParameter_FilterRoomByPerson'</span> <span class="o">=&gt;</span> <span class="s1">'PublicSearchParameter.FilterRoomByPerson'</span><span class="p">,</span>
+        <span class="s1">'PublicSearchParameter_OnlyPPPrice'</span> <span class="o">=&gt;</span> <span class="s1">'PublicSearchParameter.OnlyPPPrice'</span><span class="p">,</span>
+        <span class="s1">'PublicSearchParameter_OnlyFGPrice'</span> <span class="o">=&gt;</span> <span class="s1">'PublicSearchParameter.OnlyFGPrice'</span><span class="p">,</span>
+        <span class="s1">'PublicSearchParameter_IsJustifyConfirm'</span> <span class="o">=&gt;</span> <span class="s1">'PublicSearchParameter.IsJustifyConfirm'</span><span class="p">,</span>
+        <span class="s1">'FacilityEntity_ChildrenAgeList'</span> <span class="o">=&gt;</span> <span class="s1">'FacilityEntity.ChildrenAgeList'</span><span class="p">,</span>
+        <span class="s1">'FacilityEntity_priceRange_lowPrice'</span> <span class="o">=&gt;</span> <span class="s1">'FacilityEntity.priceRange.lowPrice'</span><span class="p">,</span>
+        <span class="s1">'FacilityEntity_priceRange_highPrice'</span> <span class="o">=&gt;</span> <span class="s1">'FacilityEntity.priceRange.highPrice'</span><span class="p">,</span>
+        <span class="s1">'OrderBy_OrderName'</span> <span class="o">=&gt;</span> <span class="s1">'OrderBy.OrderName'</span><span class="p">,</span>
+        <span class="s1">'OrderBy_OrderType'</span> <span class="o">=&gt;</span> <span class="s1">'OrderBy.OrderType'</span><span class="p">,</span>
+        <span class="s1">'SearchCandidate_DateRange_Start'</span> <span class="o">=&gt;</span> <span class="s1">'SearchCandidate.DateRange.Start'</span><span class="p">,</span>
+        <span class="s1">'SearchCandidate_DateRange_End'</span> <span class="o">=&gt;</span> <span class="s1">'SearchCandidate.DateRange.End'</span><span class="p">,</span>
+        <span class="s1">'SearchCandidate_Occupancy_Adult'</span> <span class="o">=&gt;</span> <span class="s1">'SearchCandidate.Occupancy.Adult'</span><span class="p">,</span>
+        <span class="s1">'SearchCandidate_Occupancy_Child'</span> <span class="o">=&gt;</span> <span class="s1">'SearchCandidate.Occupancy.Child'</span><span class="p">,</span>
+        <span class="s1">'SearchCandidate_Occupancy_ChildInfo'</span> <span class="o">=&gt;</span> <span class="s1">'SearchCandidate.Occupancy.ChildInfo'</span><span class="p">,</span>
+        <span class="s1">'SearchCandidate_SearchTags'</span> <span class="o">=&gt;</span> <span class="s1">'SearchCandidate.SearchTags'</span><span class="p">,</span>
+        <span class="s1">'Settings_DisplayCurrency'</span> <span class="o">=&gt;</span> <span class="s1">'Settings.DisplayCurrency'</span><span class="p">,</span>
+        <span class="s1">'Settings_IsShowNonBookable'</span> <span class="o">=&gt;</span> <span class="s1">'Settings.IsShowNonBookable'</span><span class="p">,</span>
+    <span class="p">];</span>
+
+
+    <span class="k">public</span> <span class="nv">$Version</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$TransactionIdentifier</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$SearchCandidate_HotelID</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$SearchCandidate_RoomIDs</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$Settings_PrimaryLangID</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$Settings_ExtendedNodes</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$Settings_SearchTags</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$PagingSettings_PageSize</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$PagingSettings_LastRecordID</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$SearchCandidate_DateTimeRange_Start</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$SearchCandidate_DateTimeRange_End</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$SearchCandidate_StartTime</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$SearchCandidate_Duration</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$Settings_ShowDataRange</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$Settings_IsShowChangeDetails</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$Settings_DataCategory</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$SearchCandidate_SearchByType_SearchType</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$SearchCandidate_SearchByType_IsHaveHotel</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$SearchCandidate_SearchByCityID_CityID</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$SearchTypeEntity_SearchType</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$SearchTypeEntity_HotelCount</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$SearchTypeEntity_PageIndex</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$PublicSearchParameter_City</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$PublicSearchParameter_CheckInDate</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$PublicSearchParameter_CheckOutDate</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$PublicSearchParameter_HotelList</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$PublicSearchParameter_FilterRoomByPerson</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$PublicSearchParameter_OnlyPPPrice</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$PublicSearchParameter_OnlyFGPrice</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$PublicSearchParameter_IsJustifyConfirm</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$FacilityEntity_ChildrenAgeList</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$FacilityEntity_priceRange_lowPrice</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$FacilityEntity_priceRange_highPrice</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$OrderBy_OrderName</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$OrderBy_OrderType</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$SearchCandidate_DateRange_Start</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$SearchCandidate_DateRange_End</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$SearchCandidate_Occupancy_Adult</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$SearchCandidate_Occupancy_Child</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$SearchCandidate_Occupancy_ChildInfo</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$SearchCandidate_SearchTags</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$Settings_DisplayCurrency</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$Settings_IsShowNonBookable</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+    <span class="k">public</span> <span class="nv">$AvailRequestSegments_AvailRequestSegment_HotelSearchCriteria_Criterion_HotelRef_HotelCode</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$AvailRequestSegments_AvailRequestSegment_HotelSearchCriteria_Criterion_StayDateRange_Start</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$AvailRequestSegments_AvailRequestSegment_HotelSearchCriteria_Criterion_StayDateRange_End</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$AvailRequestSegments_AvailRequestSegment_HotelSearchCriteria_Criterion_RatePlanCandidates_RatePlanCandidate_RoomID</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$AvailRequestSegments_AvailRequestSegment_HotelSearchCriteria_Criterion_RatePlanCandidates_RatePlanCandidate_RatePlanID</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$AvailRequestSegments_AvailRequestSegment_HotelSearchCriteria_Criterion_RatePlanCandidates_RatePlanCandidate_RatePlanCategory</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$AvailRequestSegments_AvailRequestSegment_HotelSearchCriteria_Criterion_RatePlanCandidates_RatePlanCandidate_PrepaidIndicator</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$AvailRequestSegments_AvailRequestSegment_HotelSearchCriteria_Criterion_RoomStayCandidates_RoomStayCandidate_GuestCounts_GuestCount_Count</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$AvailRequestSegments_AvailRequestSegment_HotelSearchCriteria_Criterion_RoomStayCandidates_RoomStayCandidate_Quantity</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$AvailRequestSegments_AvailRequestSegment_HotelSearchCriteria_Criterion_TPA_Extensions_LateArrivalTime</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$AvailRequestSegments_Version</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$AvailRequestSegments_TransactionIdentifier</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$HotelReservations</span> <span class="o">=</span> <span class="p">[];</span>
+    <span class="c1">//public $HotelReservations_HotelReservation_ResGlobalInfo_DepositPayments = [];</span>
+    <span class="k">public</span> <span class="nv">$UniqueID</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$UniqueID_Type</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$UniqueID_ID</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$HotelReservations_HotelReservation_RoomStays_RoomStay_RoomTypes_RoomType_NumberOfUnits</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$HotelReservations_HotelReservation_RoomStays_RoomStay_RatePlans_RatePlan_RoomID</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$HotelReservations_HotelReservation_RoomStays_RoomStay_RatePlans_RatePlan_RatePlanCategory</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$HotelReservations_HotelReservation_RoomStays_RoomStay_RatePlans_RatePlan_PrepaidIndicator</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$HotelReservations_HotelReservation_RoomStays_RoomStay_RatePlans_RatePlan_RatePlanID</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$HotelReservations_HotelReservation_RoomStays_RoomStay_BasicPropertyInfo_HotelCode</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$HotelReservations_HotelReservation_ResGuests_ResGuest_Profiles_ProfileInfo_Profile_Customer_PersonName</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$HotelReservations_HotelReservation_ResGuests_ResGuest_Profiles_ProfileInfo_Profile_Customer_ContactPerson_PersonName_Name</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$HotelReservations_HotelReservation_ResGuests_ResGuest_Profiles_ProfileInfo_Profile_Customer_ContactPerson_Telephone_PhoneTechType</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$HotelReservations_HotelReservation_ResGuests_ResGuest_Profiles_ProfileInfo_Profile_Customer_ContactPerson_Telephone_PhoneNumber</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$HotelReservations_HotelReservation_ResGuests_ResGuest_Profiles_ProfileInfo_Profile_Customer_ContactPerson_ContactType</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$HotelReservations_HotelReservation_ResGuests_ResGuest_Profiles_ProfileInfo_Profile_Customer_ContactPerson</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$HotelReservations_HotelReservation_ResGuests_ResGuest_TPA_Extensions_LateArrivalTime</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$HotelReservations_HotelReservation_ResGuests_ResGuest_ArrivalTime</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$HotelReservations_HotelReservation_ResGlobalInfo_GuestCounts_GuestCount_Count</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$HotelReservations_HotelReservation_ResGlobalInfo_TimeSpan_Start</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$HotelReservations_HotelReservation_ResGlobalInfo_TimeSpan_End</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$HotelReservations_HotelReservation_ResGlobalInfo_Total_ExclusiveAmount</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$HotelReservations_HotelReservation_ResGlobalInfo_Total_InclusiveAmount</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$HotelReservations_HotelReservation_ResGlobalInfo_Total_CurrencyCode</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$HotelReservations_HotelReservation_ResGlobalInfo_TPA_Extensions_TotalCost_ExclusiveAmount</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$HotelReservations_HotelReservation_ResGlobalInfo_TPA_Extensions_TotalCost_InclusiveAmount</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$HotelReservations_HotelReservation_ResGlobalInfo_TPA_Extensions_TotalCost_CurrencyCode</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$ReservationPayment_ReservationID_Type</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$ReservationPayment_ReservationID_ID</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$ReservationPayment_PaymentDetail</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+    <span class="k">public</span> <span class="nv">$ReservationPayment_Invoice</span> <span class="o">=</span> <span class="kc">null</span><span class="p">;</span>
+
+    <span class="k">protected</span> <span class="nv">$dot</span><span class="p">;</span>
+
+    <span class="k">const</span> <span class="no">HOTEL_STATIC_INFO_EXTENDED_NODES</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="s2">"HotelStaticInfo.GeoInfo"</span><span class="p">,</span><span class="c1">//重要</span>
+        <span class="s2">"HotelStaticInfo.NearbyPOIs"</span><span class="p">,</span><span class="c1">//已废弃请下线处理</span>
+        <span class="s2">"HotelStaticInfo.TransportationInfos"</span><span class="p">,</span>
+        <span class="s2">"HotelStaticInfo.Brand"</span><span class="p">,</span>
+        <span class="s2">"HotelStaticInfo.Group"</span><span class="p">,</span>
+        <span class="s2">"HotelStaticInfo.Ratings"</span><span class="p">,</span><span class="c1">//重要</span>
+        <span class="s2">"HotelStaticInfo.Policies"</span><span class="p">,</span><span class="c1">//重要</span>
+        <span class="s2">"HotelStaticInfo.AcceptedCreditCards"</span><span class="p">,</span><span class="c1">//重要</span>
+        <span class="s2">"HotelStaticInfo.ImportantNotices"</span><span class="p">,</span><span class="c1">//重要</span>
+        <span class="s2">"HotelStaticInfo.Facilities"</span><span class="p">,</span> <span class="c1">//已废弃，请切换至FacilitiesV2节点</span>
+        <span class="s2">"HotelStaticInfo.FacilitiesV2"</span><span class="p">,</span><span class="c1">//重要</span>
+        <span class="s2">"HotelStaticInfo.Pictures"</span><span class="p">,</span><span class="c1">//重要</span>
+        <span class="s2">"HotelStaticInfo.Descriptions"</span><span class="p">,</span><span class="c1">//重要</span>
+        <span class="s2">"HotelStaticInfo.Themes"</span><span class="p">,</span>
+        <span class="s2">"HotelStaticInfo.ContactInfo"</span><span class="p">,</span>
+        <span class="s2">"HotelStaticInfo.HotelTags.IsBookable"</span><span class="p">,</span><span class="c1">//重要</span>
+        <span class="s2">"HotelStaticInfo.HotelTags.IsHeCheng"</span><span class="p">,</span>
+        <span class="s2">"HotelStaticInfo.ArrivalTimeLimitInfo"</span><span class="p">,</span><span class="c1">//重要</span>
+        <span class="s2">"HotelStaticInfo.DepartureTimeLimitInfo"</span><span class="p">,</span><span class="c1">//重要</span>
+        <span class="s2">"HotelStaticInfo.ExternalFacility.Parking"</span><span class="p">,</span>
+        <span class="s2">"HotelStaticInfo.ExternalFacility.ChargingPoint"</span><span class="p">,</span>
+        <span class="s2">"HotelStaticInfo.BossInfos"</span><span class="p">,</span>
+        <span class="s2">"HotelStaticInfo.NormalizedPolicies.ChildAndExtraBedPolicy"</span><span class="p">,</span><span class="c1">//重要</span>
+        <span class="s2">"HotelStaticInfo.HotelDiscount"</span><span class="p">,</span>
+        <span class="s2">"HotelStaticInfo.SellerShowInfos"</span><span class="p">,</span>
+        <span class="s2">"HotelStaticInfo.VideoItems"</span><span class="p">,</span>
+        <span class="s2">"HotelStaticInfo.NormalizedPolicies.MealsPolicy"</span><span class="p">,</span> <span class="c1">//已废弃，请切换至MealsPolicyV2</span>
+        <span class="s2">"HotelStaticInfo.NormalizedPolicies.MealsPolicyV2"</span><span class="p">,</span><span class="c1">//重要</span>
+        <span class="s2">"HotelStaticInfo.HotelTags.ReservedData"</span><span class="p">,</span>
+        <span class="s2">"HotelStaticInfo.HotelPromotions"</span><span class="p">,</span>
+        <span class="s2">"HotelStaticInfo.HotelTaxRuleInfos"</span><span class="p">,</span><span class="c1">//重UniqueID要</span>
+        <span class="s2">"HotelStaticInfo.SepecialServiceForChinese"</span><span class="p">,</span>
+        <span class="s2">"HotelStaticInfo.HotelFeatures"</span><span class="p">,</span>
+        <span class="s2">"HotelStaticInfo.HotelUsedNames"</span><span class="p">,</span>
+        <span class="s2">"HotelStaticInfo.BnBHotel"</span><span class="p">,</span> <span class="c1">// 获取民宿酒店专有信息</span>
+        <span class="s2">"HotelStaticInfo.ContactPersonInfos"</span><span class="p">,</span>
+        <span class="s2">"HotelStaticInfo.HotelCloseTime"</span><span class="p">,</span>  <span class="c1">//酒店不营业时段</span>
+    <span class="p">];</span>
+
+    <span class="k">const</span> <span class="no">ROOM_TYPE_STATIC_EXTENDED_NODES</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="c1">//物理房型相关扩展节点</span>
+        <span class="s2">"RoomTypeInfo.Facilities"</span><span class="p">,</span>
+        <span class="s2">"RoomTypeInfo.Pictures"</span><span class="p">,</span>
+        <span class="s2">"RoomTypeInfo.Descriptions"</span><span class="p">,</span>
+        <span class="s2">"RoomTypeInfo.ChildLimit"</span><span class="p">,</span>
+        <span class="s2">"RoomTypeInfo.BroadNet"</span><span class="p">,</span>
+        <span class="s2">"RoomTypeInfo.RoomBedInfos"</span><span class="p">,</span>
+        <span class="s2">"RoomTypeInfo.BnBHotel"</span><span class="p">,</span>    <span class="c1">// 获取民宿房型专有信息</span>
+        <span class="s2">"RoomTypeInfo.Smoking"</span><span class="p">,</span><span class="c1">//已废弃，请使用售卖房型吸烟信息</span>
+        <span class="s2">"RoomTypeInfo.RoomTypeTags.ReservedData"</span><span class="p">,</span>
+        <span class="c1">//售卖房型相关扩展节点</span>
+        <span class="s2">"RoomInfo.ApplicabilityInfo"</span><span class="p">,</span>
+        <span class="s2">"RoomInfo.Smoking"</span><span class="p">,</span>
+        <span class="s2">"RoomInfo.BroadNet"</span><span class="p">,</span><span class="c1">//已废弃，请使用物理房型层宽带信息，售卖房型层宽带信息暂停使用</span>
+        <span class="s2">"RoomInfo.RoomBedInfos"</span><span class="p">,</span>
+        <span class="s2">"RoomInfo.RoomFGToPPInfo"</span><span class="p">,</span>
+        <span class="s2">"RoomInfo.ChannelLimit"</span><span class="p">,</span>
+        <span class="s2">"RoomInfo.ExpressCheckout"</span><span class="p">,</span>
+        <span class="s2">"RoomInfo.RoomTags"</span><span class="p">,</span>
+        <span class="s2">"RoomInfo.RoomGiftInfos"</span><span class="p">,</span>
+        <span class="s2">"RoomInfo.AreaApplicabilityInfo"</span><span class="p">,</span>
+        <span class="s2">"RoomInfo.RoomPromotions"</span><span class="p">,</span>
+        <span class="s2">"RoomInfo.HotelPromotions"</span><span class="p">,</span>
+        <span class="s2">"RoomInfo.MaskCampaignInfos"</span><span class="p">,</span><span class="c1">//Mask房型获取</span>
+        <span class="s2">"RoomInfo.BookingRules"</span><span class="p">,</span>
+        <span class="s2">"RoomInfo.RoomTags.HotelDiscount"</span><span class="p">,</span>
+        <span class="s2">"RoomInfo.IsNeedCustomerTelephone"</span><span class="p">,</span>
+    <span class="p">];</span>
+
+    <span class="k">const</span> <span class="no">ROOM_TYPE_STATIC_SEARCH_TAGS</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">[</span>
+            <span class="s2">"Code"</span> <span class="o">=&gt;</span> <span class="s2">"IsOutputHiddenMaskRoom"</span><span class="p">,</span> <span class="c1">//异地Mask房型获取</span>
+        <span class="p">],</span>
+        <span class="p">[</span>
+            <span class="s2">"Code"</span><span class="o">=&gt;</span> <span class="s2">"IsOutputLimitDestinationRoom"</span><span class="p">,</span> <span class="c1">//目的地Mask房型获取</span>
+        <span class="p">]</span>
+    <span class="p">];</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">dot</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Dot</span><span class="p">;</span>
+    <span class="p">}</span>
+
+    <span class="k">protected</span> <span class="k">function</span> <span class="nf">convertData</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="k">foreach</span> <span class="p">(</span><span class="nx">self</span><span class="o">::</span><span class="na">RULES</span> <span class="k">as</span> <span class="nv">$underlineRule</span> <span class="o">=&gt;</span> <span class="nv">$dotRule</span><span class="p">)</span> <span class="p">{</span>
+            <span class="k">if</span> <span class="p">(</span><span class="kc">null</span> <span class="o">===</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="p">{</span><span class="nv">$underlineRule</span><span class="p">})</span> <span class="p">{</span>
+                <span class="k">continue</span><span class="p">;</span>
+            <span class="p">}</span>
+            <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">dot</span><span class="o">-&gt;</span><span class="na">add</span><span class="p">(</span><span class="nv">$dotRule</span><span class="p">,</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="p">{</span><span class="nv">$underlineRule</span><span class="p">});</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">toArray</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">convertData</span><span class="p">();</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">dot</span><span class="o">-&gt;</span><span class="na">all</span><span class="p">();</span>
+    <span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">toJson</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">convertData</span><span class="p">();</span>
+        <span class="k">return</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">dot</span><span class="o">-&gt;</span><span class="na">toJson</span><span class="p">();</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+
+<span class="kd">class</span> <span class="nc">Test</span>
+<span class="p">{</span>
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">__construct</span><span class="p">(</span><span class="nv">$ctripClient</span><span class="p">)</span>
+	<span class="p">{</span>
+		<span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ctripClient</span> <span class="o">=</span> <span class="nv">$ctripClient</span><span class="p">;</span>
+	<span class="p">}</span>
+
+    <span class="k">public</span> <span class="k">function</span> <span class="nf">main</span><span class="p">()</span>
+    <span class="p">{</span>
+        <span class="nv">$fetchOnePage</span> <span class="o">=</span> <span class="k">function</span> <span class="p">(</span><span class="o">&amp;</span><span class="nv">$lastRecordId</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$request</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">HotelRequest</span><span class="p">();</span>
+            <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">SearchCandidate_SearchByType_SearchType</span> <span class="o">=</span> <span class="nx">self</span><span class="o">::</span><span class="na">SEARCH_TYPE</span><span class="p">;</span>
+            <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">SearchCandidate_SearchByType_IsHaveHotel</span> <span class="o">=</span> <span class="nx">self</span><span class="o">::</span><span class="na">IS_HAVE_HOTEL</span><span class="p">;</span>
+            <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">PagingSettings_PageSize</span> <span class="o">=</span> <span class="nx">self</span><span class="o">::</span><span class="na">PAGE_SIZE</span><span class="p">;</span>
+            <span class="nv">$request</span><span class="o">-&gt;</span><span class="na">PagingSettings_LastRecordID</span> <span class="o">=</span> <span class="nv">$lastRecordId</span><span class="p">;</span>
+
+            <span class="nv">$response</span> <span class="o">=</span> <span class="nv">$this</span><span class="o">-&gt;</span><span class="na">ctripClient</span><span class="o">-&gt;</span><span class="na">getAllCityInfo</span><span class="p">(</span><span class="nv">$request</span><span class="p">);</span>
+
+            <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">CtripClient</span><span class="o">::</span><span class="na">success</span><span class="p">(</span><span class="nv">$response</span><span class="p">)</span> <span class="o">||</span> <span class="k">empty</span><span class="p">(</span><span class="nv">$response</span><span class="p">[</span><span class="s1">'CityInfos'</span><span class="p">][</span><span class="s1">'CityInfo'</span><span class="p">]))</span> <span class="p">{</span>
+                <span class="k">return</span> <span class="nx">Util</span><span class="o">::</span><span class="na">LOOP_API_EXCEPTION_STOP</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="k">foreach</span> <span class="p">(</span><span class="nv">$response</span><span class="p">[</span><span class="s1">'CityInfos'</span><span class="p">][</span><span class="s1">'CityInfo'</span><span class="p">]</span> <span class="k">as</span> <span class="nv">$city</span><span class="p">)</span> <span class="p">{</span>
+				<span class="nb">var_dump</span><span class="p">(</span><span class="nv">$city</span><span class="p">);</span>
+            <span class="p">}</span>
+
+            <span class="nv">$lastRecordId</span> <span class="o">=</span> <span class="nx">CtripClient</span><span class="o">::</span><span class="na">successAndReturnLastRecordId</span><span class="p">(</span><span class="nv">$response</span><span class="p">);</span>
+            <span class="k">if</span> <span class="p">(</span><span class="k">empty</span><span class="p">(</span><span class="nv">$lastRecordId</span><span class="p">))</span> <span class="p">{</span>
+                <span class="nb">unset</span><span class="p">(</span><span class="nv">$request</span><span class="p">,</span> <span class="nv">$response</span><span class="p">);</span>
+                <span class="k">return</span> <span class="nx">Util</span><span class="o">::</span><span class="na">LOOP_NORMAL_STOP</span><span class="p">;</span>
+            <span class="p">}</span>
+
+            <span class="nb">unset</span><span class="p">(</span><span class="nv">$request</span><span class="p">,</span> <span class="nv">$response</span><span class="p">);</span>
+            <span class="k">return</span> <span class="nx">Util</span><span class="o">::</span><span class="na">LOOP_RUN_CONTINUE</span><span class="p">;</span>
+        <span class="p">};</span>
+
+        <span class="nv">$lastRecordId</span> <span class="o">=</span> <span class="s1">''</span><span class="p">;</span>
+        <span class="nx">Util</span><span class="o">::</span><span class="na">loop</span><span class="p">(</span><span class="nv">$fetchOnePage</span><span class="p">,</span> <span class="nv">$lastRecordId</span><span class="p">);</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nv">$test</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Test</span><span class="p">(</span><span class="k">new</span> <span class="nx">CtripClient</span><span class="p">());</span>
+<span class="nv">$test</span><span class="o">-&gt;</span><span class="na">main</span><span class="p">();</span>
+</code></pre></div></div>
+
+<ul>
+  <li><code class="highlighter-rouge">CtripConfig</code>配置信息类</li>
+  <li><code class="highlighter-rouge">CtripToken</code>维护携程token类支持多进程并发获取token。</li>
+  <li><code class="highlighter-rouge">CtripClient</code>对外提供的客户端类</li>
+  <li><code class="highlighter-rouge">HotelRequest</code>对外提供的请求类</li>
+  <li><code class="highlighter-rouge">Util</code>工具类</li>
+  <li><code class="highlighter-rouge">Test</code>演示类</li>
+</ul>
+
+<p>总结：支持分布式获取token；支持HotelRequest请求类参数配置；支持接口配置；支持接口限速配置；封装重试方法；封装分页循环获取方法。</p>
+
+
+	  </div>
+
+		
+		<ul class="tag_box list-unstyled list-inline">
+		  <li><i class="fa fa-folder-open"></i></li>
+		  
+		  
+			 
+				<li><a href="/categories.html#Encapsulation-ref">
+					Encapsulation <span>(1)</span>
+					
+				</a></li>
+			
+		  
+		</ul>
+		  
+
+		
+		<ul class="list-inline">
+		  <li><i class="fa fa-tags"></i></li>
+		  
+		  
+			 
+				<li>
+					<a href="/tags.html#Encapsulation-ref">
+					Encapsulation <span>(1)</span>
+					
+					</a>
+				</li>
+			
+		  
+		  
+		</ul>
+		  
+
+		<hr>
+
+		<div>
+      <section class="share col-sm-6">
+        <h4 class="section-title">Share Post</h4>
+        <a class="btn btn-default btn-sm twitter" href="http://twitter.com/share?text=携程酒店SDK封装"
+           onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+          <i class="fa fa-twitter fa-lg"></i>
+          Twitter
+        </a>
+        <a class="btn btn-default btn-sm facebook" href="https://www.facebook.com/sharer/sharer.php"
+           onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+          <i class="fa fa-facebook fa-lg"></i>
+          Facebook
+        </a>
+        <a class="btn btn-default btn-sm gplus"
+           onclick="window.open('https://plus.google.com/share?url='+window.location.href, 'google-plus-share', 'width=490,height=530');return false;">
+          <i class="fa fa-google-plus fa-lg"></i>
+          Google+
+        </a>
+      </section>
+
+      <section class="col-sm-6 author">
+        <img src="/assets/media/dragon.jpeg" class="img-rounded author-image" width="100" height="100" />
+        <h4 class="section-title author-name">JY</h4>
+        <p class="author-bio">目前就职于小猪短租</p>
+      </section>
+    </div>
+
+    <div class="clearfix"></div>
+
+		<ul class="pager">
+		  
+		  <li class="previous"><a href="/heap/2020/05/22/heap.html" title="二叉堆笔记">&larr; Previous</a></li>
+		  
+		  
+			<li class="next disabled"><a>Next &rarr;</a>
+		  
+		</ul>
+
+		<hr>
+	</div>
+	
+	<div class="col-sm-2 sidebar-2">
+	
+	</div>
+</article>
+<div class="clearfix"></div>
+
+
+
+
+
+		<footer>
+			<hr/>
+			<p>
+				&copy; 2020 JY with <a href="http://jekyllrb.com/">Jekyll</a>. Theme: <a href="https://github.com/dbtek/dbyll">dbyll</a> by dbtek.
+			</p>
+		</footer>
+	</div>
+
+	<script type="text/javascript" src="/assets/resources/jquery/jquery.min.js"></script>
+	<script type="text/javascript" src="/assets/resources/bootstrap/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="/assets/js/app.js"></script>
+</body>
+</html>
+
+
+
