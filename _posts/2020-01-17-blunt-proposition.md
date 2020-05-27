@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 直言命题
-categories: [Logical]
+categories: [logical]
 tags: [proposition]
 fullview: true
 markdown: kramdown

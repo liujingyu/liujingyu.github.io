@@ -1,7 +1,7 @@
 ---
 layout: post
 title: HashTable
-categories: [HashTable]
+categories: [data structure]
 tags: [HashTable]
 fullview: true
 markdown: kramdown

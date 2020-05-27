@@ -1468,8 +1468,8 @@ array(7) {
 &lt;/ul&gt;
 </description>
 				<pubDate>Fri, 22 May 2020 00:00:00 +0800</pubDate>
-				<link>/heap/2020/05/22/heap.html</link>
-				<guid isPermaLink="true">/heap/2020/05/22/heap.html</guid>
+				<link>/data%20structure/2020/05/22/heap.html</link>
+				<guid isPermaLink="true">/data%20structure/2020/05/22/heap.html</guid>
 			</item>
 		
 			<item>
@@ -1693,8 +1693,8 @@ Trie树也有它的缺点,Trie树的内存消耗非常大。&lt;/p&gt;
 &lt;/ul&gt;
 </description>
 				<pubDate>Sat, 16 May 2020 00:00:00 +0800</pubDate>
-				<link>/trie/2020/05/16/trie-node.html</link>
-				<guid isPermaLink="true">/trie/2020/05/16/trie-node.html</guid>
+				<link>/data%20structure/2020/05/16/trie-node.html</link>
+				<guid isPermaLink="true">/data%20structure/2020/05/16/trie-node.html</guid>
 			</item>
 		
 			<item>
@@ -1961,8 +1961,8 @@ Trie树也有它的缺点,Trie树的内存消耗非常大。&lt;/p&gt;
 &lt;/ul&gt;
 </description>
 				<pubDate>Sat, 16 May 2020 00:00:00 +0800</pubDate>
-				<link>/hashtable/2020/05/16/hashtable.html</link>
-				<guid isPermaLink="true">/hashtable/2020/05/16/hashtable.html</guid>
+				<link>/data%20structure/2020/05/16/hashtable.html</link>
+				<guid isPermaLink="true">/data%20structure/2020/05/16/hashtable.html</guid>
 			</item>
 		
 			<item>
@@ -3003,8 +3003,8 @@ localhost.irdmi(定为服务端)&lt;/p&gt;
 &lt;/ul&gt;
 </description>
 				<pubDate>Tue, 25 Feb 2020 00:00:00 +0800</pubDate>
-				<link>/tcpdump/2020/02/25/learn-tcp-ip-protocol.html</link>
-				<guid isPermaLink="true">/tcpdump/2020/02/25/learn-tcp-ip-protocol.html</guid>
+				<link>/protocol/2020/02/25/learn-tcp-ip-protocol.html</link>
+				<guid isPermaLink="true">/protocol/2020/02/25/learn-tcp-ip-protocol.html</guid>
 			</item>
 		
 			<item>
@@ -3374,8 +3374,8 @@ Average:         0.13      0.57
 
 </description>
 				<pubDate>Mon, 24 Feb 2020 00:00:00 +0800</pubDate>
-				<link>/linux/load/2020/02/24/high-machine-load.html</link>
-				<guid isPermaLink="true">/linux/load/2020/02/24/high-machine-load.html</guid>
+				<link>/linux/2020/02/24/high-machine-load.html</link>
+				<guid isPermaLink="true">/linux/2020/02/24/high-machine-load.html</guid>
 			</item>
 		
 	</channel>

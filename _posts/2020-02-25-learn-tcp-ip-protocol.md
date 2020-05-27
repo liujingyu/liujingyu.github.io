@@ -1,7 +1,7 @@
 ---
 layout: post
 title: 学习TCP/IP 协议
-categories: [tcpdump]
+categories: [protocol]
 tags: [linux, tcpdump, tcp, ip]
 fullview: true
 markdown: kramdown
