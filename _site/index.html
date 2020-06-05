@@ -216,7 +216,7 @@
 
 <p>状态表示 <code class="highlighter-rouge">f(n)</code></p>
 
-<p>状态转移 <code class="highlighter-rouge">f(n) = f(n-1) + f(n-2) + f(n-5) + f(n-10)</code></p>
+<p>状态转移方程 <code class="highlighter-rouge">f(n) = f(n-1) + f(n-2) + f(n-5) + f(n-10)</code></p>
 
 <p>转化成代码:</p>
 
@@ -249,7 +249,90 @@
 
 </code></pre></div></div>
 
-<p>未完待续)</p>
+<h3 id="最大连续子数组和"><code class="highlighter-rouge">最大连续子数组和</code></h3>
+
+<p>输入一个整形数组，数组里有正数也有负数。数组中连续的一个或多个整数组成一个子数组，每个子数组都有一个和。 求所有子数组的和的最大值，要求时间复杂度为O(n)。</p>
+
+<p>例如输入的数组为<code class="highlighter-rouge">1, -2, 3, 10, -4, 7, 2, -5，</code>和最大的子数组为<code class="highlighter-rouge">3, 10, -4, 7, 2，</code> 因此输出为该子数组的和18。</p>
+
+<p>推到过程：</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>g(1) = g(0) + 1
+f(1) = max(g(1), f(0)) = 1
+
+g(2) = max(g(1) + (-2), 0) = 0
+f(2) = max(g(2), f(1)) = 1
+
+g(3) = max(g(2) + 3, 0) = 3
+f(3) = max(g(3), f(2)) = 3
+
+g(4) = max(g(3) + 10, 0) = 13
+f(4) = max(g(4), f(3)) = 13
+
+g(5) = max(g(4) + (-4), 0) = 9
+f(5) = max(g(5), f(4)) = 13
+
+g(6) = max(g(5) + 7, 0) = 16
+f(6) = max(g(6), f(5)) = 16
+
+g(7) = max(g(6) + 2, 0) = 18
+f(7) = max(g(7), f(6)) = 18
+
+g(8) = max(g(7) + (-5), 0) = 13
+f(8) = max(g(8), f(7)) = 18
+
+...
+
+g(n) = max(g(n-1) + arr[n], 0)
+f(n) = max(g(n), f(n-1))
+</code></pre></div></div>
+
+<p>边界：</p>
+
+<p><code class="highlighter-rouge">n &gt; 0</code></p>
+
+<p>初始值定义:</p>
+
+<p><code class="highlighter-rouge">g(0) = 0; f(0) = -0xFFFFFFFF;</code></p>
+
+<p>状态表示
+g(n) 表示累积到当前的和，和小于0，从下一个数字重新计算
+f(n) 表示当前和最大值</p>
+
+<p>状态转移方程
+g(n) = max(g(n-1) + arr[n], 0)
+f(n) = max(g(n), f(n-1))</p>
+
+<p>代码如下:</p>
+
+<div class="language-php highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?php</span>
+
+<span class="k">function</span> <span class="nf">maxSum</span><span class="p">(</span><span class="nv">$arr</span><span class="p">)</span>
+<span class="p">{</span>
+    <span class="nv">$g</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span>
+    <span class="nv">$f</span> <span class="o">=</span> <span class="o">-</span><span class="mh">0xFFFFFFFF</span><span class="p">;</span>
+    <span class="nv">$l</span> <span class="o">=</span> <span class="nb">count</span><span class="p">(</span><span class="nv">$arr</span><span class="p">);</span>
+
+    <span class="k">for</span> <span class="p">(</span><span class="nv">$i</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="nv">$i</span> <span class="o">&lt;</span> <span class="nv">$l</span><span class="p">;</span> <span class="nv">$i</span><span class="o">++</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$g</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$g</span> <span class="o">=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span><span class="p">];</span>
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="nv">$g</span> <span class="o">+=</span> <span class="nv">$arr</span><span class="p">[</span><span class="nv">$i</span><span class="p">];</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="p">(</span><span class="nv">$f</span> <span class="o">&lt;</span> <span class="nv">$g</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nv">$f</span> <span class="o">=</span> <span class="nv">$g</span><span class="p">;</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="nv">$f</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">echo</span> <span class="nx">maxSum</span><span class="p">([</span>
+    <span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span>
+<span class="p">]);</span>
+
+</code></pre></div></div>
 
 <h2 id="参考">参考</h2>
 
