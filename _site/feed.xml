@@ -7,6 +7,106 @@
 		<atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>动态规划学习笔记</title>
+				<description>&lt;h2 id=&quot;介绍&quot;&gt;介绍&lt;/h2&gt;
+
+&lt;p&gt;动态规划(dynamic programming)是运筹学的一个分支，是求解决策过程(decision process)最优化的数学方法。 [1]  20世纪50年代初美国数学家R.E.Bellman等人在研究多阶段决策过程(multistep decision process)的优化问题时，提出了著名的最优化原理(principle of optimality)，把多阶段过程转化为一系列单阶段问题，利用各阶段之间的关系，逐个求解，创立了解决这类过程优化问题的新方法——动态规划。1957年出版了他的名著《Dynamic Programming》，这是该领域的第一本著作。&lt;/p&gt;
+
+&lt;h2 id=&quot;分类&quot;&gt;分类&lt;/h2&gt;
+
+&lt;p&gt;动态规划一般可分为线性动规，区域动规，树形动规，背包动规四类。&lt;/p&gt;
+
+&lt;p&gt;举例：&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;线性动规：拦截导弹，合唱队形，挖地雷，建学校，剑客决斗等；&lt;/li&gt;
+  &lt;li&gt;区域动规：石子合并， 加分二叉树，统计单词个数，炮兵布阵等；&lt;/li&gt;
+  &lt;li&gt;树形动规：贪吃的九头龙，二分查找树，聚会的欢乐，数字三角形等；&lt;/li&gt;
+  &lt;li&gt;背包问题：01背包问题，完全背包问题，分组背包问题，二维背包，装箱问题，挤牛奶（同济ACM第1132题）等；&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;概念的意义&quot;&gt;概念的意义&lt;/h2&gt;
+
+&lt;p&gt;动态规划问世以来，在经济管理、生产调度、工程技术和最优控制等方面得到了广泛的应用。例如最短路线、库存管理、资源分配、设备更新、排序、装载等问题，用动态规划方法比用其它方法求解更为方便。&lt;/p&gt;
+
+&lt;h2 id=&quot;思想与性质&quot;&gt;思想与性质&lt;/h2&gt;
+
+&lt;p&gt;动态规划最重要的是掌握他的思想，动态规划的核心思想是把原问题分解成子问题进行求解，也就是分治的思想。&lt;/p&gt;
+
+&lt;h2 id=&quot;实现套路&quot;&gt;实现套路&lt;/h2&gt;
+
+&lt;p&gt;我们实现动态规划算法，常用的是2个实现套路，一个是自底向上，另外一个是自顶向下。无论是何种方式，我们都要明确动态规划的过程，把状态表示、状态转移、边界都考虑好。&lt;/p&gt;
+
+&lt;h2 id=&quot;问题&quot;&gt;问题&lt;/h2&gt;
+
+&lt;h3 id=&quot;换硬币问题&quot;&gt;换硬币问题&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;想兑换100元钱，有1,2,5,10四种钱，问总共有多少兑换方法。 &lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;解:
+推到过程,也可以用于写完代码将其当成测试用例。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;f(0) = 1 设置一个初始值&lt;/li&gt;
+  &lt;li&gt;f(1) = f(0)&lt;/li&gt;
+  &lt;li&gt;f(2) = f(1) + f(0)&lt;/li&gt;
+  &lt;li&gt;f(3) = f(2) + f(1)&lt;/li&gt;
+  &lt;li&gt;……&lt;/li&gt;
+  &lt;li&gt;f(n) = f(n-1) + f(n-2) + f(n-5) + f(n-10)&lt;/li&gt;
+  &lt;li&gt;f(n)，n &amp;gt;= 0&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;边界 &lt;code class=&quot;highlighter-rouge&quot;&gt;n &amp;gt;= 0&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;状态表示 &lt;code class=&quot;highlighter-rouge&quot;&gt;f(n)&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;状态转移 &lt;code class=&quot;highlighter-rouge&quot;&gt;f(n) = f(n-1) + f(n-2) + f(n-5) + f(n-10)&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;转化成代码:&lt;/p&gt;
+
+&lt;div class=&quot;language-php highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;&amp;lt;?php&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;function&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;coin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$inputValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$coins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$middle&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[];&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$len&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$coins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$middle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$inputValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$len&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;++&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;empty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$middle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;nv&quot;&gt;$middle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$n&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$coins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;nv&quot;&gt;$middle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+=&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$middle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$n&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$coins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]];&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$middle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$inputValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;nv&quot;&gt;$coins&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;];&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$inputValue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;6&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;coin&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$inputValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$coins&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;);&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;未完待续)&lt;/p&gt;
+
+&lt;h2 id=&quot;参考&quot;&gt;参考&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;https://baike.baidu.com/item/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/529408?fr=aladdin&lt;/li&gt;
+  &lt;li&gt;https://baijiahao.baidu.com/s?id=1631319141857419948&amp;amp;wfr=spider&amp;amp;for=pc&lt;/li&gt;
+  &lt;li&gt;https://github.com/julycoding/The-Art-Of-Programming-By-July/blob/master/ebook/zh/02.05.md&lt;/li&gt;
+&lt;/ul&gt;
+</description>
+				<pubDate>Fri, 05 Jun 2020 00:00:00 +0800</pubDate>
+				<link>/data%20structure/2020/06/05/dp.html</link>
+				<guid isPermaLink="true">/data%20structure/2020/06/05/dp.html</guid>
+			</item>
+		
+			<item>
 				<title>携程酒店SDK封装</title>
 				<description>&lt;p&gt;最近做的分销业务，携程只提供了HTTP API，没有提供php sdk。这方面，淘宝做的不错（飞猪）直接点击下载sdk。&lt;/p&gt;
 
@@ -3126,256 +3226,6 @@ curl_setopt($curl, CURLOPT_TIMEOUT, 120);
 				<pubDate>Mon, 24 Feb 2020 00:00:00 +0800</pubDate>
 				<link>/php/2020/02/24/supervisor-script-suspended-animation.html</link>
 				<guid isPermaLink="true">/php/2020/02/24/supervisor-script-suspended-animation.html</guid>
-			</item>
-		
-			<item>
-				<title>机器高负载排查</title>
-				<description>&lt;h3 id=&quot;可以查询机器负载的命令&quot;&gt;可以查询机器负载的命令&lt;/h3&gt;
-
-&lt;p&gt;三个命令：&lt;code class=&quot;highlighter-rouge&quot;&gt;w&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;uptime&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;top&lt;/code&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[www@cloud-test-env79 ~]$ w
- 16:36:59 up  2:23,  1 user,  load average: 19.02, 18.69, 18.31
- USER     TTY      FROM             LOGIN@   IDLE   JCPU   PCPU WHAT
- www      pts/1    10.3.2.67        16:36    2.00s  0.00s  0.00s w
-
-
-[www@cloud-test-env79 ~]$ uptime
- 16:40:56 up  2:27,  1 user,  load average: 18.40, 18.24, 18.20
-
-
-top - 16:41:09 up  2:27,  1 user,  load average: 18.25, 18.21, 18.19
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;什么是机器负载load-平均负载-load-average&quot;&gt;什么是机器负载Load? 平均负载 Load Average&lt;/h3&gt;
-
-&lt;p&gt;Load 就是对计算机干活多少的度量（WikiPedia：the system Load is a measure of the amount of work that a compute system is doing）简单的说是进程队列的长度。Load Average 就是一段时间（1分钟、5分钟、15分钟）内平均Load&lt;/p&gt;
-
-&lt;h3 id=&quot;如何判断over-load&quot;&gt;如何判断Over Load&lt;/h3&gt;
-
-&lt;p&gt;一般来说，根据CPU数量判断，如果平均负载始终再&lt;code class=&quot;highlighter-rouge&quot;&gt;1.2&lt;/code&gt;以下，机器是&lt;code class=&quot;highlighter-rouge&quot;&gt;2&lt;/code&gt;颗 &lt;code class=&quot;highlighter-rouge&quot;&gt;CPU&lt;/code&gt;。那么基本不会出现CPU不够用的情况。
-也就是Load平均要小于CPU的数量，一般会根据15分钟那个load的平均值。&lt;/p&gt;
-
-&lt;p&gt;一般而言，服务器的合理负载是&lt;code class=&quot;highlighter-rouge&quot;&gt;CPU核数*2&lt;/code&gt;。也就是说对于8核的CPU，负载在16以内表明机器运行很稳定流畅。如果负载超过16了，就说明服务器的运行有一定的压力了。&lt;/p&gt;
-
-&lt;h3 id=&quot;我们如何排查机器高负载&quot;&gt;我们如何排查机器高负载&lt;/h3&gt;
-
-&lt;h4 id=&quot;vmstat是virtual-meomory-statistics虚拟内存统计的缩写可实时动态监视操作系统的虚拟内存进程cpu活动&quot;&gt;vmstat是Virtual Meomory Statistics（虚拟内存统计）的缩写，可实时动态监视操作系统的虚拟内存、进程、CPU活动。&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;procs -----------memory---------- ---swap-- -----io---- -system-- ------cpu-----
- r  b   swpd   free   buff  cache   si   so    bi    bo   in   cs us sy id wa st
- 18  0  16640 221116      0 1426276    0    1   133   195 2053  591 78 14  7  0  0
- 23  0  16640 245128      0 1426836    0    0     0    66 4208 1059 86 14  0  0  0
- 19  0  16640 227160      0 1427340    0    0     0    37 4144 1040 85 15  0  0  0
- 16  0  16640 259528      0 1428076    0    0     0   329 4090 1001 85 15  0  0  0
- 13  0  16640 261376      0 1428476    0    0     0     0 4087 1042 84 16  0  0  0
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;字段说明&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Procs（进程）:
-    r: 运行队列中进程数量 (如果长期大于1，说明cpu不足，需要增加cpu。)
-    b: 等待IO的进程数量 (比如正在等待I/O、或者内存交换等。)
-    Memory（内存）:
-    swpd: 使用虚拟内存大小
-    free: 可用内存大小
-    buff: 用作缓冲的内存大小
-    cache: 用作缓存的内存大小
-Swap:
-    si: 每秒从交换区写到内存的大小
-    so: 每秒写入交换区的内存大小
-IO：（现在的Linux版本块的大小为1024bytes）
-    bi: 每秒读取的块数
-    bo: 每秒写入的块数
-system：
-    in: 每秒中断数，包括时钟中断
-    cs: 每秒上下文切换数
-CPU（以百分比表示）
-    us: 用户进程执行时间(user time)
-    sy: 系统进程执行时间(system time)
-    id: 空闲时间(包括IO等待时间)
-    wa: 等待IO时间
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;iostat-查看io负载&quot;&gt;iostat 查看IO负载&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[www@cloud-test-env79 ~]$ iostat 1 1
-Linux 3.10.0-957.21.3.el7.x86_64 (cloud-test-env79)     02/24/2020      _x86_64_        (2 CPU)
-
-avg-cpu:  %user   %nice %system %iowait  %steal   %idle
-          79.06    0.00   14.45    0.04    0.00    6.46
-
-Device:            tps    kB_read/s    kB_wrtn/s    kB_read    kB_wrtn
-sda               1.29        24.13         4.30     255262      45469
-sdb              22.42       216.43       362.11    2289445    3830471
-dm-0              0.87        21.18         1.65     224015      17504
-dm-1              0.74         0.58         2.45       6156      25904
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;avg-cpu: 总体cpu使用情况统计信息，对于多核cpu，这里为所有cpu的平均值&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;%user: 在用户级别运行所使用的CPU的百分比.&lt;/li&gt;
-  &lt;li&gt;%nice: nice操作所使用的CPU的百分比.&lt;/li&gt;
-  &lt;li&gt;%sys: 在系统级别(kernel)运行所使用CPU的百分比.&lt;/li&gt;
-  &lt;li&gt;%iowait: CPU等待硬件I/O时,所占用CPU百分比.&lt;/li&gt;
-  &lt;li&gt;%idle: CPU空闲时间的百分比.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Device段:各磁盘设备的IO统计信息&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;tps: 每秒钟发送到的I/O请求数.&lt;/li&gt;
-  &lt;li&gt;Blk_read /s: 每秒读取的block数.&lt;/li&gt;
-  &lt;li&gt;Blk_wrtn/s: 每秒写入的block数.&lt;/li&gt;
-  &lt;li&gt;Blk_read: 读入的block总数.&lt;/li&gt;
-  &lt;li&gt;Blk_wrtn: 写入的block总数.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;sar-找出系统瓶颈的利器&quot;&gt;sar 找出系统瓶颈的利器&lt;/h4&gt;
-
-&lt;p&gt;查看CPU使用率 &lt;code class=&quot;highlighter-rouge&quot;&gt;sar -u&lt;/code&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-02:13:57 PM       LINUX RESTART
-
-02:20:01 PM     CPU     %user     %nice   %system   %iowait    %steal     %idle
-02:30:01 PM     all     38.17      0.00      6.64      0.02      0.00     55.17
-02:40:02 PM     all     84.96      0.00     15.01      0.00      0.00      0.03
-02:50:01 PM     all     84.93      0.00     15.03      0.00      0.00      0.04
-03:00:01 PM     all     84.69      0.00     15.27      0.00      0.00      0.04
-03:10:01 PM     all     84.62      0.00     15.35      0.00      0.00      0.04
-03:20:01 PM     all     83.92      0.00     16.05      0.00      0.00      0.03
-03:30:01 PM     all     84.98      0.00     14.98      0.00      0.00      0.04
-03:40:02 PM     all     84.88      0.00     15.07      0.00      0.00      0.05
-03:50:01 PM     all     84.63      0.00     15.34      0.00      0.00      0.03
-04:00:02 PM     all     84.86      0.00     15.09      0.00      0.00      0.04
-04:10:02 PM     all     84.56      0.00     15.41      0.00      0.00      0.04
-04:20:01 PM     all     83.73      0.00     16.24      0.00      0.00      0.03
-04:30:02 PM     all     83.97      0.00     15.99      0.00      0.00      0.04
-04:40:01 PM     all     83.84      0.00     16.13      0.00      0.00      0.03
-04:50:02 PM     all     84.77      0.00     15.22      0.00      0.00      0.01
-Average:        all     81.44      0.00     14.86      0.00      0.00      3.71
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;可以看到这台机器使用了虚拟化技术，有相应的时间消耗； 各列的指标分别是:&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;%user 用户模式下消耗的CPU时间的比例；&lt;/li&gt;
-  &lt;li&gt;%nice 通过nice改变了进程调度优先级的进程，在用户模式下消耗的CPU时间的比例&lt;/li&gt;
-  &lt;li&gt;%system 系统模式下消耗的CPU时间的比例；&lt;/li&gt;
-  &lt;li&gt;%iowait CPU等待磁盘I/O导致空闲状态消耗的时间比例；&lt;/li&gt;
-  &lt;li&gt;%steal 利用Xen等操作系统虚拟化技术，等待其它虚拟CPU计算占用的时间比例；&lt;/li&gt;
-  &lt;li&gt;%idle CPU空闲时间比例；&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;查看平均负载(sar -q)&lt;/p&gt;
-
-&lt;p&gt;指定-q后，就能查看运行队列中的进程数、系统上的进程大小、平均负载等；与其它命令相比，它能查看各项指标随时间变化的情况；&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;runq-sz：运行队列的长度（等待运行的进程数）&lt;/li&gt;
-  &lt;li&gt;plist-sz：进程列表中进程（processes）和线程（threads）的数量&lt;/li&gt;
-  &lt;li&gt;ldavg-1：最后1分钟的系统平均负载 ldavg-5：过去5分钟的系统平均负载&lt;/li&gt;
-  &lt;li&gt;ldavg-15：过去15分钟的系统平均负载&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;02:13:57 PM       LINUX RESTART
-
-02:20:01 PM   runq-sz  plist-sz   ldavg-1   ldavg-5  ldavg-15   blocked
-02:30:01 PM        23       215     18.70     10.79      4.67         0
-02:40:02 PM        15       204     18.32     17.53     11.33         0
-02:50:01 PM        17       202     17.31     17.35     14.18         0
-03:00:01 PM         5       202     17.28     17.45     15.75         0
-03:10:01 PM        15       201     16.86     17.47     16.60         0
-03:20:01 PM        18       201     17.40     17.73     17.32         0
-03:30:01 PM        17       202     17.98     17.60     17.43         0
-03:40:02 PM        18       199     16.85     17.40     17.45         0
-03:50:01 PM        19       205     18.94     18.30     17.80         0
-04:00:02 PM        18       204     17.58     17.65     17.68         0
-04:10:02 PM        19       208     18.68     18.29     18.00         1
-04:20:01 PM        19       200     17.22     18.03     18.09         0
-04:30:02 PM        21       211     18.28     17.87     17.96         0
-04:40:01 PM        16       205     17.54     18.13     18.17         0
-04:50:02 PM        17       202     17.72     17.79     18.01         0
-Average:           17       204     17.78     17.29     16.03         0
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;查看内存使用状况(sar -r)&lt;/p&gt;
-
-&lt;p&gt;字段注解：&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;kbmemfree：这个值和free命令中的free值基本一致,所以它不包括buffer和cache的空间.&lt;/li&gt;
-  &lt;li&gt;kbmemused：这个值和free命令中的used值基本一致,所以它包括buffer和cache的空间.&lt;/li&gt;
-  &lt;li&gt;%memused：物理内存使用率，这个值是kbmemused和内存总量(不包括swap)的一个百分比.&lt;/li&gt;
-  &lt;li&gt;kbbuffers和kbcached：这两个值就是free命令中的buffer和cache.&lt;/li&gt;
-  &lt;li&gt;kbcommit：保证当前系统所需要的内存,即为了确保不溢出而需要的内存(RAM+swap).&lt;/li&gt;
-  &lt;li&gt;%commit：这个值是kbcommit与内存总量(包括swap)的一个百分比.&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;02:13:57 PM       LINUX RESTART
-
-02:20:01 PM kbmemfree kbmemused  %memused kbbuffers  kbcached  kbcommit   %commit  kbactive   kbinact   kbdirty
-02:30:01 PM    449916   3430448     88.41       948    925236   3204692     53.61   1564160    727752     74388
-02:40:02 PM    250496   3629868     93.54        76    642292   3434756     57.46   1918776    577624      2896
-02:50:01 PM    217472   3662892     94.40        76    646180   3468536     58.03   1874572    655268      1220
-03:00:01 PM    200560   3679804     94.83        76    645484   3483892     58.28   1869832    677108      1400
-03:10:01 PM    232804   3647560     94.00        36    687240   3407608     57.01   1824896    690028      1812
-03:20:01 PM    237268   3643096     93.89         0    658572   3502412     58.59   1764740    801092      2316
-03:30:01 PM    285796   3594568     92.63         0    674780   3493840     58.45   1752620    832220      2832
-03:40:02 PM    297988   3582376     92.32         0    744884   3409472     57.04   1748868    820916      1592
-03:50:01 PM    193656   3686708     95.01         0    929264   3597268     60.18   1823876   1070348      3652
-04:00:02 PM    168556   3711808     95.66         0    944632   3562620     59.60   1847804   1070788       856
-04:10:02 PM    170684   3709680     95.60         0    964628   3529120     59.04   1829056   1059360      2620
-04:20:01 PM    251432   3628932     93.52         0    911876   3475648     58.15   1772392   1034332      2792
-04:30:02 PM    276664   3603700     92.87         0    929752   3433156     57.43   1746496   1030228      3652
-04:40:01 PM    353412   3526952     90.89         0    848160   3414616     57.12   1687536    993700       944
-04:50:02 PM    244372   3635992     93.70         0    914408   3458112     57.85   1802704    986708       620
-Average:       255405   3624959     93.42        81    804493   3458383     57.86   1788555    868498      6906
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;查看页面交换发生状况(sar -W)&lt;/p&gt;
-
-&lt;p&gt;页面发生交换时，服务器的吞吐量会大幅下降；服务器状况不良时，如果怀疑因为内存不足而导致了页面交换的发生，可以使用这个命令来确认是否发生了大量的交换；&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;pswpin/s：每秒系统换入的交换页面（swap page）数量&lt;/li&gt;
-  &lt;li&gt;pswpout/s：每秒系统换出的交换页面（swap page）数量&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;02:13:57 PM       LINUX RESTART
-
-02:20:01 PM  pswpin/s pswpout/s
-02:30:01 PM      0.00      0.00
-02:40:02 PM      0.00      0.03
-02:50:01 PM      0.04      0.65
-03:00:01 PM      0.08      0.83
-03:10:01 PM      0.09      0.20
-03:20:01 PM      0.25      0.45
-03:30:01 PM      0.12      0.39
-03:40:02 PM      0.07      0.00
-03:50:01 PM      0.24      0.84
-04:00:02 PM      0.04      0.30
-04:10:02 PM      0.16      0.74
-04:20:01 PM      0.31      1.20
-04:30:02 PM      0.08      0.84
-04:40:01 PM      0.33      2.06
-04:50:02 PM      0.07      0.00
-Average:         0.13      0.57
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;要判断系统瓶颈问题，有时需几个 sar 命令选项结合起来；&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;怀疑CPU存在瓶颈，可用 sar -u 和 sar -q 等来查看&lt;/li&gt;
-  &lt;li&gt;怀疑内存存在瓶颈，可用sar -B、sar -r 和 sar -W 等来查看&lt;/li&gt;
-  &lt;li&gt;怀疑I/O存在瓶颈，可用 sar -b、sar -u 和 sar -d 等来查看&lt;/li&gt;
-&lt;/ul&gt;
-
-</description>
-				<pubDate>Mon, 24 Feb 2020 00:00:00 +0800</pubDate>
-				<link>/linux/2020/02/24/high-machine-load.html</link>
-				<guid isPermaLink="true">/linux/2020/02/24/high-machine-load.html</guid>
 			</item>
 		
 	</channel>
