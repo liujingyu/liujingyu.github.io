@@ -1870,9 +1870,22 @@ Trie树也有它的缺点,Trie树的内存消耗非常大。&lt;/p&gt;
   &lt;li&gt;最长公共前缀&lt;/li&gt;
 &lt;/ul&gt;
 
+&lt;h2 id=&quot;问题实例&quot;&gt;问题实例&lt;/h2&gt;
+
+&lt;p&gt;1、一个文本文件，大约有一万行，每行一个词，要求统计出其中最频繁出现的前10个词，请给出思想，给出时间复杂度分析&lt;/p&gt;
+
+&lt;p&gt;提示：用trie树统计每个词出现的次数，时间复杂度是O(n&lt;em&gt;le)（le表示单词的平均长度），然后是找出出现最频繁的前10个词。当然，也可以用堆来实现，时间复杂度是O(n&lt;/em&gt;lg10)。所以总的时间复杂度，是O(n&lt;em&gt;le)与O(n&lt;/em&gt;lg10)中较大的哪一个。&lt;/p&gt;
+
+&lt;p&gt;2、寻找热门查询&lt;/p&gt;
+
+&lt;p&gt;原题：搜索引擎会通过日志文件把用户每次检索使用的所有检索串都记录下来，每个查询串的长度为1-255字节。假设目前有一千万个记录，这些查询串的重复读比较高，虽然总数是1千万，但是如果去除重复和，不超过3百万个。一个查询串的重复度越高，说明查询它的用户越多，也就越热门。请你统计最热门的10个查询串，要求使用的内存不能超过1G。&lt;/p&gt;
+
+&lt;p&gt;提示：利用trie树，关键字域存该查询串出现的次数，没有出现为0。最后用10个元素的最小推来对出现频率进行排序。&lt;/p&gt;
+
 &lt;h2 id=&quot;参考&quot;&gt;参考&lt;/h2&gt;
 &lt;ul&gt;
   &lt;li&gt;https://blog.csdn.net/hguisu/article/details/8131559&lt;/li&gt;
+  &lt;li&gt;https://github.com/julycoding/The-Art-Of-Programming-By-July/blob/master/ebook/zh/06.09.md&lt;/li&gt;
 &lt;/ul&gt;
 </description>
 				<pubDate>Sat, 16 May 2020 00:00:00 +0800</pubDate>
