@@ -159,7 +159,7 @@
 	   2020
 	 </span>
 	  <div class="article_body">
-	  <p>问题描述：</p>
+	  <h2 id="问题描述">问题描述</h2>
 
 <p>请设计一个排队系统，能够让每个进入队伍的用户都能看到自己在队列中所处的位置和变化，队伍可能随时有人加入和退出；当有人退出影响到用户的位置排名时需要及时反馈到用户。</p>
 
@@ -167,19 +167,19 @@
 
 <p>我们先分析一下题干。就是我们平常去吃饭，前面排老长队，取一个号等着叫号类似。</p>
 
-<p>假设用户ID为数字：1，3，4，8， 10。
+<p>假设用户ID为数字：<code class="highlighter-rouge">1，3，4，8， 10。</code>
 模拟题干的排队行为。
 一开始排队系统为空。
 此时，第一个用户1进入，排队系统1
 第二个用户进入，排队系统1，3</p>
 
-<p>以此类推，1，3，4，8，10已进入排队系统。
+<p>以此类推，<code class="highlighter-rouge">1，3，4，8，10</code>已进入排队系统。
 我们需要知道排队系统的长度，也就是下一个加入用户的位置。
-需要通过用户ID查到该用户的位置，此时，我们很容易想到hashtable，用户ID当做key，位置当做值。</p>
+需要通过用户ID查到该用户的位置，此时，我们很容易想到<code class="highlighter-rouge">hashtable</code>，用户ID当做key，位置当做值。</p>
 
-<p>用户8退出，此时，查询用户8所在的位置，需要清空hashtable中用户8的记录，一次遍历用户8以后的节点，并更新对应的hashtable中位置信息，最后删除用户8节点。这个队列非常像我们平常使用的链表。</p>
+<p>用户8退出，此时，查询用户8所在的位置，需要清空<code class="highlighter-rouge">hashtable</code>中用户8的记录，一次遍历用户8以后的节点，并更新对应的<code class="highlighter-rouge">hashtable</code>中位置信息，最后删除用户8节点。这个队列非常像我们平常使用的链表。</p>
 
-<p>结论就是利用hashtable+linked list两个主要数据结构实现。</p>
+<p>结论就是利用<code class="highlighter-rouge">hashtable+linked list</code>两个主要数据结构实现。</p>
 
 <p>解决此类问题，与我们分析数学证明题的思路相似。</p>
 
