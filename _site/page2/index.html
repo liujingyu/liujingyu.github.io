@@ -161,6 +161,142 @@
   </span>
 
   <h2>
+    <a href="/php/2020/02/24/supervisor-script-suspended-animation.html">supervisor 运行的PHP脚本假死排查</a>
+  </h2>
+
+  <div>
+    
+    <p>supervisor status</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[ ~]$ sudo supervisorctl -c /etc/supervisord.conf status
+....bigdata-lodgeunit-state_01   RUNNING   pid 27801, uptime 47 days, 0:50:00
+....prepare_09                   RUNNING   pid 5159, uptime 20 days, 11:13:15
+</code></pre></div></div>
+
+<p>strace 命令查看一下系统调用情况</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[]$ strace -p 27801
+Process 27801 attached
+restart_syscall(&lt;... resuming interrupted call ...&gt;) = 0
+rt_sigaction(SIGPIPE, NULL, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7ffff4a56670}, 8) = 0
+rt_sigaction(SIGPIPE, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7ffff4a56670}, NULL, 8) = 0
+poll([{fd=19, events=POLLIN|POLLPRI|POLLRDNORM|POLLRDBAND}], 1, 0) = 0 (Timeout)
+rt_sigaction(SIGPIPE, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7ffff4a56670}, NULL, 8) = 0
+poll([{fd=19, events=POLLIN}], 1, 1000) = 0 (Timeout)
+rt_sigaction(SIGPIPE, NULL, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7ffff4a56670}, 8) = 0
+rt_sigaction(SIGPIPE, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7ffff4a56670}, NULL, 8) = 0
+poll([{fd=19, events=POLLIN|POLLPRI|POLLRDNORM|POLLRDBAND}], 1, 0) = 0 (Timeout)
+rt_sigaction(SIGPIPE, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7ffff4a56670}, NULL, 8) = 0
+poll([{fd=19, events=POLLIN}], 1, 1000) = 0 (Timeout)
+rt_sigaction(SIGPIPE, NULL, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7ffff4a56670}, 8) = 0
+rt_sigaction(SIGPIPE, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7ffff4a56670}, NULL, 8) = 0
+poll([{fd=19, events=POLLIN|POLLPRI|POLLRDNORM|POLLRDBAND}], 1, 0) = 0 (Timeout)
+rt_sigaction(SIGPIPE, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7ffff4a56670}, NULL, 8) = 0
+poll([{fd=19, events=POLLIN}], 1, 1000) = 0 (Timeout)
+rt_sigaction(SIGPIPE, NULL, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7ffff4a56670}, 8) = 0
+rt_sigaction(SIGPIPE, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7ffff4a56670}, NULL, 8) = 0
+poll([{fd=19, events=POLLIN|POLLPRI|POLLRDNORM|POLLRDBAND}], 1, 0) = 0 (Timeout)
+rt_sigaction(SIGPIPE, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7ffff4a56670}, NULL, 8) = 0
+poll([{fd=19, events=POLLIN}], 1, 1000^CProcess 27801 detached
+ &lt;detached ...&gt;
+ )
+</code></pre></div></div>
+
+<p>lsof 查看一下文件下运行的服务(socket)</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[]$ lsof -d 19 |grep 27801
+php     27801  www   19u     IPv4          430131931      0t0       TCP localhost:9411-&gt;localhost:9411 (ESTABLISHED)
+</code></pre></div></div>
+
+<p>gdb查看一下</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
+[]$ gdb -p 27801
+.....
+.....
+Loaded symbols for /lib64/libnss_dns.so.2
+0x00007ffff4b0cbb0 in __poll_nocancel () from /lib64/libc.so.6
+Missing separate debuginfos, use: debuginfo-install cyrus-sasl-lib-2.1.26-19.2.el7.x86_64 freetype-2.4.11-11.el7.x86_64 glibc-2.17-105.el7.x86_64 gmp-6.0.0-11.el7.x86_64 keyutils-libs-1.5.8-3.el7.x86_64 krb5-libs-1.13.2-10.el7.x86_64 libcom_err-1.42.9-7.el7.x86_64 libgcc-4.8.5-4.el7.x86_64 libjpeg-turbo-1.2.90-5.el7.x86_64 libpng-1.5.13-5.el7.x86_64 libselinux-2.2.2-6.el7.x86_64 libstdc++-4.8.5-4.el7.x86_64 libxml2-2.9.1-5.el7_1.2.x86_64 nspr-4.10.8-2.el7_1.x86_64 nss-3.19.1-18.el7.x86_64 nss-softokn-freebl-3.16.2.3-13.el7_1.x86_64 nss-util-3.19.1-4.el7_1.x86_64 openldap-2.4.40-8.el7.x86_64 openssl-libs-1.0.1e-42.el7.9.x86_64 pcre-8.32-15.el7.x86_64 xz-libs-5.1.2-12alpha.el7.x86_64 zlib-1.2.7-15.el7.x86_64
+(gdb) bt
+#0  0x00007ffff4b0cbb0 in __poll_nocancel () from /lib64/libc.so.6
+#1  0x00007ffff5db3d49 in Curl_poll () from /usr/local/xzsoft/curl/lib/libcurl.so.4
+#2  0x00007ffff5daf0c0 in curl_multi_wait () from /usr/local/xzsoft/curl/lib/libcurl.so.4
+#3  0x00007ffff5da942c in curl_easy_perform () from /usr/local/xzsoft/curl/lib/libcurl.so.4
+#4  0x0000000000585b49 in zif_curl_exec (execute_data=&lt;optimized out&gt;, return_value=0x7ffff2a14ed0) at /home/xzapps/zhaopeng/php-7.1.15/ext/curl/interface.c:3043
+#5  0x000000000083ea80 in ZEND_DO_FCALL_SPEC_RETVAL_USED_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:1099
+#6  0x00000000007edd9b in execute_ex (ex=&lt;optimized out&gt;) at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:429
+#7  0x000000000083ed95 in ZEND_DO_FCALL_SPEC_RETVAL_UNUSED_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:949
+#8  0x00000000007edd9b in execute_ex (ex=&lt;optimized out&gt;) at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:429
+#9  0x000000000083e915 in ZEND_DO_FCALL_SPEC_RETVAL_USED_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:1076
+#10 0x00000000007edd9b in execute_ex (ex=&lt;optimized out&gt;) at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:429
+#11 0x000000000083ed95 in ZEND_DO_FCALL_SPEC_RETVAL_UNUSED_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:949
+#12 0x00000000007edd9b in execute_ex (ex=&lt;optimized out&gt;) at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:429
+#13 0x000000000083ed95 in ZEND_DO_FCALL_SPEC_RETVAL_UNUSED_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:949
+#14 0x00000000007edd9b in execute_ex (ex=&lt;optimized out&gt;) at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:429
+#15 0x000000000083e915 in ZEND_DO_FCALL_SPEC_RETVAL_USED_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:1076
+#16 0x00000000007edd9b in execute_ex (ex=&lt;optimized out&gt;) at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:429
+#17 0x000000000083e915 in ZEND_DO_FCALL_SPEC_RETVAL_USED_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:1076
+#18 0x00000000007edd9b in execute_ex (ex=&lt;optimized out&gt;) at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:429
+#19 0x000000000083e915 in ZEND_DO_FCALL_SPEC_RETVAL_USED_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:1076
+#20 0x00000000007edd9b in execute_ex (ex=&lt;optimized out&gt;) at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:429
+#21 0x000000000083e915 in ZEND_DO_FCALL_SPEC_RETVAL_USED_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:1076
+#22 0x00000000007edd9b in execute_ex (ex=&lt;optimized out&gt;) at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:429
+#23 0x000000000083e915 in ZEND_DO_FCALL_SPEC_RETVAL_USED_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:1076
+#24 0x00000000007edd9b in execute_ex (ex=&lt;optimized out&gt;) at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:429
+#25 0x000000000083dccf in ZEND_CALL_TRAMPOLINE_SPEC_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:1991
+#26 0x00000000007edd9b in execute_ex (ex=&lt;optimized out&gt;) at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:429
+#27 0x000000000083e915 in ZEND_DO_FCALL_SPEC_RETVAL_USED_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:1076
+#28 0x00000000007edd9b in execute_ex (ex=&lt;optimized out&gt;) at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:429
+#29 0x000000000083e915 in ZEND_DO_FCALL_SPEC_RETVAL_USED_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:1076
+
+</code></pre></div></div>
+
+<p>代码搜索</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[]$ grep 'localhost:9411' -r .
+./vendor/xiaozhu/tracker/src/Tracker.php:            $host = getenv('ZIP_KIN_HOST') ?: 'localhost:9411';
+^C
+[]$
+
+</code></pre></div></div>
+
+<p>curl 超时缺少设置</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$host = getenv('ZIP_KIN_HOST') ?: 'localhost:9411';
+$ch   = curl_init("http://".$host."/api/v2/spans");
+$body = json_encode($spans);
+curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
+curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
+curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+$result = curl_exec($ch);
+curl_close($ch);
+</code></pre></div></div>
+
+<p>新增超时配置项</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>// 在尝试连接时等待的秒数
+curl_setopt($curl, CURLOPT_CONNECTTIMEOUT , 120);
+// 最大执行时间
+curl_setopt($curl, CURLOPT_TIMEOUT, 120);
+</code></pre></div></div>
+
+    
+  </div>
+
+</article>
+
+
+<article class="home">
+
+  <span class="post-date">
+    
+    February
+    24th,
+    
+    2020
+  </span>
+
+  <h2>
     <a href="/linux/2020/02/24/high-machine-load.html">机器高负载排查</a>
   </h2>
 
@@ -1182,56 +1318,6 @@ AAA-1( Barbara)、EAE-1( parent)、AII1(Dari)、EIO-1(Fe rio)、AEE-2( Camestres
 <p>3.定义既不能过宽又不能过窄。</p>
 
 <p>4.定义不能用岐义的、晦涩的或比喻的语言来表述.定义在可以用肯定的地方就不应当用否定定义。</p>
-
-    
-  </div>
-
-</article>
-
-
-<article class="home">
-
-  <span class="post-date">
-    
-    January
-    17th,
-    
-    2020
-  </span>
-
-  <h2>
-    <a href="/logical/2020/01/17/blunt-proposition.html">直言命题</a>
-  </h2>
-
-  <div>
-    
-    <p>本章介绍并讨论的是古典逻辑即亚里士多德型逻辑的基本构件,也是演绎逻辑的基本构件。</p>
-
-<p>传统逻辑正是以类为基础建立起来的。我们闻明了四种基本的标准式直言命题</p>
-
-<p>A命题:全称肯定命题</p>
-
-<p>E命题:全称否定命题</p>
-
-<p>Ⅰ命题:特称肯定命题</p>
-
-<p>O命题:特称否定命题</p>
-
-<p>探讨了命题的质,即肯定和否定,以及命题的量,即全称和特称。说明了周延的项与不周延的项</p>
-
-<p>这几种直言命题之间的对当关系的种类:</p>
-
-<p>命题之间的矛盾关系、反对关系、下反对关系以及上位式与下位式之间的差等关系。</p>
-
-<p>并用个对当方阵图示了这几种关系,进而说明了一些基于传统方阵的直接推理。</p>
-
-<p>其他三种直接推论:换位法、换质法和換质位法。</p>
-
-<p>探讨存在含义问题。要保留传统对当方阵,只有做出一种假定,即全盘假定命题主项所指称的类总是有元素的一一这是现代逻辑极不赞同的。然后,我们又对本书通篇采用的布尔解释作了说明。布尔解释能保留传统逻辑对当方阵中的大部分内容,同时又避免了非空类的假定。在布尔解释中,特称命题,即称为I和O的命题之中有存在含义,但全称命题,即A和E则没有存在含义。我们也很细致地说明了采用这种解释的结果。</p>
-
-<p>直言命题符号化与图示化的方法,包括使用文恩图,用交叉的圆加以恰当的标记或阴影来刻画类与类之间的关系。</p>
-
-<p>有了这些必要的工具,我们就可以考察一一在接下来的两章中一建基于标准式直言命题之上的三段论,以及传统演绎逻辑在日常语言中的其他主要用途。</p>
 
     
   </div>

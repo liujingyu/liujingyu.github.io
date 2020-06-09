@@ -7,6 +7,39 @@
 		<atom:link href="/feed.xml" rel="self" type="application/rss+xml" />
 		
 			<item>
+				<title>排队系统设计</title>
+				<description>&lt;p&gt;问题描述：&lt;/p&gt;
+
+&lt;p&gt;请设计一个排队系统，能够让每个进入队伍的用户都能看到自己在队列中所处的位置和变化，队伍可能随时有人加入和退出；当有人退出影响到用户的位置排名时需要及时反馈到用户。&lt;/p&gt;
+
+&lt;p&gt;这是一道系统设计题。&lt;/p&gt;
+
+&lt;p&gt;我们先分析一下题干。就是我们平常去吃饭，前面排老长队，取一个号等着叫号类似。&lt;/p&gt;
+
+&lt;p&gt;假设用户ID为数字：1，3，4，8， 10。
+模拟题干的排队行为。
+一开始排队系统为空。
+此时，第一个用户1进入，排队系统1
+第二个用户进入，排队系统1，3&lt;/p&gt;
+
+&lt;p&gt;以此类推，1，3，4，8，10已进入排队系统。
+我们需要知道排队系统的长度，也就是下一个加入用户的位置。
+需要通过用户ID查到该用户的位置，此时，我们很容易想到hashtable，用户ID当做key，位置当做值。&lt;/p&gt;
+
+&lt;p&gt;用户8退出，此时，查询用户8所在的位置，需要清空hashtable中用户8的记录，一次遍历用户8以后的节点，并更新对应的hashtable中位置信息，最后删除用户8节点。这个队列非常像我们平常使用的链表。&lt;/p&gt;
+
+&lt;p&gt;结论就是利用hashtable+linked list两个主要数据结构实现。&lt;/p&gt;
+
+&lt;p&gt;解决此类问题，与我们分析数学证明题的思路相似。&lt;/p&gt;
+
+&lt;p&gt;该问题的引申，比如我们去银行办理业务，一般分为普通用户和贵宾用户，普通用户排队时，一会来了一个贵宾用户，就插队了。&lt;/p&gt;
+</description>
+				<pubDate>Tue, 09 Jun 2020 00:00:00 +0800</pubDate>
+				<link>/system%20design/2020/06/09/Queuing-system.html</link>
+				<guid isPermaLink="true">/system%20design/2020/06/09/Queuing-system.html</guid>
+			</item>
+		
+			<item>
 				<title>动态规划学习笔记</title>
 				<description>&lt;h2 id=&quot;介绍&quot;&gt;介绍&lt;/h2&gt;
 
@@ -3274,127 +3307,6 @@ localhost.irdmi(定为服务端)&lt;/p&gt;
 				<pubDate>Tue, 25 Feb 2020 00:00:00 +0800</pubDate>
 				<link>/protocol/2020/02/25/learn-tcp-ip-protocol.html</link>
 				<guid isPermaLink="true">/protocol/2020/02/25/learn-tcp-ip-protocol.html</guid>
-			</item>
-		
-			<item>
-				<title>supervisor 运行的PHP脚本假死排查</title>
-				<description>&lt;p&gt;supervisor status&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[ ~]$ sudo supervisorctl -c /etc/supervisord.conf status
-....bigdata-lodgeunit-state_01   RUNNING   pid 27801, uptime 47 days, 0:50:00
-....prepare_09                   RUNNING   pid 5159, uptime 20 days, 11:13:15
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;strace 命令查看一下系统调用情况&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[]$ strace -p 27801
-Process 27801 attached
-restart_syscall(&amp;lt;... resuming interrupted call ...&amp;gt;) = 0
-rt_sigaction(SIGPIPE, NULL, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7ffff4a56670}, 8) = 0
-rt_sigaction(SIGPIPE, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7ffff4a56670}, NULL, 8) = 0
-poll([{fd=19, events=POLLIN|POLLPRI|POLLRDNORM|POLLRDBAND}], 1, 0) = 0 (Timeout)
-rt_sigaction(SIGPIPE, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7ffff4a56670}, NULL, 8) = 0
-poll([{fd=19, events=POLLIN}], 1, 1000) = 0 (Timeout)
-rt_sigaction(SIGPIPE, NULL, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7ffff4a56670}, 8) = 0
-rt_sigaction(SIGPIPE, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7ffff4a56670}, NULL, 8) = 0
-poll([{fd=19, events=POLLIN|POLLPRI|POLLRDNORM|POLLRDBAND}], 1, 0) = 0 (Timeout)
-rt_sigaction(SIGPIPE, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7ffff4a56670}, NULL, 8) = 0
-poll([{fd=19, events=POLLIN}], 1, 1000) = 0 (Timeout)
-rt_sigaction(SIGPIPE, NULL, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7ffff4a56670}, 8) = 0
-rt_sigaction(SIGPIPE, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7ffff4a56670}, NULL, 8) = 0
-poll([{fd=19, events=POLLIN|POLLPRI|POLLRDNORM|POLLRDBAND}], 1, 0) = 0 (Timeout)
-rt_sigaction(SIGPIPE, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7ffff4a56670}, NULL, 8) = 0
-poll([{fd=19, events=POLLIN}], 1, 1000) = 0 (Timeout)
-rt_sigaction(SIGPIPE, NULL, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7ffff4a56670}, 8) = 0
-rt_sigaction(SIGPIPE, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7ffff4a56670}, NULL, 8) = 0
-poll([{fd=19, events=POLLIN|POLLPRI|POLLRDNORM|POLLRDBAND}], 1, 0) = 0 (Timeout)
-rt_sigaction(SIGPIPE, {SIG_IGN, [PIPE], SA_RESTORER|SA_RESTART, 0x7ffff4a56670}, NULL, 8) = 0
-poll([{fd=19, events=POLLIN}], 1, 1000^CProcess 27801 detached
- &amp;lt;detached ...&amp;gt;
- )
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;lsof 查看一下文件下运行的服务(socket)&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[]$ lsof -d 19 |grep 27801
-php     27801  www   19u     IPv4          430131931      0t0       TCP localhost:9411-&amp;gt;localhost:9411 (ESTABLISHED)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;gdb查看一下&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;
-[]$ gdb -p 27801
-.....
-.....
-Loaded symbols for /lib64/libnss_dns.so.2
-0x00007ffff4b0cbb0 in __poll_nocancel () from /lib64/libc.so.6
-Missing separate debuginfos, use: debuginfo-install cyrus-sasl-lib-2.1.26-19.2.el7.x86_64 freetype-2.4.11-11.el7.x86_64 glibc-2.17-105.el7.x86_64 gmp-6.0.0-11.el7.x86_64 keyutils-libs-1.5.8-3.el7.x86_64 krb5-libs-1.13.2-10.el7.x86_64 libcom_err-1.42.9-7.el7.x86_64 libgcc-4.8.5-4.el7.x86_64 libjpeg-turbo-1.2.90-5.el7.x86_64 libpng-1.5.13-5.el7.x86_64 libselinux-2.2.2-6.el7.x86_64 libstdc++-4.8.5-4.el7.x86_64 libxml2-2.9.1-5.el7_1.2.x86_64 nspr-4.10.8-2.el7_1.x86_64 nss-3.19.1-18.el7.x86_64 nss-softokn-freebl-3.16.2.3-13.el7_1.x86_64 nss-util-3.19.1-4.el7_1.x86_64 openldap-2.4.40-8.el7.x86_64 openssl-libs-1.0.1e-42.el7.9.x86_64 pcre-8.32-15.el7.x86_64 xz-libs-5.1.2-12alpha.el7.x86_64 zlib-1.2.7-15.el7.x86_64
-(gdb) bt
-#0  0x00007ffff4b0cbb0 in __poll_nocancel () from /lib64/libc.so.6
-#1  0x00007ffff5db3d49 in Curl_poll () from /usr/local/xzsoft/curl/lib/libcurl.so.4
-#2  0x00007ffff5daf0c0 in curl_multi_wait () from /usr/local/xzsoft/curl/lib/libcurl.so.4
-#3  0x00007ffff5da942c in curl_easy_perform () from /usr/local/xzsoft/curl/lib/libcurl.so.4
-#4  0x0000000000585b49 in zif_curl_exec (execute_data=&amp;lt;optimized out&amp;gt;, return_value=0x7ffff2a14ed0) at /home/xzapps/zhaopeng/php-7.1.15/ext/curl/interface.c:3043
-#5  0x000000000083ea80 in ZEND_DO_FCALL_SPEC_RETVAL_USED_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:1099
-#6  0x00000000007edd9b in execute_ex (ex=&amp;lt;optimized out&amp;gt;) at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:429
-#7  0x000000000083ed95 in ZEND_DO_FCALL_SPEC_RETVAL_UNUSED_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:949
-#8  0x00000000007edd9b in execute_ex (ex=&amp;lt;optimized out&amp;gt;) at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:429
-#9  0x000000000083e915 in ZEND_DO_FCALL_SPEC_RETVAL_USED_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:1076
-#10 0x00000000007edd9b in execute_ex (ex=&amp;lt;optimized out&amp;gt;) at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:429
-#11 0x000000000083ed95 in ZEND_DO_FCALL_SPEC_RETVAL_UNUSED_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:949
-#12 0x00000000007edd9b in execute_ex (ex=&amp;lt;optimized out&amp;gt;) at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:429
-#13 0x000000000083ed95 in ZEND_DO_FCALL_SPEC_RETVAL_UNUSED_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:949
-#14 0x00000000007edd9b in execute_ex (ex=&amp;lt;optimized out&amp;gt;) at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:429
-#15 0x000000000083e915 in ZEND_DO_FCALL_SPEC_RETVAL_USED_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:1076
-#16 0x00000000007edd9b in execute_ex (ex=&amp;lt;optimized out&amp;gt;) at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:429
-#17 0x000000000083e915 in ZEND_DO_FCALL_SPEC_RETVAL_USED_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:1076
-#18 0x00000000007edd9b in execute_ex (ex=&amp;lt;optimized out&amp;gt;) at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:429
-#19 0x000000000083e915 in ZEND_DO_FCALL_SPEC_RETVAL_USED_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:1076
-#20 0x00000000007edd9b in execute_ex (ex=&amp;lt;optimized out&amp;gt;) at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:429
-#21 0x000000000083e915 in ZEND_DO_FCALL_SPEC_RETVAL_USED_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:1076
-#22 0x00000000007edd9b in execute_ex (ex=&amp;lt;optimized out&amp;gt;) at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:429
-#23 0x000000000083e915 in ZEND_DO_FCALL_SPEC_RETVAL_USED_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:1076
-#24 0x00000000007edd9b in execute_ex (ex=&amp;lt;optimized out&amp;gt;) at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:429
-#25 0x000000000083dccf in ZEND_CALL_TRAMPOLINE_SPEC_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:1991
-#26 0x00000000007edd9b in execute_ex (ex=&amp;lt;optimized out&amp;gt;) at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:429
-#27 0x000000000083e915 in ZEND_DO_FCALL_SPEC_RETVAL_USED_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:1076
-#28 0x00000000007edd9b in execute_ex (ex=&amp;lt;optimized out&amp;gt;) at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:429
-#29 0x000000000083e915 in ZEND_DO_FCALL_SPEC_RETVAL_USED_HANDLER () at /home/xzapps/zhaopeng/php-7.1.15/Zend/zend_vm_execute.h:1076
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;代码搜索&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[]$ grep 'localhost:9411' -r .
-./vendor/xiaozhu/tracker/src/Tracker.php:            $host = getenv('ZIP_KIN_HOST') ?: 'localhost:9411';
-^C
-[]$
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;curl 超时缺少设置&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$host = getenv('ZIP_KIN_HOST') ?: 'localhost:9411';
-$ch   = curl_init(&quot;http://&quot;.$host.&quot;/api/v2/spans&quot;);
-$body = json_encode($spans);
-curl_setopt($ch, CURLOPT_POSTFIELDS, $body);
-curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type:application/json']);
-curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-$result = curl_exec($ch);
-curl_close($ch);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;新增超时配置项&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;// 在尝试连接时等待的秒数
-curl_setopt($curl, CURLOPT_CONNECTTIMEOUT , 120);
-// 最大执行时间
-curl_setopt($curl, CURLOPT_TIMEOUT, 120);
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-</description>
-				<pubDate>Mon, 24 Feb 2020 00:00:00 +0800</pubDate>
-				<link>/php/2020/02/24/supervisor-script-suspended-animation.html</link>
-				<guid isPermaLink="true">/php/2020/02/24/supervisor-script-suspended-animation.html</guid>
 			</item>
 		
 	</channel>
