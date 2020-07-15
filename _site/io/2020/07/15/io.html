@@ -2,7 +2,7 @@
 <html>
 <head>
 	<meta charset="utf-8">
-	<title>排队系统设计</title>
+	<title>IO</title>
 	
 	<meta name="author" content="JY">
 
@@ -141,7 +141,7 @@
 
 	<div class="col-sm-9 col-sm-offset-3">
 		<div class="page-header">
-  <h1>排队系统设计 </h1>
+  <h1>IO </h1>
 </div>
 	
 <article>
@@ -149,37 +149,112 @@
 	<div class="col-sm-10">
 	 <span class="post-date">
 	   
-	   June 
-	   9th,
+	   July 
+	   15th,
 	   
 	   2020
 	 </span>
 	  <div class="article_body">
-	  <h2 id="问题描述">问题描述</h2>
+	  <h2 id="定义">定义</h2>
 
-<p>请设计一个排队系统，能够让每个进入队伍的用户都能看到自己在队列中所处的位置和变化，队伍可能随时有人加入和退出；当有人退出影响到用户的位置排名时需要及时反馈到用户。</p>
+<p>I/O（英语：Input/Output），即输入／输出，通常指数据在存储器（内部和外部）或其他周边设备之间的输入和输出，是信息处理系统（例如计算机）与外部世界（可能是人类或另一信息处理系统）之间的通信。输入是系统接收的信号或数据，输出则是从其发送的信号或数据。</p>
 
-<p>这是一道系统设计题。</p>
+<p>冯•诺伊曼计算机的基本思想中有提到计算机硬件组成应为五大部分：控制器，运算器，存储器，输入和输出。这里的输入和输出就指IO。</p>
 
-<p>我们先分析一下题干。就是我们平常去吃饭，前面排老长队，取一个号等着叫号类似。</p>
+<h2 id="输入设备">输入设备</h2>
+<ul>
+  <li>键盘</li>
+  <li>定点设备</li>
+  <li>指点杆</li>
+  <li>鼠标</li>
+  <li>触控板</li>
+  <li>轨迹球</li>
+  <li>扫描仪</li>
+  <li>麦克风</li>
+  <li>相机</li>
+</ul>
 
-<p>假设用户ID为数字：<code class="highlighter-rouge">1，3，4，8， 10。</code>
-模拟题干的排队行为。
-一开始排队系统为空。
-此时，第一个用户1进入，排队系统1
-第二个用户进入，排队系统1，3</p>
+<h2 id="输出设备">输出设备</h2>
+<ul>
+  <li>屏幕、投影机</li>
+  <li>打印机、</li>
+  <li>扬声器、耳机</li>
+  <li>闪光灯</li>
+</ul>
 
-<p>以此类推，<code class="highlighter-rouge">1，3，4，8，10</code>已进入排队系统。
-我们需要知道排队系统的长度，也就是下一个加入用户的位置。
-需要通过用户ID查到该用户的位置，此时，我们很容易想到<code class="highlighter-rouge">hashtable</code>，用户ID当做key，位置当做值。</p>
+<h2 id="双向设备">双向设备</h2>
 
-<p>用户8退出，此时，查询用户8所在的位置，需要清空<code class="highlighter-rouge">hashtable</code>中用户8的记录，一次遍历用户8以后的节点，并更新对应的<code class="highlighter-rouge">hashtable</code>中位置信息，最后删除用户8节点。这个队列非常像我们平常使用的链表。</p>
+<ul>
+  <li>存储设备，如RAM</li>
+  <li>一部分USB和火线设备</li>
+  <li>触摸屏</li>
+  <li>刻录机</li>
+  <li>ADSL</li>
+  <li>ATM</li>
+  <li>USB</li>
+</ul>
 
-<p>结论就是利用<code class="highlighter-rouge">hashtable+linked list</code>两个主要数据结构实现。</p>
+<h2 id="应用程序角度分析">应用程序角度分析</h2>
 
-<p>解决此类问题，与我们分析数学证明题的思路相似。</p>
+<p>换句话说应用程序发起的一次IO操作实际包含两个阶段：</p>
+<ol>
+  <li>IO调用阶段：应用程序进程向内核发起系统调用</li>
+  <li>
+    <p>IO执行阶段：内核执行IO操作并返回</p>
 
-<p>该问题的引申，比如我们去银行办理业务，一般分为普通用户和贵宾用户，普通用户排队时，一会来了一个贵宾用户，就插队了。</p>
+    <p>a. 准备数据阶段：内核等待I/O设备准备好数据</p>
+
+    <p>b. 拷贝数据阶段：将数据从内核缓冲区拷贝到用户空间缓冲区</p>
+  </li>
+</ol>
+
+<p><img src="/assets/media/cVOJvNOsAX-compress.jpg" alt="IO-1" /></p>
+
+<p>内核空间角度图示</p>
+
+<p><img src="/assets/media/JWgHKpW5xX-compress.jpg" alt="IO-2" /></p>
+
+<p>应用程序中进程在发起IO调用后至内核执行IO操作返回结果之前，若发起系统调用的线程一直处于等待状态，则此次IO操作为阻塞IO。阻塞IO简称BIO，Blocking IO。</p>
+
+<p>BIO带来了一个问题：如果内核数据需要耗时很久才能准备好，那么用户进程将被阻塞，浪费性能。</p>
+
+<p>那解决方案自然也容易想到，将阻塞变为非阻塞，那就是用户进程在发起系统调用时指定为非阻塞，内核接收到请求后，就会立即返回，然后用户进程通过轮询的方式来拉取处理结果。非阻塞IO简称NIO，Non-Blocking IO。
+<img src="/assets/media/RPXNofb2wC-compress.jpg" alt="IO-3" /></p>
+
+<p>NIO带来了一个问题：就是频繁轮询导致的无效系统调用。</p>
+
+<p>解决NIO的思路就是降解无效的系统调用。</p>
+
+<ul>
+  <li>IO多路复用之select/poll</li>
+</ul>
+
+<p>select是内核提供的系统调用，它支持一次查询多个系统调用的可用状态，当任意一个结果状态可用时就会返回，用户进程再发起一次系统调用进行数据读取。换句话说，就是NIO中N次的系统调用，借助select，只需要发起一次系统调用就够了。</p>
+
+<p><img src="/assets/media/suSYRFwAhA-compress.jpg" alt="IO-4" /></p>
+
+<p>select/poll 虽然解决了NIO重复无效系统调用用的问题，但同时又引入了新的问题。问题是：</p>
+<ol>
+  <li>用户空间和内核空间之间，大量的数据拷贝</li>
+  <li>内核循环遍历IO状态，浪费CPU时间。</li>
+</ol>
+
+<p>针对select/poll引入的问题，我们把解决问题的思路转回到内核上，如何减少内核重复无效的循环遍历呢？变主动为被动，基于事件驱动来实现。</p>
+
+<p><img src="/assets/media/yhNnMCuNCs-compress.jpg" alt="IO-6" /></p>
+
+<p>epoll，已经大大优化了IO的执行效率，但在IO执行的第一阶段：数据准备阶段都还是被阻塞的。所以这是一个可以继续优化的点。</p>
+
+<p>异步IO真正实现了IO全流程的非阻塞。用户进程发出系统调用后立即返回，内核等待数据准备完成，然后将数据拷贝到用户进程缓冲区，然后发送信号告诉用户进程IO操作执行完毕。
+<img src="/assets/media/MCsqfcaP1E-compress.jpg" alt="IO-5" /></p>
+
+<p>所以，之所以称为异步IO，取决于IO执行的第二阶段是否阻塞。因此前面讲的BIO，NIO均为同步IO。</p>
+
+<h2 id="参考">参考</h2>
+<ul>
+  <li>https://zh.wikipedia.org/wiki/I/O</li>
+</ul>
+
 
 	  </div>
 
@@ -189,8 +264,8 @@
 		  
 		  
 			 
-				<li><a href="/categories.html#system design-ref">
-					system design <span>(1)</span>
+				<li><a href="/categories.html#io-ref">
+					io <span>(1)</span>
 					
 				</a></li>
 			
@@ -205,8 +280,8 @@
 		  
 			 
 				<li>
-					<a href="/tags.html#system design-ref">
-					system design <span>(1)</span>
+					<a href="/tags.html#io-ref">
+					io <span>(1)</span>
 					
 					</a>
 				</li>
@@ -221,7 +296,7 @@
 		<div>
       <section class="share col-sm-6">
         <h4 class="section-title">Share Post</h4>
-        <a class="btn btn-default btn-sm twitter" href="http://twitter.com/share?text=排队系统设计"
+        <a class="btn btn-default btn-sm twitter" href="http://twitter.com/share?text=IO"
            onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
           <i class="fa fa-twitter fa-lg"></i>
           Twitter
@@ -249,10 +324,10 @@
 
 		<ul class="pager">
 		  
-		  <li class="previous"><a href="/data%20structure/2020/06/05/dp.html" title="动态规划学习笔记">&larr; Previous</a></li>
+		  <li class="previous"><a href="/system%20design/2020/06/09/Queuing-system.html" title="排队系统设计">&larr; Previous</a></li>
 		  
 		  
-		  <li class="next"><a href="/io/2020/07/15/io.html" title="IO">Next &rarr;</a></li>
+			<li class="next disabled"><a>Next &rarr;</a>
 		  
 		</ul>
 
